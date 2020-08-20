@@ -80,7 +80,7 @@
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
             <UserProg1Name>..\AfterBuildRun.bat</UserProg1Name>
-            <UserProg2Name></UserProg2Name>
+            <UserProg2Name>fromelf --bin !L -o ./T5L51.bin</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -440,6 +440,11 @@
               <FileName>crc16.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FUNC_HANDLER\crc16.c</FilePath>
+            </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FUNC_HANDLER\modbus.c</FilePath>
             </File>
           </Files>
         </Group>
