@@ -426,6 +426,11 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\norflash.c</FilePath>
             </File>
+            <File>
+              <FileName>T5L_lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FUNC_HANDLER\T5L_lib.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

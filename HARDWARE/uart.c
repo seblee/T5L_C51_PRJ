@@ -45,8 +45,8 @@ void Uart2Init(void)
     ADCON          = 0x80; /*0x80=使用SREL0H:L*/
     SCON0          = 0x50; /*方式1:10位UART*/
     PCON &= 0x7F;          /*.7=SMOD,波特率倍频选择,0=不倍频*/
-    SREL0H = 0x02;         /*1024-FOSC/(64*波特率)*/
-    SREL0L = 0xB0;         /*1024-206438400/(64*115200)=0x03E4*/
+    SREL0H = 0x03;         /*1024-FOSC/(64*波特率)*/
+    SREL0L = 0xE4;         /*1024-206438400/(64*115200)=0x03E4*/
     REN0   = 1;
     ES0    = 1;
 }
@@ -301,6 +301,6 @@ void InitUart(void)
 {
     Uart2Init();
     //  Uart3Init();
-    //  Uart4Init();
-    Uart5Init();
+    Uart4Init();
+    // Uart5Init();
 }

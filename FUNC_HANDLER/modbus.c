@@ -47,10 +47,6 @@ u8 modbus_rx_count_before = 0;  //接收串口的数据
 u8 read_status_interval_times = 0;  //控制读取状态03H的间隔时间
 u32 modbus_tx_process_tick    = 0;  // modbus发送命令的时间间隔
 
-u16 run_set_value;  //设置页面设置的参数值，下同
-u16 speed_set_value;
-u16 temp_set_value;
-u16 hot_set_value;
 u16 status_para[MODBUS_READ_REG_LEN];  // 03H读回来的数据保存
 /******************************************************************************
           版权所有 (C), 2020，DFX，Write by Food(181 1266 9427)
@@ -201,7 +197,7 @@ void Modbus_Process_Task(void)
     {
         //  Modbus_Write_Register(MODBUS_WRITE_REG_ADDRESS, run_set_value);  // 0~4
         //  return;                                                          //不再处理其他发送命令
-    } 
+    }
     // if (process_flag.speed_set == 1)
     // {
     //     Modbus_Write_Register(MODBUS_WRITE_REG_ADDRESS + 1, speed_set_value + 1);  // 1~5档

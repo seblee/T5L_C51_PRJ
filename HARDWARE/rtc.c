@@ -5,6 +5,7 @@
 #include "dgus.h"
 
 //**********************RX8130接口程序，SDA 10K上拉到3.3V**************
+//上电时运行一次initrtc()，然后0.5秒间隔运行一次rdtime()读取时间到DGUS相应系统接口
 
 uint8_t RTC_temp[7] = {0};
 //时间校准
@@ -15,6 +16,15 @@ uint8_t xdata yearH               = 0;
 uint8_t xdata yearL               = 0;
 const uint8_t code table_week[12] = {0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};  //月修正数据表
 
+void SDA_IN(void)
+{
+    P3MDOUT = P3MDOUT & 0xF7;
+}
+
+void SDA_OUT(void)
+{
+    P3MDOUT = P3MDOUT | 0x08;
+}
 void delayus(unsigned char t)
 {
     char i;
@@ -26,16 +36,6 @@ void delayus(unsigned char t)
         }
         t--;
     }
-}
-
-void SDA_IN(void)
-{
-    P3MDOUT = P3MDOUT & 0xF7;
-}
-
-void SDA_OUT(void)
-{
-    P3MDOUT = P3MDOUT | 0x08;
 }
 
 void i2cstart(void)
@@ -173,8 +173,7 @@ void init_rtc(void)
     mnak();
     i2cstop();
     if ((i & 0x02) == 0x02)
-    {
-        //重新配置时间
+    {                //重新配置时间
         i2cstart();  // 30=00
         i2cbw(0x64);
         i2cbw(0x30);
@@ -247,7 +246,7 @@ void rdtime(void)
 {
     unsigned char rtcdata[8];
     unsigned char temp[2];
-    unsigned char i, n, m;//, k;
+    unsigned char i, n, m;  //, k;
     i2cstart();
     i2cbw(0x64);
     i2cbw(0x10);

@@ -23,10 +23,10 @@
 
 /*****************************************************************************
 主函数*/
-u8 test[] = "uart send...";
+u8 test[] = "uart4 send...";
 void main(void)
 {
-    InitCPU();
+    InitSys();
     init_rtc();  //硬件RTC初始化
     while (1)
     {
@@ -34,7 +34,7 @@ void main(void)
         if (SysTick_RTC >= 500)  //原来是500，调试改为50
         {
             rdtime();  //更新硬件RTC时间
-            Uart5SendStr(test, sizeof(test));
+            Uart4SendStr(test, sizeof(test));
             SysTick_RTC = 0;
         }
 

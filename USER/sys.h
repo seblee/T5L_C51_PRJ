@@ -50,7 +50,6 @@ typedef unsigned short u16;
 typedef unsigned long u32;
 #endif
 
- 
 
 
 #define DWIN_OK (0x00)
@@ -77,7 +76,7 @@ sbit KEY1_Vin_F = P2 ^ 2;
 
 /*****************************************************************************
 对外函数声明*/
-void InitCPU(void); /* 寄存器配置初始化 */
+void InitSys(void); /* 寄存器配置初始化 */
 // void DelayUs(uint16_t n);
 void DelayMs(uint16_t n);
 
