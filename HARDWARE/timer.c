@@ -23,10 +23,11 @@ unsigned long ctr_inc  = 0;
 unsigned int ctr1_inc  = 0;
 unsigned long ctr2_inc = 0;
 u16 data SysTick_RTC   = 0;
-u16 data SysTick       = 0;
+u32 data SysTick       = 0;
 //计算key延时
-uint16_t Key2_Count = 0;
-
+uint16_t Key2_Count       = 0;
+_TKS_FLAGA_type timerFlag = {0};
+#define timer1msFlag timerFlag.bits.b0
 /*****************************************************************************
 定时器0*/
 void T0_Init(void)
@@ -60,7 +61,9 @@ void T0_ISR_PC(void) interrupt 1
         Key2_Count++;
     }
     SysTick_RTC++;
-    EA = 1;
+    SysTick++;
+    timer1msFlag = 1;
+    EA           = 1;
 }
 /*****************************************************************************
 定时器2*/
@@ -79,7 +82,6 @@ void T2_Init(void)
 void T2_ISR_PC(void) interrupt 5
 {
     TF2 = 0;
-    SysTick--;
     // WDT_RST();
 }
 /*****************************************************************************

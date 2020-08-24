@@ -54,9 +54,9 @@ uint16_t crc16table(uint8_t *ptr, uint16_t len)
     uint16_t index;
     while (len--)
     {
-        index = crclo ^ *ptr++;
-        crclo = crchi ^ crctablehi[index];
-        crchi = crctablelo[index];
+        index = crchi ^ *ptr++;
+        crchi = crclo ^ crctablehi[index];
+        crclo = crctablelo[index];
     }
     return (crchi << 8 | crclo);
 }

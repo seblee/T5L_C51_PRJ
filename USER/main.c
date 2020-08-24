@@ -20,7 +20,8 @@
 #include "handle.h"
 //#include "password.h"
 #include "rtc.h"
-
+#include "modbus.h"
+#include "ui.h"
 /*****************************************************************************
 主函数*/
 u8 test[] = "uart4 send...";
@@ -28,17 +29,24 @@ void main(void)
 {
     InitSys();
     init_rtc();  //硬件RTC初始化
+    Modbus_UART_Init();
     while (1)
     {
         WDT_RST();               //喂狗
         if (SysTick_RTC >= 500)  //原来是500，调试改为50
         {
             rdtime();  //更新硬件RTC时间
-            Uart4SendStr(test, sizeof(test));
+            // Uart4SendStr(test, sizeof(test));
             SysTick_RTC = 0;
         }
+        Modbus_Process_Task();  // Modbus串口处理流程
 
         HandleProc();
         RTC_Set_CMD();
+        ui();
+        if (timer1msFlag)
+        {
+            timer1msFlag = 0;
+        }
     }
 }

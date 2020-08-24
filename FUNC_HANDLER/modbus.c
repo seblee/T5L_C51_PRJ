@@ -17,22 +17,12 @@
 #include "sys.h"
 #include "crc16.h"
 #include "uart.h"
-
-#define MODBUS_SLAVE_ADDRESS 0xD1  //设备端地址
-
-#define MODBUS_READ_COMMAND_03H 0x03    //读寄存器地址命令
-#define MODBUS_READ_REG_ADDRESS 0x4001  //寄存器首地址
-
-#define MODBUS_WRITE_REG_ADDRESS 0x5001  //寄存器写地址
-#define MODBUS_WRITE_COMMAND_06H 0x06    //写寄存器地址命令
-
-#define MODBUS_SEND_TIME_PERIOD 500  // 0.5秒钟
-#define RX_CHECK_TICK_TIME 10  //超过10个字节的时间没有收到新的字符，认为接收结束，10*10*1000/9600,
+#include "ui.h"
 
 void Modbus_RX_Reset(void);
 // void Modbus_TX_Reset(void);
-void Modbus_Write_Register(u16 reg, u16 value);
-void Modbus_Read_Register(u16 addr, u16 num);
+void Modbus_Write_Register(modbosCmd_t *CmdNow, u16 value);
+void Modbus_Read_Register(modbosCmd_t *CmdNow);
 void modbus_process_command(u8 *pstr, u16 strlen);
 
 u8 modbus_rx_count = 0;                 //接收到的字符串的长度
@@ -40,14 +30,31 @@ u8 modbus_rx_flag  = 0;                 //接收到的字符串的标志，为1�
 u8 modbus_rx_buf[UART_RX_BUF_MAX_LEN];  //接收到的字符串的内容
 
 // extern process_struct process_flag;  //命令状态标志
-extern u16 data SysTick;        //每隔1ms+1
+extern u32 data SysTick;        //每隔1ms+1
 u32 uart_rx_check_tick    = 0;  //检查串口是否接收结束
 u8 modbus_rx_count_before = 0;  //接收串口的数据
 
 u8 read_status_interval_times = 0;  //控制读取状态03H的间隔时间
 u32 modbus_tx_process_tick    = 0;  // modbus发送命令的时间间隔
 
-u16 status_para[MODBUS_READ_REG_LEN];  // 03H读回来的数据保存
+const modbosCmd_t modbusCmdlib[11] = {
+    // en         id         fun           len  timeout mod  modP  VP     slaveAddr feedback
+    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x04, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},   // 00
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 01
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 02
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 03
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 04
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 05
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 06
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 07
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 08
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 09
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0x64, 0x01, 0x00, 0x5000, 0x0300, 0x00ff},  // 10
+};
+modbosCmd_t modbusCmdNow = {0};
+u8 CmdIndex              = 0;
+
+_TKS_FLAGA_type modbusFlag = {0};
 /******************************************************************************
           版权所有 (C), 2020，DFX，Write by Food(181 1266 9427)
  ******************************************************************************
@@ -76,21 +83,15 @@ void modbus_process_command(u8 *pstr, u16 strlen)
     num = 0;
     do
     {
-        if ((*(pstr + num)) == MODBUS_SLAVE_ADDRESS)
+        if ((*(pstr + num)) == SLAVE_ID)
         {
             switch (*(pstr + num + 1))  //判读下一个字节是modbus的哪个命令
             {
-                case MODBUS_READ_COMMAND_03H:
+                case MODBUS_READ_03H:
                     len = *(pstr + num + 2);
                     if ((len + num + 5) > strlen)  //长度超过最大长度
                     {
                         num = strlen;  //非modbus命令
-                        // printf("Lenth is too short!\r\n");
-                        break;
-                    }
-                    if (len != (MODBUS_READ_REG_LEN * 2))  //长度不符合
-                    {
-                        // printf("Lenth is not right!\r\n");
                         break;
                     }
                     crc_data = crc16table(pstr + num, 3 + len);
@@ -101,16 +102,13 @@ void modbus_process_command(u8 *pstr, u16 strlen)
                     {
                         break;
                     }
+                    cmdRxFlag = 1;
                     //正确的modbus 回送命令
                     // printf("Modbus command OK!\r\n");
-                    for (len = 0; len < MODBUS_READ_REG_LEN; len++)
-                    {
-                        status_para[len] = *(pstr + num + len * 2 + 3) * 256 + *(pstr + num + len * 2 + 4);
-                    }
-                    // Machine_Status_Handler();  //更新到页面内容
+                    WriteDGUS(modbusCmdlib[CmdIndex].VPAddr, (pstr + 3), *(pstr + 2));
                     num = len + 5;
                     break;
-                case MODBUS_WRITE_COMMAND_06H:
+                case MODBUS_WRITE_06H:
                     if ((num + 8) > strlen)
                     {
                         num = strlen;  //非modbus命令
@@ -162,6 +160,7 @@ modbus 发送和接收任务处理程序，实现：
 ******************************************************************************/
 void Modbus_Process_Task(void)
 {
+    modbosCmd_t *cmdTemp_t = NULL;
     if (modbus_rx_flag == 1)  //接收数据
     {
         if (modbus_rx_count > modbus_rx_count_before)
@@ -185,63 +184,59 @@ void Modbus_Process_Task(void)
             }
         }
     }
+
+    if (cmdTxFlag)
+    {
+        if ((cmdRxFlag) || ((SysTick - modbus_tx_process_tick) >= modbusCmdlib[CmdIndex].timeout))
+        {
+            CmdIndex++;
+            goto processCMDLib;
+        }
+        return;
+    }
+
     if ((SysTick - modbus_tx_process_tick) < MODBUS_SEND_TIME_PERIOD)  //间隔固定时间后再处理UI的设置命令，
     {
         return;
     }
-
+processCMDLib:
     modbus_tx_process_tick = SysTick;
     read_status_interval_times++;
-
-    // if (process_flag.run_set == 1)
-    {
-        //  Modbus_Write_Register(MODBUS_WRITE_REG_ADDRESS, run_set_value);  // 0~4
-        //  return;                                                          //不再处理其他发送命令
-    }
-    // if (process_flag.speed_set == 1)
-    // {
-    //     Modbus_Write_Register(MODBUS_WRITE_REG_ADDRESS + 1, speed_set_value + 1);  // 1~5档
-    //     return;
-    // }
-    // if (process_flag.temp_set == 1)
-    // {
-    //     Modbus_Write_Register(MODBUS_WRITE_REG_ADDRESS + 2, temp_set_value * 10 + 2730);
-    //     return;
-    // }
-    // if (process_flag.hot_set == 1)
-    // {
-    //     if (hot_set_value == 2)
-    //     {
-    //         Modbus_Write_Register(MODBUS_WRITE_REG_ADDRESS + 3, hot_set_value + 1);  // 3
-    //     }
-    //     else
-    //     {
-    //         Modbus_Write_Register(MODBUS_WRITE_REG_ADDRESS + 3, hot_set_value);  // 0,2
-    //     }
-    //     return;
-    // }
+    cmdRxFlag = 0;
+    cmdTxFlag = 0;
     if ((read_status_interval_times % 2) == 0)  //一秒钟执行一次，
     {
-        Modbus_Read_Register(MODBUS_READ_REG_ADDRESS,
-                             MODBUS_READ_REG_LEN);  //从4101H地址开始读取14个寄存器的内容，更新状态信息
-        return;
+        getCmd(&CmdIndex);
+        if (CmdIndex < CMD_NUMBER)
+        {
+            memcpy(&modbusCmdNow, &modbusCmdlib[CmdIndex], sizeof(modbosCmd_t));
+            //从4101H地址开始读取14个寄存器的内容，更新状态信息
+            if (modbusCmdNow.funCode == MODBUS_READ_03H)
+            {
+                cmdTxFlag = 1;
+                Modbus_Read_Register(&modbusCmdNow);
+            }
+        }
+        else
+        {
+            CmdIndex = 0;
+        }
     }
 }
 // modbus 03H 读取寄存器
-void Modbus_Read_Register(u16 addr, u16 num)
+void Modbus_Read_Register(modbosCmd_t *CmdNow)
 {
     u16 crc_data;
     u8 len;
     u8 modbus_tx_buf[20];
 
     len                  = 0;
-    modbus_tx_buf[len++] = MODBUS_SLAVE_ADDRESS;
-    modbus_tx_buf[len++] = MODBUS_READ_COMMAND_03H;  // command
-    modbus_tx_buf[len++] = (addr >> 8) & 0xFF;
-    ;  // register
-    modbus_tx_buf[len++] = addr & 0xFF;
-    modbus_tx_buf[len++] = (num >> 8) & 0xFF;  // register number
-    modbus_tx_buf[len++] = num & 0xFF;
+    modbus_tx_buf[len++] = CmdNow->slaveID;
+    modbus_tx_buf[len++] = MODBUS_READ_03H;                  // command
+    modbus_tx_buf[len++] = (CmdNow->slaveAddr >> 8) & 0xFF;  // register
+    modbus_tx_buf[len++] = CmdNow->slaveAddr & 0xFF;
+    modbus_tx_buf[len++] = (CmdNow->length >> 8) & 0xFF;  // register number
+    modbus_tx_buf[len++] = CmdNow->length & 0xFF;
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
@@ -249,18 +244,17 @@ void Modbus_Read_Register(u16 addr, u16 num)
 }
 
 // modbus 06H 发送
-void Modbus_Write_Register(u16 reg, u16 value)
+void Modbus_Write_Register(modbosCmd_t *CmdNow, u16 value)
 {
     u16 crc_data;
     u8 len;
     u8 modbus_tx_buf[20];
 
     len                  = 0;
-    modbus_tx_buf[len++] = MODBUS_SLAVE_ADDRESS;
-    modbus_tx_buf[len++] = MODBUS_WRITE_COMMAND_06H;  // command
-    modbus_tx_buf[len++] = (reg >> 8) & 0xFF;
-    ;  // register
-    modbus_tx_buf[len++] = reg & 0xFF;
+    modbus_tx_buf[len++] = CmdNow->slaveID;
+    modbus_tx_buf[len++] = MODBUS_WRITE_06H;                 // command
+    modbus_tx_buf[len++] = (CmdNow->slaveAddr >> 8) & 0xFF;  // register
+    modbus_tx_buf[len++] = CmdNow->slaveAddr & 0xFF;
     modbus_tx_buf[len++] = (value >> 8) & 0xFF;  // register value
     modbus_tx_buf[len++] = value & 0xFF;
     crc_data             = crc16table(modbus_tx_buf, len);
@@ -279,8 +273,7 @@ void Modbus_RX_Reset(void)
 }
 //初始化modbus 相关参数
 void Modbus_UART_Init(void)
-{
-    u8 i;
+{  
     //	Modbus_TX_Reset();
     Modbus_RX_Reset();
     modbus_tx_process_tick = 0;  //初始化 0
@@ -288,8 +281,40 @@ void Modbus_UART_Init(void)
     // process_flag.speed_set = 0;  //初始化0
     // process_flag.temp_set  = 0;  //初始化0
     // process_flag.hot_set   = 0;  //初始化0
-    for (i = 0; i < MODBUS_READ_REG_LEN; i++)
+}
+
+void getCmd(u8 *index)
+{
+    u8 i;
+    for (i = *index; i < CMD_NUMBER; i++)
     {
-        status_para[i] = 0;
+        if ((modbusCmdlib[i].modbusEn != MODBUS_EN) || (modbusCmdlib[i].length == 0))
+        {
+            continue;
+        }
+        if (modbusCmdlib[i].mode == 0)
+        {
+            goto getCmdExit;
+        }
+        else if (modbusCmdlib[i].mode == 1)
+        {
+            if (picNow == modbusCmdlib[i].moddPara)
+            {
+                goto getCmdExit;
+            }
+            continue;
+        }
+        else if (modbusCmdlib[i].mode == 2)
+        {
+            u16 paraTemp;
+            ReadDGUS(modbusCmdlib[i].moddPara, (u8 *)(&paraTemp), 2);
+            if ((paraTemp & 0xff) == 0x5a)
+            {
+                goto getCmdExit;
+            }
+            continue;
+        }
     }
+getCmdExit:
+    *index = i;
 }

@@ -21,6 +21,9 @@
 #include "T5LOS8051.H"
 #include "sys.h"
 
+extern _TKS_FLAGA_type timerFlag;
+#define timer1msFlag timerFlag.bits.b0
+
 /*****************************************************************************
 宏定义变量*/
 extern uint16_t Key_Count;
@@ -28,7 +31,7 @@ extern uint16_t Key2_Count;
 extern uint16_t Toset_Count;
 
 extern u16 data SysTick_RTC;
-extern u16 data SysTick;
+extern u32 data SysTick;
 
 /*****************************************************************************
 对外函数声明*/

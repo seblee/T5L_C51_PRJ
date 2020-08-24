@@ -28,8 +28,8 @@ uint8_t uart3_busy      = 0;
 uint16_t uart3_rx_count = 0;
 uint8_t xdata Uart3_Rx[UART3_MAX_LEN];
 
-uint16_t uart4_rx_count = 0;
-uint8_t xdata Uart4_Rx[UART4_MAX_LEN];
+// uint16_t uart4_rx_count = 0;
+// uint8_t xdata Uart4_Rx[UART4_MAX_LEN];
 
 uint16_t uart5_rx_count = 0;
 uint8_t xdata Uart5_Rx[UART5_MAX_LEN];
@@ -173,11 +173,11 @@ void UART3_ISR_PC(void) interrupt 16
 //串口4配置*/
 void Uart4Init(void)
 {
-    uart4_rx_count = 0;
-    SCON2T         = 0x80; /*开启UART4发送*/
-    SCON2R         = 0x80; /*开启UART4接收*/
-    BODE2_DIV_H    = 0x00; /*FCLK/(8*DIV)*/
-    BODE2_DIV_L    = 0xe0;
+    //    uart4_rx_count = 0;
+    SCON2T      = 0x80; /*开启UART4发送*/
+    SCON2R      = 0x80; /*开启UART4接收*/
+    BODE2_DIV_H = 0x00; /*FCLK/(8*DIV)*/
+    BODE2_DIV_L = 0xe0;
     // ES2T=1;
     ES2R = 1;
 }
@@ -210,6 +210,7 @@ void Uart4SendStr(uint8_t *pstr, uint8_t strlen)
 void UART4_TX_ISR_PC(void) interrupt 10
 {
 }
+#include "modbus.h"
 /*****************************************************************************
 串口4接收中断*/
 void UART4_RX_ISR_PC(void) interrupt 11
@@ -218,16 +219,24 @@ void UART4_RX_ISR_PC(void) interrupt 11
     EA          = 0;
     if ((SCON2R & 0x01) == 0x01)
     {
-        res                      = SBUF2_RX;
-        Uart4_Rx[uart4_rx_count] = res;
-        uart4_rx_count++;
-        SCON2R &= 0xFE;
-        if (uart4_rx_count >= UART4_MAX_LEN)
+        if (modbus_rx_count < UART_RX_BUF_MAX_LEN)
         {
-            //防止溢出
-            uart4_rx_count = 0;
+            modbus_rx_buf[modbus_rx_count++] = SBUF2_RX;
+            modbus_rx_flag                   = 1;
         }
+        SCON2R &= 0xFE;
     }
+    // {
+    //     res                      = SBUF2_RX;
+    //     Uart4_Rx[uart4_rx_count] = res;
+    //     uart4_rx_count++;
+    //     SCON2R &= 0xFE;
+    //     if (uart4_rx_count >= UART4_MAX_LEN)
+    //     {
+    //         //防止溢出
+    //         uart4_rx_count = 0;
+    //     }
+    // }
     WDT_RST();
     EA = 1;
 }
