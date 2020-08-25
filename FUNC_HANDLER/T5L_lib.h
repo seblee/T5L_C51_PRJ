@@ -17,6 +17,9 @@
  *
  **/
 
+#define READRFLASH 0x5A
+#define WRITERFLASH 0xA5
+
 void wait_ok(unsigned int addr);
 void T5L_Flash(unsigned char mod, unsigned int addr, long addr_flash, unsigned int len);
 void read_dgusii_vp(unsigned int addr, unsigned char *buf, unsigned int len);

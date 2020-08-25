@@ -28,7 +28,7 @@ typedef struct modbosCmd
     u8 length;
     u8 timeout;
     u8 mode;
-    u8 moddPara;
+    u16 moddPara;
     u16 VPAddr;
     u16 slaveAddr;
     u16 feedbadck;
@@ -40,7 +40,7 @@ extern u8 modbus_rx_count;                     //接收到的字符串的长度
 
 extern _TKS_FLAGA_type modbusFlag;
 #define cmdTxFlag modbusFlag.bits.b0
-#define cmdRxFlag modbusFlag.bits.b0
+#define cmdRxFlag modbusFlag.bits.b1
 
 void Modbus_UART_Init(void);
 void Modbus_Process_Task(void);

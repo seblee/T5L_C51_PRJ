@@ -23,7 +23,6 @@ void ui(void)
 {
     if (timer1msFlag)
     {
-        ReadDGUS(0x0014, (u8*)(&picNow), 2);
-        timer1msFlag = 0;
+        ReadDGUS(0x0014, (u8*)(&picNow), 2); 
     }
 }
