@@ -35,10 +35,11 @@ void curveInit(void)
         {
             if (temp[j] == 0xa55a)
             {
-                break;
+                goto checkout;
             }
         }
     }
+checkout:
     pointTemp = i + j;
     if (pointTemp >= Curve0End)
     {
@@ -106,18 +107,19 @@ void curveProcess(void)
         temp[2] = DragerRight;
         WriteDGUS(DragerX, (u8*)&temp[2], 2);
 
-        return;
         if (curvePoint & 0x01)
         {
+            return;
         }
         temp[3]--;
-        temp[2] = 0xa55a;
         ReadDGUS(temp[3] + Curve0Start, (u8*)&temp[0], 4);
+        temp[2] = 0xa55a;
         WriteDGUS(Curvetemp, (u8*)&temp[0], 6);
         T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3], 4);
         ReadDGUS(temp[3] + Curve1Start, (u8*)&temp[0], 4);
+        temp[2] = 0xa55a;
         WriteDGUS(Curvetemp, (u8*)&temp[0], 6);
-        T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3], 4);
+        T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x0800, 4);
     }
 }
 void dragCuave(void)

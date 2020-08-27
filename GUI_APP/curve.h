@@ -50,7 +50,7 @@
 #define CurveDrager 0x500A  // 10个
 #define DragerX 0x5011
 #define DragerLeft 143
-#define DragerRight 555
+#define DragerRight 650
 
 void curveInit(void);
 void curveProcess(void);
