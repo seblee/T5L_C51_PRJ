@@ -22,6 +22,7 @@
 #include "rtc.h"
 #include "modbus.h"
 #include "ui.h"
+#include "curve.h"
 /*****************************************************************************
 主函数*/
 u8 test[] = "uart4 send...";
@@ -30,6 +31,7 @@ void main(void)
     InitSys();
     init_rtc();  //硬件RTC初始化
     Modbus_UART_Init();
+    curveInit();
     while (1)
     {
         WDT_RST();               //喂狗
@@ -44,9 +46,11 @@ void main(void)
         HandleProc();
         RTC_Set_CMD();
         ui();
+        curveProcess();
         if (timer1msFlag)
         {
-            timer1msFlag = 0;
+            timer1msFlag   = 0;
+            timer100msFlag = 0;
         }
     }
 }

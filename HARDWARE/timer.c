@@ -27,7 +27,6 @@ u32 data SysTick       = 0;
 //计算key延时
 uint16_t Key2_Count       = 0;
 _TKS_FLAGA_type timerFlag = {0};
-#define timer1msFlag timerFlag.bits.b0
 /*****************************************************************************
 定时器0*/
 void T0_Init(void)
@@ -62,6 +61,8 @@ void T0_ISR_PC(void) interrupt 1
     }
     SysTick_RTC++;
     SysTick++;
+    if (SysTick % 100 == 0)
+        timer100msFlag = 1;
     timer1msFlag = 1;
     EA           = 1;
 }
