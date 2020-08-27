@@ -17,8 +17,9 @@
 自定义头文件*/
 #include "T5LOS8051.H"
 #include "sys.h"
-#include "handle.h"
+// #include "handle.h"
 //#include "password.h"
+#include "timer.h"
 #include "rtc.h"
 #include "modbus.h"
 #include "ui.h"
@@ -41,9 +42,8 @@ void main(void)
             // Uart4SendStr(test, sizeof(test));
             SysTick_RTC = 0;
         }
+        // HandleProc();
         Modbus_Process_Task();  // Modbus串口处理流程
-
-        HandleProc();
         RTC_Set_CMD();
         ui();
         curveProcess();

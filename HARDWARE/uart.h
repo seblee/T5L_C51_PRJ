@@ -24,17 +24,17 @@
 sbit RS485_TX_EN = P0 ^ 1;
 /*****************************************************************************
 宏定义变量*/
-#define UART2_MAX_LEN 8096
-extern uint16_t uart2_rx_count;
-extern uint8_t xdata Uart2_Rx[UART2_MAX_LEN];
+// #define UART2_MAX_LEN 8096
+// extern uint16_t uart2_rx_count;
+// extern uint8_t xdata Uart2_Rx[UART2_MAX_LEN];
 
 #define UART3_MAX_LEN 128
 extern uint16_t uart3_rx_count;
 extern uint8_t xdata Uart3_Rx[UART3_MAX_LEN];
 
-// #define UART4_MAX_LEN 128
-// extern uint16_t uart4_rx_count;
-// extern uint8_t xdata Uart4_Rx[UART4_MAX_LEN];
+#define UART4_MAX_LEN 128
+extern uint16_t uart4_rx_count;
+extern uint8_t xdata Uart4_Rx[UART4_MAX_LEN];
 
 #define UART5_MAX_LEN 128
 extern uint16_t uart5_rx_count;

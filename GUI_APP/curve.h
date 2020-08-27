@@ -18,7 +18,7 @@
  **/
 #include "sys.h"
 
-#define TimerPeriod 10  // T*100ms
+#define TimerPeriod 1200  // T*100ms
 
 #define CURVE_FLASH_ADDR 0
 #define CURVE_VP_ADDR 0x1000

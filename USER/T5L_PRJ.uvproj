@@ -447,11 +447,6 @@
           <GroupName>FUNC_HANDLER</GroupName>
           <Files>
             <File>
-              <FileName>handle.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FUNC_HANDLER\handle.c</FilePath>
-            </File>
-            <File>
               <FileName>crc16.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FUNC_HANDLER\crc16.c</FilePath>

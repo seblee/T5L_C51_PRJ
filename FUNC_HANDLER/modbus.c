@@ -38,7 +38,7 @@ u8 read_status_interval_times = 0;  //控制读取状态03H的间隔时间
 u32 modbus_tx_process_tick    = 0;  // modbus发送命令的时间间隔
 
 const modbosCmd_t modbusCmdlib[CMD_NUMBER] = {
-    // en         id         fun           len  timeout mod  modP  VP     slaveAddr feedback
+    // en         id         fun           len  timeout mod    modP     VP  slaveAddr feedback
     {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x04, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},   // 00
     {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x02, 0x8001, 0x8000, 0x0304, 0x00ff},  // 01
     {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 02
@@ -226,7 +226,7 @@ void Modbus_Read_Register(modbosCmd_t *CmdNow)
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
-    Uart4SendStr(modbus_tx_buf, len);
+    Uart2SendStr(modbus_tx_buf, len);
 }
 
 // modbus 06H 发送
@@ -246,7 +246,7 @@ void Modbus_Write_Register06H(modbosCmd_t *CmdNow, u16 value)
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
-    Uart4SendStr(modbus_tx_buf, len);
+    Uart2SendStr(modbus_tx_buf, len);
 }  // modbus 06H 发送
 void Modbus_Write_Register10H(modbosCmd_t *CmdNow, u16 value)
 {
@@ -264,7 +264,7 @@ void Modbus_Write_Register10H(modbosCmd_t *CmdNow, u16 value)
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
-    Uart4SendStr(modbus_tx_buf, len);
+    Uart2SendStr(modbus_tx_buf, len);
 }
 //清除modbus RX的相关参数
 void Modbus_RX_Reset(void)
