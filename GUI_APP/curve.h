@@ -1,21 +1,25 @@
+/*******************************************************************
+ * @Warning      : Without permission from the author,Not for commercial use
+ * @File         :
+ * @Author       : xiaowine
+ * @Date         : 2020-08-25 16:54:38
+ * @version      : v01.00
+ * @ **************************************************************
+ * @LastEditTime : 2020-08-28 11:17:40
+ * @LastEditors  : xiaowine
+ * @ **************************************************************
+ * @brief        :
+ * @Description  :
+ * @FilePath     : \T5L_C51_PRJ\GUI_APP\curve.h
+ * @ **************************************************************
+ * @attention    :
+ * @Powered By xiaowine
+ * @<h2><center>&copy;  Copyright(C) cee0.com 2020</center></h2>
+ * @All rights reserved
+ ******************************************************************/
 #ifndef __CURVE_H_
 #define __CURVE_H_
-/**
- ****************************************************************************
- * @Warning Without permission from the author,Not for commercial use
- * @File
- * @Author  xiaowine@cee0.com
- * @date
- * @version V1.0
- *************************************************
- * @brief   -->>
- ****************************************************************************
- * @attention
- * Powered By Xiaowine
- * <h2><center>&copy;  Copyright(C) cee0.com 2015-2019</center></h2>
- * All rights reserved
- *
- **/
+
 #include "sys.h"
 
 #define TimerPeriod 1200  // T*100ms
