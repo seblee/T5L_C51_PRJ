@@ -1,14 +1,22 @@
-/******************************************************************************
- * 文 件 名   : main.c
- * 版 本 号   : V1.0
- * 作    者   : pinot
- * 生成日期   : 2019年11月01日
- * 功能描述   : 主函数，外设和参数初始化，主循环中主要功能函数入口。
- * 修改历史   :
- * 日    期   :
- * 作    者   :
- * 修改内容   :
- ******************************************************************************/
+/*******************************************************************
+ * @Warning      : Without permission from the author,Not for commercial use
+ * @File         : main.c
+ * @Author       : xiaowine
+ * @Date         : 2020-08-14 18:29:09
+ * @version      : v01.00
+ * @ **************************************************************
+ * @LastEditTime : 2020-08-29 15:05:04
+ * @LastEditors  : xiaowine
+ * @ **************************************************************
+ * @brief        : 主函数，外设和参数初始化，主循环中主要功能函数入口。
+ * @Description  :
+ * @FilePath     : \T5L_C51_PRJ\USER\main.c
+ * @ **************************************************************
+ * @attention    :
+ * @Powered By xiaowine
+ * @<h2><center>&copy;  Copyright(C) cee0.com 2020</center></h2>
+ * @All rights reserved
+ ******************************************************************/
 
 /*****************************************************************************
 系统库*/
@@ -26,29 +34,29 @@
 #include "ui.h"
 #include "curve.h"
 #include "string.h"
+#include "alarm.h"
+#include "ChineseCharacter.h"
 /*****************************************************************************
 主函数*/
-const u8 test[] = "测试汉字";
-
 void main(void)
 {
     InitSys();
     init_rtc();  //硬件RTC初始化
     Modbus_UART_Init();
     curveInit();
-    WriteDGUS(0x7500, test, sizeof(test));
+    alarmInit();
     while (1)
     {
         WDT_RST();               //喂狗
         if (SysTick_RTC >= 500)  //原来是500，调试改为50
         {
             rdtime();  //更新硬件RTC时间
-            // Uart4SendStr(test, sizeof(test));
+            // Uart2SendStr(test, strlen(test));
             SysTick_RTC = 0;
+            RTC_Set_CMD();
         }
         // HandleProc();
         Modbus_Process_Task();  // Modbus串口处理流程
-        RTC_Set_CMD();
         ui();
         curveProcess();
         if (timer1msFlag)

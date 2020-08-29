@@ -5,7 +5,7 @@
  * @Date         : 2020-08-28 18:14:28
  * @version      : v01.00
  * @ **************************************************************
- * @LastEditTime : 2020-08-28 18:18:37
+ * @LastEditTime : 2020-08-29 15:58:00
  * @LastEditors  : xiaowine
  * @ **************************************************************
  * @brief        :
@@ -21,5 +21,6 @@
 #ifndef __CHINESECHARACTER_H_
 #define __CHINESECHARACTER_H_
 extern const char test[];
+extern const char alarmMessage[16][32];
 
 #endif

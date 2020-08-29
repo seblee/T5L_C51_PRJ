@@ -416,6 +416,11 @@
               <FileType>1</FileType>
               <FilePath>..\GUI_APP\alarm.c</FilePath>
             </File>
+            <File>
+              <FileName>ChineseCharacter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_APP\ChineseCharacter.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
