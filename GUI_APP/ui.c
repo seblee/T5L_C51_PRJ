@@ -1,19 +1,22 @@
-/**
- ****************************************************************************
- * @Warning Without permission from the author,Not for commercial use
- * @File    ui.c
- * @Author  xiaowine@cee0.com
- * @date
- * @version V1.0
- *************************************************
- * @brief   ??????
- ****************************************************************************
- * @attention
- * Powered By Xiaowine
- * <h2><center>&copy;  Copyright(C) cee0.com 2015-2019</center></h2>
- * All rights reserved
- *
- **/
+/*******************************************************************
+ * @Warning      : Without permission from the author,Not for commercial use
+ * @File         :
+ * @Author       : xiaowine
+ * @Date         : 2020-08-24 15:54:49
+ * @version      : v01.00
+ * @ **************************************************************
+ * @LastEditTime : 2020-09-01 16:10:39
+ * @LastEditors  : xiaowine
+ * @ **************************************************************
+ * @brief        :
+ * @Description  :
+ * @FilePath     : \T5L_C51_PRJ\GUI_APP\ui.c
+ * @ **************************************************************
+ * @attention    :
+ * @Powered By xiaowine
+ * @<h2><center>&copy;  Copyright(C) cee0.com 2020</center></h2>
+ * @All rights reserved
+ ******************************************************************/
 
 #include "ui.h"
 #include "timer.h"
@@ -23,6 +26,6 @@ void ui(void)
 {
     if (timer1msFlag)
     {
-        ReadDGUS(0x0014, (u8*)(&picNow), 2); 
+        ReadDGUS(0x0014, (u8*)(&picNow), 2);
     }
 }

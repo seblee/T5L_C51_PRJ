@@ -5,7 +5,7 @@
  * @Date         : 2020-08-27 17:35:14
  * @version      : v01.00
  * @ **************************************************************
- * @LastEditTime : 2020-08-29 19:02:45
+ * @LastEditTime : 2020-09-01 18:14:24
  * @LastEditors  : xiaowine
  * @ **************************************************************
  * @brief        :
@@ -34,40 +34,54 @@
 #define ALARMINFOFLAG 0x5aa5
 
 #define CURRENTALARMPAGE 14
-#define alarmVPStart 0x3500
+#define ALARMHISTORYAGE 15
+#define ALARMPAGEADDR 0x6EE0
+#define alarmStateVP 0x5000  // 8个
+#define alarmVPStart 0x3500  // 24*116
 // show alarm list description
-#define SHOWTIMESTART0 0x3600
-#define SHOWTIMESTART1 0x3610
-#define SHOWTIMESTART2 0x3620
-#define SHOWTIMESTART3 0x3630
-#define SHOWTIMESTART4 0x3640
-#define SHOWTIMESTART5 0x3650
-#define SHOWTIMESTART6 0x3660
-#define SHOWTIMESTART7 0x3670
-#define SHOWTIMESTART8 0x3680
-#define SHOWTIMESTART9 0x3690
+#define SHOWTIMESTART0 0x4000
+#define SHOWTIMESTART1 0x4010
+#define SHOWTIMESTART2 0x4020
+#define SHOWTIMESTART3 0x4030
+#define SHOWTIMESTART4 0x4040
+#define SHOWTIMESTART5 0x4050
+#define SHOWTIMESTART6 0x4060
+#define SHOWTIMESTART7 0x4070
+#define SHOWTIMESTART8 0x4080
+#define SHOWTIMESTART9 0x4090
 
-#define SHOWTIMEEND0 0x36a0
-#define SHOWTIMEEND1 0x36b0
-#define SHOWTIMEEND2 0x36c0
-#define SHOWTIMEEND3 0x36d0
-#define SHOWTIMEEND4 0x36e0
-#define SHOWTIMEEND5 0x36f0
-#define SHOWTIMEEND6 0x3700
-#define SHOWTIMEEND7 0x3710
-#define SHOWTIMEEND8 0x3720
-#define SHOWTIMEEND9 0x3730
+#define SHOWTIMEEND0 0x40a0
+#define SHOWTIMEEND1 0x40b0
+#define SHOWTIMEEND2 0x40c0
+#define SHOWTIMEEND3 0x40d0
+#define SHOWTIMEEND4 0x40e0
+#define SHOWTIMEEND5 0x40f0
+#define SHOWTIMEEND6 0x4100
+#define SHOWTIMEEND7 0x4110
+#define SHOWTIMEEND8 0x4120
+#define SHOWTIMEEND9 0x4130
 
-#define SHOWSTRING0 0x3740
-#define SHOWSTRING1 0x3750
-#define SHOWSTRING2 0x3760
-#define SHOWSTRING3 0x3770
-#define SHOWSTRING4 0x3780
-#define SHOWSTRING5 0x3790
-#define SHOWSTRING6 0x37a0
-#define SHOWSTRING7 0x37b0
-#define SHOWSTRING8 0x37c0
-#define SHOWSTRING9 0x37d0
+#define SHOWSTRING0 0x4140
+#define SHOWSTRING1 0x4150
+#define SHOWSTRING2 0x4160
+#define SHOWSTRING3 0x4170
+#define SHOWSTRING4 0x4180
+#define SHOWSTRING5 0x4190
+#define SHOWSTRING6 0x41a0
+#define SHOWSTRING7 0x41b0
+#define SHOWSTRING8 0x41c0
+#define SHOWSTRING9 0x41d0
+
+#define HISTORYSHOWVP0 0x41e0
+#define HISTORYSHOWVP1 0x41f8
+#define HISTORYSHOWVP2 0x4210
+#define HISTORYSHOWVP3 0x4228
+#define HISTORYSHOWVP4 0x4240
+#define HISTORYSHOWVP5 0x4258
+#define HISTORYSHOWVP6 0x4270
+#define HISTORYSHOWVP7 0x4288
+#define HISTORYSHOWVP8 0x42a0
+#define HISTORYSHOWVP9 0x42b8
 
 typedef struct alarmDataStruct
 {
@@ -86,6 +100,7 @@ typedef struct alarmDataStruct
     u8 end_s;
     u16 alarmCode;
 } alarmDataStrc_t;
+
 typedef struct alarmInfoStruct
 {
     u16 flag;
@@ -95,6 +110,9 @@ typedef struct alarmInfoStruct
 } alarmInfoStrc_t;
 
 void alarmInit(void);
+void alarmTask(void);
 void saveAlarmHistory(void);
+void setAlarmDisplay(u8 index, u16 vp, u8 page);
+void resetAlarmDisplay(u8 index);
 
 #endif

@@ -289,7 +289,7 @@ void rdtime(void)
 
     temp[0] = 0;
     temp[1] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
-    // WriteDGUS(0x7000, temp, 2);  //显示星期
+    WriteDGUS(0x7000, temp, 2);  //显示星期
 
     rtcdata[7] = 0;
 

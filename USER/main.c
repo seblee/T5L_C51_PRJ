@@ -5,7 +5,7 @@
  * @Date         : 2020-08-14 18:29:09
  * @version      : v01.00
  * @ **************************************************************
- * @LastEditTime : 2020-08-29 15:05:04
+ * @LastEditTime : 2020-08-31 18:04:40
  * @LastEditors  : xiaowine
  * @ **************************************************************
  * @brief        : 主函数，外设和参数初始化，主循环中主要功能函数入口。
@@ -59,6 +59,7 @@ void main(void)
         Modbus_Process_Task();  // Modbus串口处理流程
         ui();
         curveProcess();
+        alarmTask();
         if (timer1msFlag)
         {
             timer1msFlag   = 0;
