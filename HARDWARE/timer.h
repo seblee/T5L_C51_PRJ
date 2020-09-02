@@ -21,7 +21,7 @@
 #include "T5LOS8051.H"
 #include "sys.h"
 
-extern _TKS_FLAGA_type timerFlag;
+extern data _TKS_FLAGA_type timerFlag;
 #define timer1msFlag timerFlag.bits.b0
 #define timer100msFlag timerFlag.bits.b1
 

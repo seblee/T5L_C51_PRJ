@@ -5,7 +5,7 @@
  * @Date         : 2020-08-14 18:29:09
  * @version      : v01.00
  * @ **************************************************************
- * @LastEditTime : 2020-08-31 18:04:40
+ * @LastEditTime : 2020-09-02 17:28:55
  * @LastEditors  : xiaowine
  * @ **************************************************************
  * @brief        : 主函数，外设和参数初始化，主循环中主要功能函数入口。
@@ -36,6 +36,7 @@
 #include "string.h"
 #include "alarm.h"
 #include "ChineseCharacter.h"
+#include "control.h"
 /*****************************************************************************
 主函数*/
 void main(void)
@@ -55,11 +56,12 @@ void main(void)
             SysTick_RTC = 0;
             RTC_Set_CMD();
         }
-        // HandleProc();
+        HandleProc();
         Modbus_Process_Task();  // Modbus串口处理流程
         ui();
         curveProcess();
         alarmTask();
+        touchHandler();
         if (timer1msFlag)
         {
             timer1msFlag   = 0;

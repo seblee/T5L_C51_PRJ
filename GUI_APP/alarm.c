@@ -5,7 +5,7 @@
  * @Date         : 2020-08-27 17:35:07
  * @version      : v01.00
  * @ **************************************************************
- * @LastEditTime : 2020-09-01 18:27:46
+ * @LastEditTime : 2020-09-02 15:05:27
  * @LastEditors  : xiaowine
  * @ **************************************************************
  * @brief        :
@@ -135,13 +135,17 @@ void alarmInit(void)
         {
             continue;
         }
-        if (alarmInfo->flag == ALARMINFOFLAG)
+        else if (alarmInfo->flag == ALARMINFOFLAG)
         {
             memcpy(&alarmInfomation, alarmInfo, sizeof(alarmInfoStrc_t));
             break;
         }
-        break;
+        else
+        {
+            break;
+        }
     }
+
     for (i = 0; i < 10; i++)
     {
         u16 showTemp[16] = {0};
@@ -183,7 +187,7 @@ void alarmTask(void)
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
         cache[14] = 0;
         cache[15] &= 0x07;
-        if ((memcmp(cache, alarmState, sizeof(alarmState))) || (showPage != showPagebAK))
+        if ((memcmp(cache, alarmState, sizeof(alarmState))) || (showPage != showPagebAK) || (pageBak != picNow))
         {
             alarmDataStrc_t *alarmData;
             memcpy(alarmState, cache, sizeof(alarmState));
@@ -213,23 +217,6 @@ void alarmTask(void)
                         {
                             setAlarmDisplay((showIndex - (showPage * 10)), (alarmVPStart + alarmIndex * 24),
                                             CURRENTALARMPAGE);
-                            // u16 showTemp[16] = {0};
-                            // memcpy(showTemp, &showStartDesConst, sizeof(dgus_hex_t));
-                            // ((dgus_hex_t *)showTemp)->Y      = START_Ys + 27 * (showIndex - showPage * 10);
-                            // ((dgus_hex_t *)showTemp)->Lib_ID = 0;
-                            // ((dgus_hex_t *)showTemp)->VP     = alarmVPStart + alarmIndex * 24 + 1;
-                            // WriteDGUS(alarmShowDescriptionVP[showIndex - (showPage * 10)][0], (u8 *)showTemp,
-                            //           sizeof(showTemp));
-
-                            // memcpy(showTemp, &showEndDesConst, sizeof(dgus_hex_t));
-                            // ((dgus_hex_t *)showTemp)->Y      = END_Ys + 27 * (showIndex - showPage * 10);
-                            // ((dgus_hex_t *)showTemp)->Lib_ID = 1;
-                            // ((dgus_hex_t *)showTemp)->VP     = alarmVPStart + alarmIndex * 24 + 4;
-                            // WriteDGUS(alarmShowDescriptionVP[showIndex - (showPage * 10)][1], (u8 *)showTemp,
-                            //           sizeof(showTemp));
-
-                            // *((u16 *)&cache[0]) = alarmVPStart + alarmIndex * 24 + 8;
-                            // WriteDGUS(alarmShowDescriptionVP[showIndex - (showPage * 10)][2], (u8 *)&cache, 2);
                         }
                         showIndex++;
                     }
@@ -252,20 +239,6 @@ void alarmTask(void)
             for (i = showIndex; i < (showPage * 10 + 10); i++)
             {
                 resetAlarmDisplay(i - showPage * 10);
-                // u16 showTemp[16] = {0};
-                // memcpy(showTemp, &showStartDesConst, sizeof(dgus_hex_t));
-                // ((dgus_hex_t *)showTemp)->Y      = START_Ys + 27 * (i - showPage * 10);
-                // ((dgus_hex_t *)showTemp)->Lib_ID = 1;
-                // WriteDGUS(alarmShowDescriptionVP[i - showPage * 10][0], (u8 *)showTemp, sizeof(showTemp));
-                // memcpy(showTemp, &showEndDesConst, sizeof(dgus_hex_t));
-                // ((dgus_hex_t *)showTemp)->Y      = END_Ys + 27 * (i - showPage * 10);
-                // ((dgus_hex_t *)showTemp)->Lib_ID = 1;
-                // WriteDGUS(alarmShowDescriptionVP[i - showPage * 10][1], (u8 *)showTemp, sizeof(showTemp));
-                // memcpy(showTemp, &showStringDesConst, sizeof(dgus_string_t));
-                // ((dgus_string_t *)showTemp)->Y  = STRING_Ys + 27 * (i - showPage * 10);
-                // ((dgus_string_t *)showTemp)->Ys = STRING_Ys + 27 * (i - showPage * 10);
-                // ((dgus_string_t *)showTemp)->Ye = STRING_Ye + 27 * (i - showPage * 10);
-                // WriteDGUS(alarmShowDescriptionVP[i - showPage * 10][2], (u8 *)showTemp, sizeof(showTemp));
             }
             showPagebAK = showPage;
         }
@@ -294,7 +267,7 @@ void alarmTask(void)
             {
                 break;
             }
-            if (alarmInfomation.head_ptr > (10 * showPage + showIndex + 1))
+            if (alarmInfomation.head_ptr > (10 * showPage + showIndex))
             {
                 addressTemp = alarmInfomation.head_ptr - (10 * showPage + showIndex + 1);
             }
@@ -310,36 +283,46 @@ void alarmTask(void)
 
             setAlarmDisplay(showIndex, historyShowVP[showIndex], ALARMHISTORYAGE);
         }
+
+        for (showIndex; showIndex < 10; showIndex++)
+        {
+            resetAlarmDisplay(showIndex);
+        }
     }
 alarmTaskExit:
     pageBak = picNow;
 }
 
-void alarmHandler(void)
+void alarmClearHandler(void)
 {
+    memset(&alarmInfomation, 0, sizeof(alarmInfoStrc_t));
+
+    WriteDGUS(alarmTemp, (u8 *)&alarmInfomation, sizeof(alarmInfoStrc_t));  // write memory
+    T5L_Flash(WRITERFLASH, alarmTemp, ALARM_FLASH_START + alarmInfomation.head_ptr * 8, 4);
 }
 void saveAlarmHistory(void)
 {
     T5L_Flash(WRITERFLASH, alarmTemp, ALARM_FLASH_START + alarmInfomation.head_ptr * 8, 8);
-    if (alarmInfomation.head_ptr > ALARM_LEN)
-        alarmInfomation.head_ptr = 0;
-    else
+    alarmInfomation.head_ptr++;
+    if (alarmInfomation.head_ptr >= ALARM_LEN)
     {
-        alarmInfomation.head_ptr++;
+        alarmInfomation.head_ptr = 0;
     }
     if (alarmInfomation.length >= ALARM_LEN)
     {
-        if (alarmInfomation.tail_ptr > ALARM_LEN)
-            alarmInfomation.tail_ptr = 0;
-        else
+        alarmInfomation.length = ALARM_LEN;
+        alarmInfomation.tail_ptr++;
+        if (alarmInfomation.tail_ptr >= ALARM_LEN)
         {
-            alarmInfomation.tail_ptr++;
+            alarmInfomation.tail_ptr = 0;
         }
     }
     else
     {
         alarmInfomation.length++;
     }
+    alarmInfomation.flag = ALARMINFOFLAG;
+
     WriteDGUS(alarmTemp, (u8 *)&alarmInfomation, sizeof(alarmInfoStrc_t));  // write memory
     T5L_Flash(WRITERFLASH, alarmTemp, ALARM_FLASH_START + alarmInfomation.head_ptr * 8, 4);
 }

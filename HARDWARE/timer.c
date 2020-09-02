@@ -26,7 +26,7 @@ u16 data SysTick_RTC   = 0;
 u32 data SysTick       = 0;
 //计算key延时
 uint16_t Key2_Count       = 0;
-_TKS_FLAGA_type timerFlag = {0};
+data _TKS_FLAGA_type timerFlag = {0};
 /*****************************************************************************
 定时器0*/
 void T0_Init(void)

@@ -466,6 +466,11 @@
               <FileType>1</FileType>
               <FilePath>..\FUNC_HANDLER\modbus.c</FilePath>
             </File>
+            <File>
+              <FileName>control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FUNC_HANDLER\control.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

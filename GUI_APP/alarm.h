@@ -5,7 +5,7 @@
  * @Date         : 2020-08-27 17:35:14
  * @version      : v01.00
  * @ **************************************************************
- * @LastEditTime : 2020-09-01 18:14:24
+ * @LastEditTime : 2020-09-02 17:30:29
  * @LastEditors  : xiaowine
  * @ **************************************************************
  * @brief        :
@@ -114,5 +114,6 @@ void alarmTask(void);
 void saveAlarmHistory(void);
 void setAlarmDisplay(u8 index, u16 vp, u8 page);
 void resetAlarmDisplay(u8 index);
+void alarmClearHandler(void);
 
 #endif
