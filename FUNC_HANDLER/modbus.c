@@ -34,25 +34,65 @@ extern u32 data SysTick;        //每隔1ms+1
 u32 uart_rx_check_tick    = 0;  //检查串口是否接收结束
 u8 modbus_rx_count_before = 0;  //接收串口的数据
 
-u8 read_status_interval_times = 0;  //控制读取状态03H的间隔时间
-u32 modbus_tx_process_tick    = 0;  // modbus发送命令的时间间隔
+u32 modbus_tx_process_tick = 0;  // modbus发送命令的时间间隔
 
 const modbosCmd_t modbusCmdlib[CMD_NUMBER] = {
     // en         id         fun           len  timeout mod    modP     VP  slaveAddr feedback
-    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x04, 0xc8, 0x01, 0x000e, 0x5000, 0x0300, 0x00ff},   // 00
-    {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x02, 0x8001, 0x8000, 0x0304, 0x00ff},  // 01
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 02
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 03
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 04
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 05
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 06
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 07
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 08
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 09
-    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 10
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x04, 0xc8, 0x01, 0x000e, 0x5000, 0x0300, 0x00ff},  // 00
+    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x000a, 0xaa00, 0x0326, 0x00ff},   // 01
+    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x08, 0xc8, 0x01, 0x000a, 0xaa02, 0x0341, 0x00ff},   // 02
+    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x01, 0xc8, 0x01, 0x000a, 0xaa0a, 0x036f, 0x00ff},   // 03
+    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x01, 0xc8, 0x01, 0x000a, 0xaa0b, 0x0377, 0x00ff},   // 04
+    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x07, 0xc8, 0x03, 0xb300, 0xb320, 0x011a, 0x0013},   // 05
+    {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x03, 0xb380, 0xb320, 0x011a, 0x0013},  // 06
+    {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x03, 0xb382, 0xb322, 0x011c, 0x0013},  // 07
+    {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x03, 0xb383, 0xb323, 0x011d, 0x0013},  // 08
+    {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x03, 0xb384, 0xb324, 0x011e, 0x0013},  // 09
+    {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x03, 0xb385, 0xb325, 0x011f, 0x0013},  // 10
+    {MODBUS_EN, SLAVE_ID, MODBUS_WRITE_06H, 0x01, 0xc8, 0x03, 0xb386, 0xb326, 0x0120, 0x0013},  // 11
+    {MODBUS_EN, SLAVE_ID, MODBUS_READ_03H, 0x0b, 0xc8, 0x03, 0xb400, 0xb420, 0x0158, 0x0014},   // 12
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 13
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 14
+    {MODBUS_DIS, SLAVE_ID, MODBUS_READ_03H, 0x02, 0xc8, 0x01, 0x0000, 0x5000, 0x0300, 0x00ff},  // 15
 };
 modbosCmd_t modbusCmdNow = {0};
 u8 CmdIndex              = 0;
+
+const dataCheckCmd_t dataCheckLib[CHECK_NUMBER] = {
+    // en      page  data    back   flag
+    {MODBUS_EN, 19, 0xb320, 0xb350, 0xb380},   //
+    {MODBUS_EN, 19, 0xb322, 0xb352, 0xb382},   //
+    {MODBUS_EN, 19, 0xb323, 0xb353, 0xb383},   //
+    {MODBUS_EN, 19, 0xb324, 0xb354, 0xb384},   //
+    {MODBUS_EN, 19, 0xb325, 0xb355, 0xb385},   //
+    {MODBUS_EN, 19, 0xb326, 0xb356, 0xb386},   //
+    {MODBUS_EN, 20, 0xb420, 0xb450, 0xb480},   //
+    {MODBUS_EN, 20, 0xb421, 0xb451, 0xb481},   //
+    {MODBUS_EN, 20, 0xb423, 0xb453, 0xb483},   //
+    {MODBUS_EN, 20, 0xb424, 0xb454, 0xb484},   //
+    {MODBUS_EN, 20, 0xb425, 0xb455, 0xb485},   //
+    {MODBUS_EN, 20, 0xb426, 0xb456, 0xb486},   //
+    {MODBUS_EN, 20, 0xb427, 0xb457, 0xb487},   //
+    {MODBUS_EN, 20, 0xb428, 0xb458, 0xb488},   //
+    {MODBUS_EN, 20, 0xb42a, 0xb45a, 0xb48a},   //
+    {MODBUS_EN, 23, 0xb720, 0xb750, 0xb780},   //
+    {MODBUS_EN, 23, 0xb724, 0xb754, 0xb784},   //
+    {MODBUS_EN, 23, 0xb725, 0xb755, 0xb785},   //
+    {MODBUS_EN, 23, 0xb726, 0xb756, 0xb786},   //
+    {MODBUS_EN, 23, 0xb727, 0xb757, 0xb787},   //
+    {MODBUS_EN, 23, 0xb728, 0xb758, 0xb788},   //
+    {MODBUS_EN, 23, 0xb729, 0xb759, 0xb789},   //
+    {MODBUS_EN, 23, 0xb72a, 0xb75a, 0xb78a},   //
+    {MODBUS_EN, 24, 0xb820, 0xb850, 0xb880},   //
+    {MODBUS_EN, 24, 0xb821, 0xb851, 0xb881},   //
+    {MODBUS_EN, 24, 0xb822, 0xb852, 0xb882},   //
+    {MODBUS_EN, 24, 0xb823, 0xb853, 0xb883},   //
+    {MODBUS_EN, 24, 0xb824, 0xb854, 0xb884},   //
+    {MODBUS_EN, 24, 0xb825, 0xb855, 0xb885},   //
+    {MODBUS_EN, 24, 0xb826, 0xb856, 0xb886},   //
+    {MODBUS_EN, 24, 0xb827, 0xb857, 0xb887},   //
+    {MODBUS_DIS, 23, 0xb72a, 0xb75a, 0xb78a},  //
+};
 
 _TKS_FLAGA_type modbusFlag = {0};
 /******************************************************************************
@@ -180,33 +220,31 @@ void Modbus_Process_Task(void)
         return;
     }
 processCMDLib:
+    if (CmdIndex == 0)
+        checkChange();
     modbus_tx_process_tick = SysTick;
-    read_status_interval_times++;
-    cmdRxFlag = 0;
-    cmdTxFlag = 0;
-    if ((read_status_interval_times % 2) == 0)  //一秒钟执行一次，
+    cmdRxFlag              = 0;
+    cmdTxFlag              = 0;
+    getCmd(&CmdIndex);
+    if (CmdIndex < CMD_NUMBER)
     {
-        getCmd(&CmdIndex);
-        if (CmdIndex < CMD_NUMBER)
+        memcpy(&modbusCmdNow, &modbusCmdlib[CmdIndex], sizeof(modbosCmd_t));
+        if (modbusCmdNow.funCode == MODBUS_READ_03H)
         {
-            memcpy(&modbusCmdNow, &modbusCmdlib[CmdIndex], sizeof(modbosCmd_t));
-            if (modbusCmdNow.funCode == MODBUS_READ_03H)
-            {
-                Modbus_Read_Register(&modbusCmdNow);
-                cmdTxFlag = 1;
-            }
-            else if (modbusCmdNow.funCode == MODBUS_WRITE_06H)
-            {
-                u16 value;
-                ReadDGUS(modbusCmdNow.VPAddr, (u8 *)(&value), 2);
-                Modbus_Write_Register06H(&modbusCmdNow, value);
-                cmdTxFlag = 1;
-            }
+            Modbus_Read_Register(&modbusCmdNow);
+            cmdTxFlag = 1;
         }
-        else
+        else if (modbusCmdNow.funCode == MODBUS_WRITE_06H)
         {
-            CmdIndex = 0;
+            u16 value;
+            ReadDGUS(modbusCmdNow.VPAddr, (u8 *)(&value), 2);
+            Modbus_Write_Register06H(&modbusCmdNow, value);
+            cmdTxFlag = 1;
         }
+    }
+    else
+    {
+        CmdIndex = 0;
     }
 }
 // modbus 03H 读取寄存器
@@ -281,10 +319,6 @@ void Modbus_UART_Init(void)
     //	Modbus_TX_Reset();
     Modbus_RX_Reset();
     modbus_tx_process_tick = 0;  //初始化 0
-    // process_flag.run_set   = 0;  //初始化0
-    // process_flag.speed_set = 0;  //初始化0
-    // process_flag.temp_set  = 0;  //初始化0
-    // process_flag.hot_set   = 0;  //初始化0
 }
 
 void getCmd(u8 *index)
@@ -302,7 +336,7 @@ void getCmd(u8 *index)
         }
         else if (modbusCmdlib[i].mode == 1)
         {
-            if (picNow == modbusCmdlib[i].moddPara)
+            if (picNow == modbusCmdlib[i].modePara)
             {
                 goto getCmdExit;
             }
@@ -311,11 +345,41 @@ void getCmd(u8 *index)
         else if (modbusCmdlib[i].mode == 2)
         {
             u16 paraTemp;
-            ReadDGUS(modbusCmdlib[i].moddPara, (u8 *)(&paraTemp), 2);
+            ReadDGUS(modbusCmdlib[i].modePara, (u8 *)(&paraTemp), 2);
             if ((paraTemp & 0xff) == 0x5a)
             {
+                if (i < CMD_NUMBER - 1)
+                {
+                    if ((modbusCmdlib[i + 1].mode == 2) && (modbusCmdlib[i].modePara == modbusCmdlib[i + 1].modePara))
+                    {
+                        goto getCmdExit;
+                    }
+                }
                 paraTemp = 0;
-                WriteDGUS(modbusCmdlib[i].moddPara, (u8 *)(&paraTemp), 2);
+                WriteDGUS(modbusCmdlib[i].modePara, (u8 *)(&paraTemp), 2);
+                goto getCmdExit;
+            }
+            continue;
+        }
+        else if (modbusCmdlib[i].mode == 3)
+        {
+            u16 paraTemp;
+            if (modbusCmdlib[i].feedback != picNow)
+            {
+                continue;
+            }
+            ReadDGUS(modbusCmdlib[i].modePara, (u8 *)(&paraTemp), 2);
+            if ((paraTemp & 0xff) == 0x5a)
+            {
+                if (i < CMD_NUMBER - 1)
+                {
+                    if ((modbusCmdlib[i + 1].mode == 3) && (modbusCmdlib[i].modePara == modbusCmdlib[i + 1].modePara))
+                    {
+                        goto getCmdExit;
+                    }
+                }
+                paraTemp = 0;
+                WriteDGUS(modbusCmdlib[i].modePara, (u8 *)(&paraTemp), 2);
                 goto getCmdExit;
             }
             continue;
@@ -323,4 +387,23 @@ void getCmd(u8 *index)
     }
 getCmdExit:
     *index = i;
+}
+
+void checkChange(void)
+{
+    u16 cache[20] = {0};
+    u16 i;
+    for (i = 0; i < CHECK_NUMBER; i++)
+    {
+        if (dataCheckLib[i].page != picNow)
+            continue;
+        ReadDGUS(dataCheckLib[i].dataAddr, (u8 *)&cache[0], 2);
+        ReadDGUS(dataCheckLib[i].backAddr, (u8 *)&cache[1], 2);
+        if (cache[0] != cache[1])
+        {
+            WriteDGUS(dataCheckLib[i].backAddr, (u8 *)&cache[0], 2);
+            cache[2] = 0x5a;
+            WriteDGUS(dataCheckLib[i].flagAddr, (u8 *)&cache[2], 2);
+        }
+    }
 }
