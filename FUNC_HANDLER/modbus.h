@@ -5,7 +5,7 @@
  * @Date         : 2020-08-20 16:46:36
  * @version      : v01.00
  * @ **************************************************************
- * @LastEditTime : 2020-09-04 17:27:49
+ * @LastEditTime : 2020-09-07 11:04:19
  * @LastEditors  : xiaowine
  * @ **************************************************************
  * @brief        :
@@ -37,8 +37,8 @@
 #define MODBUS_DIS 0X00
 #define MODBUS_READ_03H 0x03   //读寄存器地址命令
 #define MODBUS_WRITE_06H 0x06  //写寄存器地址命令
-#define CMD_NUMBER 18
-#define CHECK_NUMBER 50
+#define CMD_NUMBER (sizeof(modbusCmdlib)/sizeof(modbosCmd_t))
+#define CHECK_NUMBER (sizeof(dataCheckLib)/sizeof(dataCheckCmd_t))
 
 typedef struct modbosCmd
 {

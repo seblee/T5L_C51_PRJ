@@ -165,7 +165,12 @@ void UART3_ISR_PC(void) interrupt 16
         Uart3_Rx[uart3_rx_count] = res;
         uart3_rx_count++;
         SCON1 &= 0xFE;
-        SCON1 &= 0xFE;
+        SCON1 &= 0xFE;       
+        if (uart3_rx_count >= UART3_MAX_LEN)
+        {
+            //防止溢出
+            uart3_rx_count = 0;
+        }
     }
     if (SCON1 & 0x02)
     {
