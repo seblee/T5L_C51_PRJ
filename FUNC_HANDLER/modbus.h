@@ -37,8 +37,8 @@
 #define MODBUS_DIS 0X00
 #define MODBUS_READ_03H 0x03   //读寄存器地址命令
 #define MODBUS_WRITE_06H 0x06  //写寄存器地址命令
-#define CMD_NUMBER (sizeof(modbusCmdlib)/sizeof(modbosCmd_t))
-#define CHECK_NUMBER (sizeof(dataCheckLib)/sizeof(dataCheckCmd_t))
+#define CMD_NUMBER (sizeof(modbusCmdlib) / sizeof(modbosCmd_t))
+#define CHECK_NUMBER (sizeof(dataCheckLib) / sizeof(dataCheckCmd_t))
 
 typedef struct modbosCmd
 {
@@ -74,5 +74,6 @@ void Modbus_UART_Init(void);
 void Modbus_Process_Task(void);
 void getCmd(u8 *index);
 void checkChange(void);
+void forcedOutput(void);
 
 #endif

@@ -22,6 +22,7 @@
 #include "dgus.h"
 #include "alarm.h"
 #include "timer.h"
+#include "modbus.h"
 
 void touchHandler(void)
 {
@@ -35,6 +36,9 @@ void touchHandler(void)
         {
             case ALARM_CLEAR_EVENT:
                 alarmClearHandler();
+                break;
+            case OUTPUT_EVENT:
+                forcedOutput();
                 break;
             default:
                 break;

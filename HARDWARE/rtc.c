@@ -11,9 +11,6 @@ uint8_t RTC_temp[7] = {0};
 //时间校准
 uint8_t time_calibra[8]           = {0};
 uint8_t prtc_set1[8]              = {0};
-uint16_t xdata year_real          = 0;
-uint8_t xdata yearH               = 0;
-uint8_t xdata yearL               = 0;
 const uint8_t code table_week[12] = {0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};  //月修正数据表
 
 void SDA_IN(void)
@@ -310,24 +307,24 @@ void rdtime(void)
 */
 uint8_t RTC_Get_Week(uint8_t year, uint8_t month, uint8_t day)
 {
-    u16 temp;
+    u16 y, c, m, d, w;
+    uint16_t year_real = 0;
+
     year_real = (u16)year + 2000;
-    yearH     = year_real / 100;
-    yearL     = year_real % 100;
-    // 如果为21世纪,年份数加100
-    if (yearH > 19)
-        yearL += 100;
-    // 所过闰年数只算1900年之后的
-    temp = yearL + yearL / 4;
-    temp = temp % 7;
-    temp = temp + day + table_week[month - 1];
-    if (yearL % 4 == 0 && month < 3)
-        temp--;
-    temp %= 7;
-    if (temp == 0)
-        return 6;
-    else
-        return temp - 1;
+    y         = year_real % 100;  //年　如2015 即年是15年
+    c         = year_real / 100;  // 年份前两位　如2015即20
+    m         = month;
+    d         = day;
+    if (m == 1 || m == 2)
+    {  //判断月份是否为1或2
+        y--;
+        m += 12;  //某年的1、2月要看作上一年的13、14月来计算
+    }
+    w = y + y / 4 + c / 4 - 2 * c + 13 * (m + 1) / 5 + d - 1;  //蔡勒公式的公式
+    while (w < 0)
+        w += 7;  //确保余数为正
+    w %= 7;
+    return w;
 }
 
 void RTC_Set_CMD(void)

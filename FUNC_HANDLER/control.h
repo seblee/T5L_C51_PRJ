@@ -24,6 +24,7 @@
 #define TOUCH_EVENT_FLAG 0x5014
 
 #define ALARM_CLEAR_EVENT 0X6d00
+#define OUTPUT_EVENT 0Xc700
 
 void touchHandler(void);
 
