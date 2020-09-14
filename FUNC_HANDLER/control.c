@@ -40,10 +40,36 @@ void touchHandler(void)
             case OUTPUT_EVENT:
                 forcedOutput();
                 break;
+            case RESET_EVENT:
+                resetEventHandl();
+                break;
+            case CLEAR_RUNTIME_EVENT_1:
+            case CLEAR_RUNTIME_EVENT_6:
+            case CLEAR_RUNTIME_EVENT_c:
+            case CLEAR_RUNTIME_EVENT_d:
+            case CLEAR_RUNTIME_EVENT_10:
+                clearRunTimeHandle(touchEventFlag);
+                break;
             default:
                 break;
         }
         touchEventFlag = 0;
         WriteDGUS(TOUCH_EVENT_FLAG, (u8*)&touchEventFlag, 2);
     }
+}
+
+void resetEventHandl(void)
+{
+    u16 cache;
+    cache = 0x005a;
+    WriteDGUS(0xc520, (u8*)&cache, 2);
+    WriteDGUS(0xc580, (u8*)&cache, 2);
+}
+
+void clearRunTimeHandle(u16 eventId)
+{
+    u16 cache = eventId & 0xff;
+    WriteDGUS(0xc930, (u8*)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xc990, (u8*)&cache, 2);
 }

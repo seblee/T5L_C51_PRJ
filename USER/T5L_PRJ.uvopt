@@ -48,9 +48,9 @@
         <ListingPath>..\OBJ\</ListingPath>
       </OPTLEX>
       <ListingPage>
-        <CreateCListing>1</CreateCListing>
-        <CreateAListing>1</CreateAListing>
-        <CreateLListing>1</CreateLListing>
+        <CreateCListing>0</CreateCListing>
+        <CreateAListing>0</CreateAListing>
+        <CreateLListing>0</CreateLListing>
         <CreateIListing>0</CreateIListing>
         <AsmCond>1</AsmCond>
         <AsmSymb>1</AsmSymb>

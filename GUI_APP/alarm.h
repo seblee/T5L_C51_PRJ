@@ -33,8 +33,8 @@
 #define ALARMDATALAG 0xa55a
 #define ALARMINFOFLAG 0x5aa5
 
-#define CURRENTALARMPAGE 14
-#define ALARMHISTORYAGE 15
+#define CURRENTALARMPAGE 13
+#define ALARMHISTORYAGE 14
 #define ALARMPAGEADDR 0x6EE0
 #define alarmStateVP 0x5000  // 8个
 #define alarmVPStart 0x3500  // 24*116

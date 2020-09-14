@@ -242,8 +242,7 @@ void RTC_Set_Time(u8* prtc_set)
 void rdtime(void)
 {
     unsigned char rtcdata[8];
-    unsigned char temp[2];
-    unsigned char i, n, m;  //, k;
+     unsigned char i, n, m;  //, k;
     i2cstart();
     i2cbw(0x64);
     i2cbw(0x10);
@@ -284,11 +283,7 @@ void rdtime(void)
     //	}
     //	rtcdata[3]=n;
 
-    temp[0] = 0;
-    temp[1] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
-    WriteDGUS(0x7000, temp, 2);  //显示星期
-
-    rtcdata[7] = 0;
+    rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
 
     WriteDGUS(0x0010, (u8*)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
 }

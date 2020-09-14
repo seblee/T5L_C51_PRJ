@@ -24,8 +24,16 @@
 #define TOUCH_EVENT_FLAG 0x5014
 
 #define ALARM_CLEAR_EVENT 0X6d00
+#define RESET_EVENT 0Xc500
 #define OUTPUT_EVENT 0Xc700
+#define CLEAR_RUNTIME_EVENT_1 0Xc901
+#define CLEAR_RUNTIME_EVENT_6 0Xc906
+#define CLEAR_RUNTIME_EVENT_c 0Xc90c
+#define CLEAR_RUNTIME_EVENT_d 0Xc90d
+#define CLEAR_RUNTIME_EVENT_10 0Xc910
 
 void touchHandler(void);
 
+void resetEventHandl(void);
+void clearRunTimeHandle(u16 eventId);
 #endif

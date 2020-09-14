@@ -296,7 +296,6 @@ alarmTaskExit:
 void alarmClearHandler(void)
 {
     memset(&alarmInfomation, 0, sizeof(alarmInfoStrc_t));
-
     WriteDGUS(alarmTemp, (u8 *)&alarmInfomation, sizeof(alarmInfoStrc_t));  // write memory
     T5L_Flash(WRITERFLASH, alarmTemp, ALARM_FLASH_START + alarmInfomation.head_ptr * 8, 4);
 }

@@ -25,7 +25,7 @@ unsigned long ctr2_inc = 0;
 u16 data SysTick_RTC   = 0;
 u32 data SysTick       = 0;
 //计算key延时
-uint16_t Key2_Count       = 0;
+uint16_t Key2_Count            = 0;
 data _TKS_FLAGA_type timerFlag = {0};
 /*****************************************************************************
 定时器0*/
@@ -63,6 +63,8 @@ void T0_ISR_PC(void) interrupt 1
     SysTick++;
     if (SysTick % 100 == 0)
         timer100msFlag = 1;
+    if (SysTick % 500 == 0)
+        timer500msFlag = 1;
     timer1msFlag = 1;
     EA           = 1;
 }
