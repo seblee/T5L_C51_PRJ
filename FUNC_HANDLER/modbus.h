@@ -74,6 +74,6 @@ void Modbus_UART_Init(void);
 void Modbus_Process_Task(void);
 void getCmd(u8 *index);
 void checkChange(void);
-void forcedOutput(void);
+void forcedOutputHnadle(void);
 
 #endif

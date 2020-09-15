@@ -24,6 +24,7 @@
 #define TOUCH_EVENT_FLAG 0x5014
 
 #define ALARM_CLEAR_EVENT 0X6d00
+#define POWER_SWITCH_EVENT 0Xa000
 #define RESET_EVENT 0Xc500
 #define OUTPUT_EVENT 0Xc700
 #define CLEAR_RUNTIME_EVENT_1 0Xc901
@@ -34,6 +35,7 @@
 
 void touchHandler(void);
 
-void resetEventHandl(void);
+void resetEventHandle(void);
 void clearRunTimeHandle(u16 eventId);
+void powerSwitchEventHandle(void);
 #endif

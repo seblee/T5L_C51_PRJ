@@ -293,7 +293,7 @@ alarmTaskExit:
     pageBak = picNow;
 }
 
-void alarmClearHandler(void)
+void alarmClearHandle(void)
 {
     memset(&alarmInfomation, 0, sizeof(alarmInfoStrc_t));
     WriteDGUS(alarmTemp, (u8 *)&alarmInfomation, sizeof(alarmInfoStrc_t));  // write memory

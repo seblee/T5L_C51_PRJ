@@ -35,13 +35,13 @@ void touchHandler(void)
         switch (touchEventFlag)
         {
             case ALARM_CLEAR_EVENT:
-                alarmClearHandler();
+                alarmClearHandle();
                 break;
             case OUTPUT_EVENT:
-                forcedOutput();
+                forcedOutputHnadle();
                 break;
             case RESET_EVENT:
-                resetEventHandl();
+                resetEventHandle();
                 break;
             case CLEAR_RUNTIME_EVENT_1:
             case CLEAR_RUNTIME_EVENT_6:
@@ -49,6 +49,9 @@ void touchHandler(void)
             case CLEAR_RUNTIME_EVENT_d:
             case CLEAR_RUNTIME_EVENT_10:
                 clearRunTimeHandle(touchEventFlag);
+                break;
+            case POWER_SWITCH_EVENT:
+                powerSwitchEventHandle();
                 break;
             default:
                 break;
@@ -58,7 +61,7 @@ void touchHandler(void)
     }
 }
 
-void resetEventHandl(void)
+void resetEventHandle(void)
 {
     u16 cache;
     cache = 0x005a;
@@ -72,4 +75,20 @@ void clearRunTimeHandle(u16 eventId)
     WriteDGUS(0xc930, (u8*)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xc990, (u8*)&cache, 2);
+}
+void powerSwitchEventHandle(void)
+{
+    u16 cache;
+    ReadDGUS(0xa023, (u8*)&cache, 2);
+    if (cache & 1)
+    {
+        cache = 0;
+    }
+    else
+    {
+        cache = 1;
+    }
+    WriteDGUS(0xa024, (u8*)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xa084, (u8*)&cache, 2);
 }
