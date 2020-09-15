@@ -91,6 +91,11 @@ sbit P2_1 = P2 ^ 1;
 sbit KEY1_Vin_F = P2 ^ 2;
 
 #define SOFTWARE_VER 0x0101
+
+extern data _TKS_FLAGA_type MSFlag;
+#define MS1msFlag MSFlag.bits.b0
+#define MS100msFlag MSFlag.bits.b1
+#define MS500msFlag MSFlag.bits.b2
 /*****************************************************************************
 对外函数声明*/
 void InitSys(void); /* 寄存器配置初始化 */

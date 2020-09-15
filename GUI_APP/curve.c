@@ -74,7 +74,7 @@ checkout:
 void curveProcess(void)
 {
     static u16 TimerCount = 0;
-    if (timer100msFlag)
+    if (MS100msFlag)
     {
         TimerCount++;
         dragCuave();
@@ -85,6 +85,7 @@ void curveProcess(void)
         TimerCount = 0;
         temp[0]    = curvePoint + Curve0Start;
         ReadDGUS(Curve0Data, (u8*)&temp[1], 2);
+        temp[1] += 200;  //负数显示
         WriteDGUS(temp[0], (u8*)&temp[1], 2);
 
         temp[0] = curvePoint + Curve1Start;

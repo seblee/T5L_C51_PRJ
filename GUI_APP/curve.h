@@ -41,8 +41,8 @@
 
 // #define Curve0Addr 0x5004  // 1个
 // #define Curve1Addr 0x5005  // 1个
-#define Curve0Data 0xaa23  // 1个
-#define Curve1Data 0xaa24  // 1个
+#define Curve0Data 0xa0a3  // 1个
+#define Curve1Data 0xa0a4  // 1个
 
 #define CurveMAX 0x07FE
 #define Curveffset 0x1000

@@ -48,6 +48,18 @@ void main(void)
     alarmInit();
     while (1)
     {
+        if (timer1msFlag)
+        {
+            MS1msFlag = 1;
+            if (timer100msFlag)
+                MS100msFlag = 1;
+            if (timer500msFlag)
+                MS500msFlag = 1;
+
+            timer1msFlag   = 0;
+            timer100msFlag = 0;
+            timer500msFlag = 0;
+        }
         WDT_RST();               //喂狗
         if (SysTick_RTC >= 500)  //原来是500，调试改为50
         {
@@ -62,11 +74,11 @@ void main(void)
         curveProcess();
         alarmTask();
         touchHandler();
-        if (timer1msFlag)
+        if (MS1msFlag)
         {
-            timer1msFlag   = 0;
-            timer100msFlag = 0;
-            timer500msFlag = 0;
+            MS1msFlag   = 0;
+            MS100msFlag = 0;
+            MS500msFlag = 0;
         }
     }
 }

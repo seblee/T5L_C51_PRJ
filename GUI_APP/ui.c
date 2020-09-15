@@ -24,11 +24,11 @@ u16 picNow = 0;
 
 void ui(void)
 {
-    if (timer1msFlag)
+    if (MS1msFlag)
     {
         ReadDGUS(0x0014, (u8*)(&picNow), 2);
     }
-    if (timer500msFlag)
+    if (MS500msFlag)
     {
         switch (picNow)
         {

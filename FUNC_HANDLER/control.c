@@ -27,7 +27,7 @@
 void touchHandler(void)
 {
     u16 touchEventFlag = 0;
-    if (!timer1msFlag)
+    if (!MS1msFlag)
         return;
     ReadDGUS(TOUCH_EVENT_FLAG, (u8*)&touchEventFlag, 2);
     if (touchEventFlag)

@@ -114,6 +114,9 @@ static u16 pageBak     = 0;
 static u16 showPage    = 0;
 static u16 showPagebAK = 0;
 u8 showIndex           = 0;
+
+const u16 alarmBeep = 0x0005;
+
 /*******************************************************************
  * @description:
  * @param {type}
@@ -168,10 +171,16 @@ void alarmTask(void)
 {
     u8 cache[50];
     u8 i, j;
-    if (timer100msFlag != 1)
+    if (MS500msFlag != 1)
     {
         return;
     }
+    ReadDGUS(0xa021, (u8 *)&cache, 4);  // GET PAGENOW
+    if ((*((u16 *)&cache[0]) > 0) || (*((u16 *)&cache[2]) > 0))
+    {
+        WriteDGUS(WAE_PALY_ADDR, (u8 *)&alarmBeep, 2);  // GET PAGENOW
+    }
+
     if (picNow == CURRENTALARMPAGE)
     {
         if (pageBak != picNow)

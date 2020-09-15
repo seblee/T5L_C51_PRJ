@@ -83,6 +83,8 @@
 #define HISTORYSHOWVP8 0x42a0
 #define HISTORYSHOWVP9 0x42b8
 
+#define WAE_PALY_ADDR 0x00A0
+
 typedef struct alarmDataStruct
 {
     u16 flag;
