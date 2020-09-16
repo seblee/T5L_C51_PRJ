@@ -114,6 +114,7 @@ static u16 pageBak     = 0;
 static u16 showPage    = 0;
 static u16 showPagebAK = 0;
 u8 showIndex           = 0;
+static u8 alarmCount   = 0;
 
 const u16 alarmBeep = 0x0005;
 
@@ -175,10 +176,21 @@ void alarmTask(void)
     {
         return;
     }
-    ReadDGUS(0xa021, (u8 *)&cache, 4);  // GET PAGENOW
+    ReadDGUS(0xa021, (u8 *)&cache, 12);  // GET PAGENOW
     if ((*((u16 *)&cache[0]) > 0) || (*((u16 *)&cache[2]) > 0))
     {
-        WriteDGUS(WAE_PALY_ADDR, (u8 *)&alarmBeep, 2);  // GET PAGENOW
+        if (alarmCount != (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
+        {
+            if (alarmCount < (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
+            {
+                *((u16 *)&cache[10]) = 1;
+                WriteDGUS(ALARM_BEEP_FLAG, (u8 *)&cache[10], 2);
+            }
+            alarmCount = *((u16 *)&cache[0]) + *((u16 *)&cache[2]);
+        }
+
+        if (*((u16 *)&cache[10]))
+            WriteDGUS(WAE_PALY_ADDR, (u8 *)&alarmBeep, 2);  // GET PAGENOW
     }
 
     if (picNow == CURRENTALARMPAGE)
@@ -308,6 +320,12 @@ void alarmClearHandle(void)
     WriteDGUS(alarmTemp, (u8 *)&alarmInfomation, sizeof(alarmInfoStrc_t));  // write memory
     T5L_Flash(WRITERFLASH, alarmTemp, ALARM_FLASH_START + alarmInfomation.head_ptr * 8, 4);
 }
+void curAlarmClearHandle(void)
+{
+    u16 cache = 0x005a;
+    WriteDGUS(0xac20, (u8 *)&cache, 2);
+    WriteDGUS(0xac80, (u8 *)&cache, 2);
+}
 void saveAlarmHistory(void)
 {
     T5L_Flash(WRITERFLASH, alarmTemp, ALARM_FLASH_START + alarmInfomation.head_ptr * 8, 8);
@@ -370,4 +388,10 @@ void resetAlarmDisplay(u8 index)
     ((dgus_string_t *)showTemp)->Ys = STRING_Ys + 27 * index;
     ((dgus_string_t *)showTemp)->Ye = STRING_Ye + 27 * index;
     WriteDGUS(alarmShowDescriptionVP[index][2], (u8 *)showTemp, sizeof(showTemp));
+}
+
+void alarmConfirmEventHandle(void)
+{
+    u16 cache = 0;
+    WriteDGUS(ALARM_BEEP_FLAG, (u8 *)&cache, 2);
 }

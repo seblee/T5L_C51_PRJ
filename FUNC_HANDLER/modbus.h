@@ -32,7 +32,7 @@
 #define MODBUS_SEND_TIME_PERIOD 500  // 0.5秒钟
 #define RX_CHECK_TICK_TIME 10  //超过10个字节的时间没有收到新的字符，认为接收结束，10*10*1000/9600,
 
-#define SLAVE_ID 0x01  //设备端地址
+#define SLAVE_ID 0x02  //设备端地址
 #define MODBUS_EN 0X5A
 #define MODBUS_DIS 0X00
 #define MODBUS_READ_03H 0x03   //读寄存器地址命令

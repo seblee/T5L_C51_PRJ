@@ -37,6 +37,9 @@ void touchHandler(void)
             case ALARM_CLEAR_EVENT:
                 alarmClearHandle();
                 break;
+            case CUR_ALARM_CLEAR_EVENT:
+                curAlarmClearHandle();
+                break;
             case OUTPUT_EVENT:
                 forcedOutputHnadle();
                 break;
@@ -52,6 +55,15 @@ void touchHandler(void)
                 break;
             case POWER_SWITCH_EVENT:
                 powerSwitchEventHandle();
+                break;
+            case ALARM_CONFIRM_EVENT:
+                alarmConfirmEventHandle();
+                break;
+            case IN_MAINTAIN_MOD_EVENT:
+                inMaintainModEventHandle();
+                break;
+            case OUT_MAINTAIN_MOD_EVENT:
+                outMaintainModEventHandle();
                 break;
             default:
                 break;
@@ -91,4 +103,21 @@ void powerSwitchEventHandle(void)
     WriteDGUS(0xa024, (u8*)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xa084, (u8*)&cache, 2);
+}
+
+void inMaintainModEventHandle(void)
+{
+    u16 cache = 0x005a;
+    WriteDGUS(0xc700, (u8*)&cache, 2);
+    cache = 1;
+    WriteDGUS(0xa025, (u8*)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xa085, (u8*)&cache, 2);
+}
+void outMaintainModEventHandle(void)
+{
+    u16 cache = 0;
+    WriteDGUS(0xa025, (u8*)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xa085, (u8*)&cache, 2);
 }

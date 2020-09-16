@@ -46,7 +46,7 @@ void Uart2Init(void)
     SCON0 = 0x50;  /*方式1:10位UART*/
     PCON &= 0x7F;  /*.7=SMOD,波特率倍频选择,0=不倍频*/
     SREL0H = 0x03; /*1024-FOSC/(64*波特率)*/
-    SREL0L = 0xE4; /*1024-206438400/(64*115200)=0x03E4*/
+    SREL0L = 0x58; /*1024-206438400/(64*19200)=0x0358*/
     REN0   = 1;
     ES0    = 1;
 }
@@ -165,7 +165,7 @@ void UART3_ISR_PC(void) interrupt 16
         Uart3_Rx[uart3_rx_count] = res;
         uart3_rx_count++;
         SCON1 &= 0xFE;
-        SCON1 &= 0xFE;       
+        SCON1 &= 0xFE;
         if (uart3_rx_count >= UART3_MAX_LEN)
         {
             //防止溢出

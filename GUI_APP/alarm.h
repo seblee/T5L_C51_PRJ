@@ -84,6 +84,7 @@
 #define HISTORYSHOWVP9 0x42b8
 
 #define WAE_PALY_ADDR 0x00A0
+#define ALARM_BEEP_FLAG 0xa026
 
 typedef struct alarmDataStruct
 {
@@ -117,5 +118,6 @@ void saveAlarmHistory(void);
 void setAlarmDisplay(u8 index, u16 vp, u8 page);
 void resetAlarmDisplay(u8 index);
 void alarmClearHandle(void);
+void alarmConfirmEventHandle(void);
 
 #endif

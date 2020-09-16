@@ -23,10 +23,14 @@
 
 #define TOUCH_EVENT_FLAG 0x5014
 
-#define ALARM_CLEAR_EVENT 0X6d00
 #define POWER_SWITCH_EVENT 0Xa000
+#define ALARM_CLEAR_EVENT 0Xac00
+#define CUR_ALARM_CLEAR_EVENT 0Xac01
+#define ALARM_CONFIRM_EVENT 0Xa026
 #define RESET_EVENT 0Xc500
+#define IN_MAINTAIN_MOD_EVENT 0Xc600
 #define OUTPUT_EVENT 0Xc700
+#define OUT_MAINTAIN_MOD_EVENT 0Xc701
 #define CLEAR_RUNTIME_EVENT_1 0Xc901
 #define CLEAR_RUNTIME_EVENT_6 0Xc906
 #define CLEAR_RUNTIME_EVENT_c 0Xc90c
@@ -38,4 +42,7 @@ void touchHandler(void);
 void resetEventHandle(void);
 void clearRunTimeHandle(u16 eventId);
 void powerSwitchEventHandle(void);
+void inMaintainModEventHandle(void);
+void outMaintainModEventHandle(void);
+
 #endif
