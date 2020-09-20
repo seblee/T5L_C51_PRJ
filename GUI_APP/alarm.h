@@ -118,6 +118,7 @@ void saveAlarmHistory(void);
 void setAlarmDisplay(u8 index, u16 vp, u8 page);
 void resetAlarmDisplay(u8 index);
 void alarmClearHandle(void);
+void curAlarmClearHandle(void);
 void alarmConfirmEventHandle(void);
 
 #endif
