@@ -143,3 +143,25 @@ void dragCuave(void)
     temp[0] += DragerLeft;
     WriteDGUS(DragerX, (u8*)&temp[0], 2);
 }
+
+void curveClearHandle(void)
+{
+    u16 cache[16];
+    u16 i;
+    memset(cache, 0, sizeof(cache));
+    for (i = 0; i < 256; i++)
+    {
+        WriteDGUS(CURVE_VP_ADDR + (i << 4), (u8*)&cache[0], sizeof(cache));
+    }
+    T5L_Flash(WRITERFLASH, CURVE_VP_ADDR, CURVE_FLASH_ADDR, CURVE_LEN);
+    // clear buffer
+    curvePoint = 0;
+    WriteDGUS(Curve0Point, (u8*)&curvePoint, 2);
+    WriteDGUS(Curve1Point, (u8*)&curvePoint, 2);
+
+    cache[2] = CurveMAX;
+    WriteDGUS(CurveManual, (u8*)&cache[2], 2);
+    WriteDGUS(CurveManualBak, (u8*)&cache[2], 2);
+    cache[2] = DragerRight;
+    WriteDGUS(DragerX, (u8*)&cache[2], 2);
+}

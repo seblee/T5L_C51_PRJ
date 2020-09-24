@@ -19,7 +19,7 @@
  ******************************************************************/
 #ifndef __CURVE_H_
 #define __CURVE_H_
-
+#include "string.h"
 #include "sys.h"
 
 #define TimerPeriod 1200  // T*100ms
@@ -60,4 +60,6 @@
 void curveInit(void);
 void curveProcess(void);
 void dragCuave(void);
+void curveClearHandle(void);
+
 #endif

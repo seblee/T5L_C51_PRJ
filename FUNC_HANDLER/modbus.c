@@ -377,7 +377,8 @@ void Modbus_Process_Task(void)
     {
         if ((cmdRxFlag) || ((SysTick - modbus_tx_process_tick) >= modbusCmdNow.timeout))
         {
-            CmdIndex++;
+            if (cmdRxFlag)
+                CmdIndex++;
             goto processCMDLib;
         }
         return;

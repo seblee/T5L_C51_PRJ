@@ -81,6 +81,10 @@
 
 #define PASSWORD_FUN_00_EVENT 0xA4F0
 #define PASSWORD_FUN_01_EVENT 0xA4F1
+#define PASSWORD_FUN_02_EVENT 0xA4F2
+
+#define PASSWORD_CHANGE_CONFIRM_EVENT 0xA600
+#define PASSWORD_CHANGE_CANCLE_EVENT 0xA601
 
 #define ALARM_CLEAR_EVENT 0Xac00
 #define CUR_ALARM_CLEAR_EVENT 0Xac01
@@ -95,6 +99,10 @@
 #define CLEAR_RUNTIME_EVENT_11 0Xc911
 #define REST_ORIGINAL_PARA 0xcf00
 #define SAVE_FACTORY_CFG 0xcf01
+
+#define LEVEL_NUM 5
+#define PASSWORD_FLASH_START 0x3000
+#define PASSWORD_FLASH_LENTH (LEVEL_NUM - 1) * 2
 
 typedef enum password_mode
 {
@@ -159,6 +167,7 @@ enum
 {
     FUN00 = 0X00,
     FUN01 = 0X01,
+    FUN02 = 0X02,
 };
 
 void touchHandler(void);
@@ -177,5 +186,9 @@ void passwordPageJumpEventHandle(u16 event);
 void passwordFunEventHandle(u16 event);
 void passwordFunOPThandle(u16 fun);
 u8 getPasswordLevel(u16 event);
+u8 checkPassword(u8 level, u8* input);
+void passwordInit(void);
+void passwordChangeConfirmEventHandle(void);
+void pageHandle(u16 page);
 
 #endif

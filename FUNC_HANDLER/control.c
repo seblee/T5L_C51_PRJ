@@ -24,11 +24,11 @@
 #include "timer.h"
 #include "modbus.h"
 #include "ui.h"
+#include "T5L_lib.h"
+#include "curve.h"
 
-const u8 password[][4] = {
-    {0x00, 0x0a, 0x2d, 0x08},  //设置 666888
-    {0x00, 0x02, 0x73, 0x60},  //维护 160608
-};
+u8 password[LEVEL_NUM][4]             = {0};
+static u32 defaultPassword[LEVEL_NUM] = {1, 2, 160608, 666888, 519525};
 
 const u8 pageLevel[][2] = {
     {PAGE00, 0},  //  PASSWORD_PAGEJUMP_00_EVENT
@@ -43,10 +43,10 @@ const u8 pageLevel[][2] = {
     {PAGE09, 0},  //  PASSWORD_PAGEJUMP_09_EVENT
     {PAGE10, 0},  //  PASSWORD_PAGEJUMP_0A_EVENT
     {PAGE11, 0},  //  PASSWORD_PAGEJUMP_0B_EVENT
-    {PAGE12, 0},  //  PASSWORD_PAGEJUMP_0C_EVENT
+    {PAGE12, 2},  //  setSys
     {PAGE13, 0},  //  PASSWORD_PAGEJUMP_0D_EVENT
     {PAGE14, 0},  //  PASSWORD_PAGEJUMP_0E_EVENT
-    {PAGE15, 0},  //  set page
+    {PAGE15, 1},  //  set page
     {PAGE16, 0},  //  PASSWORD_PAGEJUMP_10_EVENT
     {PAGE17, 0},  //  PASSWORD_PAGEJUMP_11_EVENT
     {PAGE18, 0},  //  PASSWORD_PAGEJUMP_12_EVENT
@@ -58,7 +58,7 @@ const u8 pageLevel[][2] = {
     {PAGE24, 0},  //  PASSWORD_PAGEJUMP_18_EVENT
     {PAGE25, 0},  //  PASSWORD_PAGEJUMP_19_EVENT
     {PAGE26, 0},  //  PASSWORD_PAGEJUMP_1A_EVENT
-    {PAGE27, 0},  //  PASSWORD_PAGEJUMP_1B_EVENT
+    {PAGE27, 2},  //  alarmSet
     {PAGE28, 0},  //  PASSWORD_PAGEJUMP_1C_EVENT
     {PAGE29, 0},  //  PASSWORD_PAGEJUMP_1D_EVENT
     {PAGE30, 0},  //  PASSWORD_PAGEJUMP_1E_EVENT
@@ -69,7 +69,7 @@ const u8 pageLevel[][2] = {
     {PAGE35, 0},  //  PASSWORD_PAGEJUMP_23_EVENT
     {PAGE36, 0},  //  PASSWORD_PAGEJUMP_24_EVENT
     {PAGE37, 0},  //  PASSWORD_PAGEJUMP_25_EVENT
-    {PAGE38, 1},  //  MAINTAIM PAGE
+    {PAGE38, 2},  //  MAINTAIM PAGE
     {PAGE39, 0},  //  PASSWORD_PAGEJUMP_27_EVENT
     {PAGE40, 0},  //  PASSWORD_PAGEJUMP_28_EVENT
     {PAGE41, 0},  //  PASSWORD_PAGEJUMP_29_EVENT
@@ -78,13 +78,14 @@ const u8 pageLevel[][2] = {
     {PAGE44, 0},  //  PASSWORD_PAGEJUMP_2C_EVENT
     {PAGE45, 0},  //  PASSWORD_PAGEJUMP_2D_EVENT
     {PAGE46, 0},  //  PASSWORD_PAGEJUMP_2E_EVENT
-    {PAGE47, 0},  //  PASSWORD_PAGEJUMP_2F_EVENT
+    {PAGE47, 3},  //  sysConfig
     {PAGE48, 0},  //  PASSWORD_PAGEJUMP_30_EVENT
     {PAGE49, 0},  //  PASSWORD_PAGEJUMP_31_EVENT
 };
 const u8 funLevel[][2] = {
-    {FUN00, 1},
-    {FUN01, 1},
+    {FUN00, 1},  // clear current alarm
+    {FUN01, 3},  // clear alarm history
+    {FUN02, 3},  // clear curve
 };
 
 u16 jumpPage    = 0;
@@ -98,7 +99,7 @@ void touchHandler(void)
     u16 touchEventFlag = 0;
     if (!MS1msFlag)
         return;
-    ReadDGUS(TOUCH_EVENT_FLAG, (u8*)&touchEventFlag, 2);
+    ReadDGUS(TOUCH_EVENT_FLAG, (u8 *)&touchEventFlag, 2);
     if (touchEventFlag)
     {
         switch (touchEventFlag)
@@ -168,10 +169,14 @@ void touchHandler(void)
                 passwordPageJumpEventHandle(touchEventFlag);
                 break;
             case PASSWORD_FUN_00_EVENT:
+            case PASSWORD_FUN_01_EVENT:
+            case PASSWORD_FUN_02_EVENT:
                 passwordFunEventHandle(touchEventFlag);
                 break;
-            case PASSWORD_FUN_01_EVENT:
-                passwordFunEventHandle(touchEventFlag);
+            case PASSWORD_CHANGE_CONFIRM_EVENT:
+                passwordChangeConfirmEventHandle();
+                break;
+            case PASSWORD_CHANGE_CANCLE_EVENT:
                 break;
             case ALARM_CLEAR_EVENT:
                 alarmClearHandle();
@@ -210,7 +215,7 @@ void touchHandler(void)
                 break;
         }
         touchEventFlag = 0;
-        WriteDGUS(TOUCH_EVENT_FLAG, (u8*)&touchEventFlag, 2);
+        WriteDGUS(TOUCH_EVENT_FLAG, (u8 *)&touchEventFlag, 2);
     }
 }
 /*****************************************************************************
@@ -232,21 +237,21 @@ void resetEventHandle(void)
 {
     u16 cache;
     cache = 0x005a;
-    WriteDGUS(0xc520, (u8*)&cache, 2);
-    WriteDGUS(0xc580, (u8*)&cache, 2);
+    WriteDGUS(0xc520, (u8 *)&cache, 2);
+    WriteDGUS(0xc580, (u8 *)&cache, 2);
 }
 
 void clearRunTimeHandle(u16 eventId)
 {
     u16 cache = eventId & 0xff;
-    WriteDGUS(0xc930, (u8*)&cache, 2);
+    WriteDGUS(0xc930, (u8 *)&cache, 2);
     cache = 0x005a;
-    WriteDGUS(0xc990, (u8*)&cache, 2);
+    WriteDGUS(0xc990, (u8 *)&cache, 2);
 }
 void powerSwitchEventHandle(void)
 {
     u16 cache;
-    ReadDGUS(0xa023, (u8*)&cache, 2);
+    ReadDGUS(0xa023, (u8 *)&cache, 2);
     if (cache & 1)
     {
         cache = 0;
@@ -255,58 +260,47 @@ void powerSwitchEventHandle(void)
     {
         cache = 1;
     }
-    WriteDGUS(0xa024, (u8*)&cache, 2);
+    WriteDGUS(0xa024, (u8 *)&cache, 2);
     cache = 0x005a;
-    WriteDGUS(0xa084, (u8*)&cache, 2);
+    WriteDGUS(0xa084, (u8 *)&cache, 2);
 }
 
 void inMaintainModEventHandle(void)
 {
     u16 cache = 0x005a;
-    WriteDGUS(0xc700, (u8*)&cache, 2);
-    cache = 1;
-    WriteDGUS(0xa025, (u8*)&cache, 2);
-    cache = 0x005a;
-    WriteDGUS(0xa085, (u8*)&cache, 2);
+    WriteDGUS(0xc700, (u8 *)&cache, 2);
 }
 void outMaintainModEventHandle(void)
 {
-    u16 cache = 0;
-    WriteDGUS(0xa025, (u8*)&cache, 2);
-    cache = 0x005a;
-    WriteDGUS(0xa085, (u8*)&cache, 2);
 }
 
 void resetOriginalPara(void)
 {
     u16 cache = 0x3c;
-    WriteDGUS(0xcf2a, (u8*)&cache, 2);
+    WriteDGUS(0xcf2a, (u8 *)&cache, 2);
     cache = 0x005a;
-    WriteDGUS(0xcf8a, (u8*)&cache, 2);
+    WriteDGUS(0xcf8a, (u8 *)&cache, 2);
 }
 
 void saveFactoryCFG(void)
 {
     u16 cache = 0x69;
-    WriteDGUS(0xcf2b, (u8*)&cache, 2);
+    WriteDGUS(0xcf2b, (u8 *)&cache, 2);
     cache = 0x005a;
-    WriteDGUS(0xcf8b, (u8*)&cache, 2);
+    WriteDGUS(0xcf8b, (u8 *)&cache, 2);
 }
 
 void passwordConfirmEventHandle(void)
 {
     u8 cache[4] = {0};
     ReadDGUS(0xa420, cache, 4);
-    if (memcmp(cache, &password[currentLevel][0], sizeof(cache)))
-    {
-        JumpPage(5);
-    }
-    else
+    if (checkPassword(currentLevel, cache))
     {
         switch (mode)
         {
             case PWM_PAGEJUMP:
                 JumpPage(jumpPage);
+                pageHandle(jumpPage);
                 break;
             case PWM_FUN:
                 passwordFunOPThandle(funOpt);
@@ -315,6 +309,10 @@ void passwordConfirmEventHandle(void)
             default:
                 break;
         }
+    }
+    else
+    {
+        JumpPage(5);
     }
     memset(cache, 0, 4);
     WriteDGUS(0xa420, cache, 4);
@@ -345,13 +343,30 @@ void passwordFunEventHandle(u16 event)
 
 void passwordFunOPThandle(u16 fun)
 {
-    if (fun == 0)
+    if (fun == FUN00)
     {
         curAlarmClearHandle();
     }
-    else if (fun == 1)
+    else if (fun == FUN01)
     {
         alarmClearHandle();
+    }
+    else if (fun == FUN02)
+    {
+        curveClearHandle();
+    }
+}
+
+void pageHandle(u16 page)
+{
+    u16 cache = 0x005a;
+    if (page == PAGE27)
+    {
+        WriteDGUS(0xa000 | (page << 8), (u8 *)&cache, 2);
+    }
+    if (page == PAGE47)
+    {
+        WriteDGUS(0xa000 | (page << 8), (u8 *)&cache, 2);
     }
 }
 
@@ -361,9 +376,72 @@ u8 getPasswordLevel(u16 event)
     {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
     }
-    if (event <= PASSWORD_FUN_01_EVENT)
+    if (event <= PASSWORD_FUN_02_EVENT)
     {
         return funLevel[event - PASSWORD_FUN_00_EVENT][1];
     }
+    return LEVEL_NUM;
+}
+
+u8 checkPassword(u8 level, u8 *input)
+{
+    u8 i;
+    if (level == 0)
+        return 1;
+    for (i = (level - 1); i < LEVEL_NUM; i++)
+    {
+        if (memcmp(input, &password[i][0], 4) == 0)
+            return 1;
+    }
     return 0;
+}
+
+void passwordInit(void)
+{
+    u8 i;
+    T5L_Flash(READRFLASH, VP_TEMP, PASSWORD_FLASH_START, PASSWORD_FLASH_LENTH);
+    ReadDGUS(VP_TEMP, (u8 *)password, PASSWORD_FLASH_LENTH * 2);
+
+    for (i = 0; i < LEVEL_NUM; i++)
+    {
+        if ((*((u32 *)password[i]) == 0) || (*((u32 *)password[i]) > 999999))
+        {
+            *((u32 *)password[i]) = defaultPassword[i];
+        }
+    }
+    WriteDGUS(0xa6a0, (u8 *)password, 20);
+}
+
+void savePassword(void)
+{
+    WriteDGUS(VP_TEMP, (u8 *)password, PASSWORD_FLASH_LENTH * 2);
+    T5L_Flash(WRITERFLASH, VP_TEMP, PASSWORD_FLASH_START, PASSWORD_FLASH_LENTH);
+}
+
+void passwordChangeConfirmEventHandle(void)
+{
+    u16 cache[10];
+    u8 i;
+    ReadDGUS(0xa620, (u8 *)cache, 16);
+    if (*((u32 *)&cache[2]) != *((u32 *)password[cache[0]]))
+    {
+        JumpPage(7);
+        return;
+    }
+    if (*((u32 *)&cache[4]) != *((u32 *)&cache[6]))
+    {
+        JumpPage(8);
+        return;
+    }
+    *((u32 *)password[cache[0]]) = *((u32 *)&cache[4]);
+    savePassword();
+    for (i = 0; i < 10; i++)
+    {
+        cache[i] = 0;
+    }
+    WriteDGUS(0xa622, (u8 *)cache, 12);
+}
+
+void passwordChangeCancleEventHandle(void)
+{
 }

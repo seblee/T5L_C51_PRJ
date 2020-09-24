@@ -46,6 +46,7 @@ void main(void)
     Modbus_UART_Init();
     curveInit();
     alarmInit();
+    passwordInit();
     while (1)
     {
         if (timer1msFlag)
