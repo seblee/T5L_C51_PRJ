@@ -83,5 +83,37 @@ void ui(void)
                 diagnosisPageInCount = 0;
             }
         }
+
+        {
+            static u16 timerCounter = 0;
+            u16 cache;
+            ReadDGUS(0x0016, (u8*)cache, 2);
+            if (cache != 0)
+                timerCounter = 0;
+            else
+            {
+                cache = 0;
+                WriteDGUS(0x0016, (u8*)cache, 2);
+                if (timerCounter < STANGBYTIME)
+                    timerCounter++;
+                else if (timerCounter == STANGBYTIME)
+                { /****/
+                }
+            }
+        }
     }
+}
+/*****************************************************************************
+跳转指定页面*/
+void JumpPage(uint16_t pageId)
+{
+    uint8_t temp[4] = {0x5A, 0x01, 0, 0};
+    temp[2]         = (uint8_t)(pageId >> 8);
+    temp[3]         = pageId;
+    WriteDGUS(0x0084, temp, sizeof(temp));
+    // do
+    // {
+    //     DelayMs(5);
+    //     ReadDGUS(DHW_SPAGE, temp, 1);
+    // } while (temp[0] != 0);
 }

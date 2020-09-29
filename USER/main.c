@@ -8,7 +8,7 @@
  * @LastEditTime : 2020-09-02 17:56:29
  * @LastEditors  : xiaowine
  * @ **************************************************************
- * @brief        : Ö÷º¯Êı£¬ÍâÉèºÍ²ÎÊı³õÊ¼»¯£¬Ö÷Ñ­»·ÖĞÖ÷Òª¹¦ÄÜº¯ÊıÈë¿Ú¡£
+ * @brief        : ä¸»å‡½æ•°ï¼Œå¤–è®¾å’Œå‚æ•°åˆå§‹åŒ–ï¼Œä¸»å¾ªç¯ä¸­ä¸»è¦åŠŸèƒ½å‡½æ•°å…¥å£ã€‚
  * @Description  :
  * @FilePath     : \T5L_C51_PRJ\USER\main.c
  * @ **************************************************************
@@ -19,10 +19,10 @@
  ******************************************************************/
 
 /*****************************************************************************
-ÏµÍ³¿â*/
+ç³»ç»Ÿåº“*/
 
 /*****************************************************************************
-×Ô¶¨ÒåÍ·ÎÄ¼ş*/
+è‡ªå®šä¹‰å¤´æ–‡ä»¶*/
 #include "T5LOS8051.H"
 #include "sys.h"
 // #include "handle.h"
@@ -38,11 +38,11 @@
 #include "ChineseCharacter.h"
 #include "control.h"
 /*****************************************************************************
-Ö÷º¯Êı*/
+ä¸»å‡½æ•°*/
 void main(void)
 {
     InitSys();
-    init_rtc();  //Ó²¼şRTC³õÊ¼»¯
+    init_rtc();  //ç¡¬ä»¶RTCåˆå§‹åŒ–
     Modbus_UART_Init();
     curveInit();
     alarmInit();
@@ -61,20 +61,21 @@ void main(void)
             timer100msFlag = 0;
             timer500msFlag = 0;
         }
-        WDT_RST();               //Î¹¹·
-        if (SysTick_RTC >= 500)  //Ô­À´ÊÇ500£¬µ÷ÊÔ¸ÄÎª50
+        WDT_RST();               //å–‚ç‹—
+        if (SysTick_RTC >= 500)  //åŸæ¥æ˜¯500ï¼Œè°ƒè¯•æ”¹ä¸º50
         {
-            rdtime();  //¸üĞÂÓ²¼şRTCÊ±¼ä
+            rdtime();  //æ›´æ–°ç¡¬ä»¶RTCæ—¶é—´
                        // Uart2SendStr(test, strlen(test));
             SysTick_RTC = 0;
             RTC_Set_CMD();
         }
         // HandleProc();
-        Modbus_Process_Task();  // Modbus´®¿Ú´¦ÀíÁ÷³Ì
+        Modbus_Process_Task();  // Modbusä¸²å£å¤„ç†æµç¨‹
         ui();
         curveProcess();
         alarmTask();
         touchHandler();
+        passwordTask();
         if (MS1msFlag)
         {
             MS1msFlag   = 0;

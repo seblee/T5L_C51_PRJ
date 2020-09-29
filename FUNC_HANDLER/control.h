@@ -100,7 +100,7 @@
 #define REST_ORIGINAL_PARA 0xcf00
 #define SAVE_FACTORY_CFG 0xcf01
 
-#define LEVEL_NUM 5
+#define LEVEL_NUM 6
 #define PASSWORD_FLASH_START 0x3000
 #define PASSWORD_FLASH_LENTH (LEVEL_NUM - 1) * 2
 
@@ -170,8 +170,9 @@ enum
     FUN02 = 0X02,
 };
 
+extern u8 passwordGotLevel;
+
 void touchHandler(void);
-void JumpPage(uint16_t pageId);
 void resetEventHandle(void);
 void clearRunTimeHandle(u16 eventId);
 void powerSwitchEventHandle(void);
@@ -184,10 +185,12 @@ void passwordConfirmEventHandle(void);
 void passwordCancleEventHandle(void);
 void passwordPageJumpEventHandle(u16 event);
 void passwordFunEventHandle(u16 event);
+void passwordOperation(void);
 void passwordFunOPThandle(u16 fun);
 u8 getPasswordLevel(u16 event);
 u8 checkPassword(u8 level, u8* input);
 void passwordInit(void);
+void passwordTask(void);
 void passwordChangeConfirmEventHandle(void);
 void pageHandle(u16 page);
 

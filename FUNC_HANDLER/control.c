@@ -28,7 +28,8 @@
 #include "curve.h"
 
 u8 password[LEVEL_NUM][4]             = {0};
-static u32 defaultPassword[LEVEL_NUM] = {1, 2, 160608, 666888, 519525};
+static u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 519525};
+u8 passwordGotLevel                   = 0xff;
 
 const u8 pageLevel[][2] = {
     {PAGE00, 0},  //  PASSWORD_PAGEJUMP_00_EVENT
@@ -218,20 +219,6 @@ void touchHandler(void)
         WriteDGUS(TOUCH_EVENT_FLAG, (u8 *)&touchEventFlag, 2);
     }
 }
-/*****************************************************************************
-跳转指定页面*/
-void JumpPage(uint16_t pageId)
-{
-    uint8_t temp[4] = {0x5A, 0x01, 0, 0};
-    temp[2]         = (uint8_t)(pageId >> 8);
-    temp[3]         = pageId;
-    WriteDGUS(0x0084, temp, sizeof(temp));
-    // do
-    // {
-    //     DelayMs(5);
-    //     ReadDGUS(DHW_SPAGE, temp, 1);
-    // } while (temp[0] != 0);
-}
 
 void resetEventHandle(void)
 {
@@ -296,19 +283,8 @@ void passwordConfirmEventHandle(void)
     ReadDGUS(0xa420, cache, 4);
     if (checkPassword(currentLevel, cache))
     {
-        switch (mode)
-        {
-            case PWM_PAGEJUMP:
-                JumpPage(jumpPage);
-                pageHandle(jumpPage);
-                break;
-            case PWM_FUN:
-                passwordFunOPThandle(funOpt);
-                JumpPage(currentPage);
-                break;
-            default:
-                break;
-        }
+        passwordOperation();
+        passwordGotLevel = currentLevel;
     }
     else
     {
@@ -328,8 +304,15 @@ void passwordPageJumpEventHandle(u16 event)
     jumpPage     = event - PASSWORD_PAGEJUMP_START;
     currentPage  = picNow;
     currentLevel = getPasswordLevel(event);
-    JumpPage(4);
-    mode = PWM_PAGEJUMP;
+    mode         = PWM_PAGEJUMP;
+    if (currentLevel <= passwordGotLevel)
+    {
+        passwordOperation();
+    }
+    else
+    {
+        JumpPage(4);
+    }
 }
 
 void passwordFunEventHandle(u16 event)
@@ -337,10 +320,33 @@ void passwordFunEventHandle(u16 event)
     funOpt       = event - PASSWORD_FUN_00_EVENT;
     currentLevel = getPasswordLevel(event);
     currentPage  = picNow;
-    JumpPage(4);
-    mode = PWM_FUN;
+    mode         = PWM_FUN;
+    if (currentLevel <= passwordGotLevel)
+    {
+        passwordOperation();
+    }
+    else
+    {
+        JumpPage(4);
+    }
 }
 
+void passwordOperation(void)
+{
+    switch (mode)
+    {
+        case PWM_PAGEJUMP:
+            JumpPage(jumpPage);
+            pageHandle(jumpPage);
+            break;
+        case PWM_FUN:
+            passwordFunOPThandle(funOpt);
+            JumpPage(currentPage);
+            break;
+        default:
+            break;
+    }
+}
 void passwordFunOPThandle(u16 fun)
 {
     if (fun == FUN00)
@@ -388,7 +394,7 @@ u8 checkPassword(u8 level, u8 *input)
     u8 i;
     if (level == 0)
         return 1;
-    for (i = (level - 1); i < LEVEL_NUM; i++)
+    for (i = level; i < LEVEL_NUM; i++)
     {
         if (memcmp(input, &password[i][0], 4) == 0)
             return 1;
@@ -410,6 +416,13 @@ void passwordInit(void)
         }
     }
     WriteDGUS(0xa6a0, (u8 *)password, 20);
+}
+void passwordTask(void)
+{
+    if (picNow == PAGE00)
+    {
+        passwordGotLevel = 0;
+    }
 }
 
 void savePassword(void)
