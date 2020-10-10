@@ -22,8 +22,8 @@
 
 #include "sys.h"
 
-#define UART_TX_BUF_MAX_LEN 64
-#define UART_RX_BUF_MAX_LEN 64
+#define UART_TX_BUF_MAX_LEN 128
+#define UART_RX_BUF_MAX_LEN 128
 
 #define MODBUS_READ_REG_ADDRESS 0x4001  //寄存器首地址
 

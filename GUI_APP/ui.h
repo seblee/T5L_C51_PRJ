@@ -81,5 +81,6 @@ extern u16 picNow;
 
 void ui(void);
 void JumpPage(uint16_t pageId);
+void caculateGroupCtrlPic(void);
 
 #endif
