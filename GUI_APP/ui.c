@@ -1,27 +1,45 @@
-/*******************************************************************
- * @Warning      : Without permission from the author,Not for commercial use
- * @File         :
- * @Author       : xiaowine
- * @Date         : 2020-08-24 15:54:49
- * @version      : v01.00
- * @ **************************************************************
- * @LastEditTime : 2020-09-01 16:10:39
- * @LastEditors  : xiaowine
- * @ **************************************************************
- * @brief        :
- * @Description  :
- * @FilePath     : \T5L_C51_PRJ\GUI_APP\ui.c
- * @ **************************************************************
- * @attention    :
- * @Powered By xiaowine
- * @<h2><center>&copy;  Copyright(C) cee0.com 2020</center></h2>
- * @All rights reserved
- ******************************************************************/
+/**
+ * @file ui.c
+ * @brief
+ * @author  xiaowine (xiaowine@sina.cn)
+ * @version 01.00
+ * @date    2020-10-12
+ *
+ * @copyright Copyright (c) {2020}  xiaowine
+ *
+ * @par 修改日志:
+ * <table>
+ * <tr><th>Date       <th>Version <th>Author  <th>Description
+ * <tr><td>2020-10-12 <td>1.0     <td>wangh     <td>内容
+ * </table>
+ * ******************************************************************
+ * *                   .::::
+ * *                 .::::::::
+ * *                ::::::::::
+ * *             ..:::::::::::
+ * *          '::::::::::::
+ * *            .:::::::::
+ * *       '::::::::::::::..        女神助攻,流量冲
+ * *            ..::::::::::::.     永不宕机,代码无bug
+ * *          ``:::::::::::::::
+ * *           ::::``:::::::::'        .:::
+ * *          ::::'   ':::::'       .::::::::
+ * *        .::::'      ::::     .:::::::'::::
+ * *       .:::'       :::::  .:::::::::' ':::::
+ * *      .::'        :::::.:::::::::'      ':::::
+ * *     .::'         ::::::::::::::'         ``::::
+ * * ...:::           ::::::::::::'              ``::
+ * *```` ':.          ':::::::::'                  ::::.
+ * *                   '.:::::'                    ':'````.
+ * ******************************************************************
+ */
 
 #include "ui.h"
 #include "timer.h"
 u16 picNow = 0;
-
+/**
+ * @brief ui task
+ */
 void ui(void)
 {
     if (MS1msFlag)
@@ -112,8 +130,10 @@ void ui(void)
         }
     }
 }
-/*****************************************************************************
-跳转指定页面*/
+/**
+ * @brief  jump tu id page
+ * @param  pageId page od
+ */
 void JumpPage(uint16_t pageId)
 {
     uint8_t temp[4] = {0x5A, 0x01, 0, 0};
@@ -149,13 +169,16 @@ enum
     MAX_SYS_STS
 
 };
-void caculateGroupCtrlPic(void)  //计算图标状态
+/**
+ * @brief 计算图标状态
+ */
+void caculateGroupCtrlPic(void)
 {
 #define GROUP_DEVICE_COUNT 18
     u16 mb_teamwork_sts_regs[31] = {0};
     u32 malfun_dev_bitmap, online_bitmap, final_out_bitmap;
     u8 i;
-    u16 lw_teamwork_icon_sta[18] = {0};
+    u16 lw_teamwork_icon_sta[GROUP_DEVICE_COUNT] = {0};
     short status, temp;
 
     ReadDGUS(0xab20, (u8*)mb_teamwork_sts_regs, sizeof(mb_teamwork_sts_regs));
