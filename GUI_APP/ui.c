@@ -177,22 +177,19 @@ void caculateGroupCtrlPic(void)
 {
 #define GROUP_DEVICE_COUNT 18
     u16 mb_teamwork_sts_regs[31] = {0};
-    u32 malfun_dev_bitmap, online_bitmap, final_out_bitmap;
     u8 i;
     u16 lw_teamwork_icon_sta[GROUP_DEVICE_COUNT] = {0};
     short status, temp;
 
     ReadDGUS(0xab20, (u8*)mb_teamwork_sts_regs, sizeof(mb_teamwork_sts_regs));
-    malfun_dev_bitmap = mb_teamwork_sts_regs[SYS_STS_MALFUN_0] | (mb_teamwork_sts_regs[SYS_STS_MALFUN_1] << 16);
-    online_bitmap     = mb_teamwork_sts_regs[SYS_STS_ONLINE_0] | (mb_teamwork_sts_regs[SYS_STS_ONLINE_1] << 16);
-    final_out_bitmap  = mb_teamwork_sts_regs[SYS_STS_FINALOUT_0] | (mb_teamwork_sts_regs[SYS_STS_FINALOUT_1] << 16);
-    for (i = 0; i < GROUP_DEVICE_COUNT; i++)
+
+    for (i = 0; i < 16; i++)
     {
         //在线状态
-        if ((online_bitmap & (0x00000001 << i)) != 0)
+        if ((mb_teamwork_sts_regs[SYS_STS_ONLINE_0] & (1 << i)) != 0)
         {
             //运行
-            if ((final_out_bitmap & (0x00000001 << i)) != 0)
+            if ((mb_teamwork_sts_regs[SYS_STS_FINALOUT_0] & (1 << i)) != 0)
             {
                 // get equipment status
                 temp   = SYS_STS_STA_0_3 + (i / 4);
@@ -228,7 +225,7 @@ void caculateGroupCtrlPic(void)
                         break;
                 }
                 //故障
-                if ((malfun_dev_bitmap & (0x00000001 << i)) != 0)
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0)
                 {
                     lw_teamwork_icon_sta[i] += 8;
                 }
@@ -239,7 +236,75 @@ void caculateGroupCtrlPic(void)
             }
             else  //备用
             {     //故障
-                if ((malfun_dev_bitmap & (0x00000001 << i)) != 0)
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0)
+                {
+                    lw_teamwork_icon_sta[i] = 2;
+                }
+                else  //正常
+                {
+                    lw_teamwork_icon_sta[i] = 1;
+                }
+            }
+        }
+        else
+        {
+            lw_teamwork_icon_sta[i] = 0;
+        }
+    }
+    for (i = 16; i < GROUP_DEVICE_COUNT; i++)
+    {
+        //在线状态
+        if ((mb_teamwork_sts_regs[SYS_STS_ONLINE_1] & (1 << (i - 16))) != 0)
+        {
+            //运行
+            if ((mb_teamwork_sts_regs[SYS_STS_FINALOUT_1] & (1 << (i - 16))) != 0)
+            {
+                // get equipment status
+                temp   = SYS_STS_STA_0_3 + (i / 4);
+                status = (mb_teamwork_sts_regs[temp] >> (4 * (i % 4))) & 0x000f;
+                switch (status)
+                {
+                    case 0x00:
+                        lw_teamwork_icon_sta[i] = 5;
+                        break;
+                    case 0x01:  //制热
+                        lw_teamwork_icon_sta[i] = 6;
+                        break;
+                    case 0x02:  //制冷
+                        lw_teamwork_icon_sta[i] = 7;
+                        break;
+                    case 0x04:  //加湿
+                        lw_teamwork_icon_sta[i] = 8;
+                        break;
+                    case 0x05:  //加湿+制热
+                        lw_teamwork_icon_sta[i] = 9;
+                        break;
+                    case 0x06:  //加湿+制冷
+                        lw_teamwork_icon_sta[i] = 10;
+                        break;
+                    case 0x08:  //除湿
+                        lw_teamwork_icon_sta[i] = 3;
+                        break;
+                    case 0x09:  //除湿+制热
+                        lw_teamwork_icon_sta[i] = 4;
+                        break;
+                    default:
+                        lw_teamwork_icon_sta[i] = 5;
+                        break;
+                }
+                //故障
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0)
+                {
+                    lw_teamwork_icon_sta[i] += 8;
+                }
+                else  //正常
+                {
+                    //保持原值
+                }
+            }
+            else  //备用
+            {     //故障
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0)
                 {
                     lw_teamwork_icon_sta[i] = 2;
                 }

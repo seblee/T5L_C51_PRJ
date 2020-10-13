@@ -144,6 +144,11 @@ enum
     PAGE47 = 0x2F,
     PAGE48 = 0x30,
     PAGE49 = 0x31,
+    PAGE50 = 0x32,
+    PAGE51 = 0x33,
+    PAGE52 = 0x34,
+    PAGE53 = 0x35,
+    PAGE54 = 0x36,
 };
 #define STANGBYTIME 300 * 2
 
