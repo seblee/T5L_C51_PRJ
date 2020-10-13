@@ -43,9 +43,9 @@
 #include "T5L_lib.h"
 #include "curve.h"
 
-u8 password[LEVEL_NUM][4]             = {0};
-static u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 519525};
-u8 passwordGotLevel                   = 0xff;
+u8 password[LEVEL_NUM][4]            = {0};
+const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 519525};
+u8 passwordGotLevel                  = 0xff;
 
 const u8 pageLevel[][2] = {
     {PAGE00, 0},  //  PASSWORD_PAGEJUMP_00_EVENT
@@ -60,13 +60,13 @@ const u8 pageLevel[][2] = {
     {PAGE09, 0},  //  PASSWORD_PAGEJUMP_09_EVENT
     {PAGE10, 0},  //  PASSWORD_PAGEJUMP_0A_EVENT
     {PAGE11, 0},  //  PASSWORD_PAGEJUMP_0B_EVENT
-    {PAGE12, 2},  //  setSys
+    {PAGE12, 0},  //  PASSWORD_PAGEJUMP_0C_EVENT
     {PAGE13, 0},  //  PASSWORD_PAGEJUMP_0D_EVENT
     {PAGE14, 0},  //  PASSWORD_PAGEJUMP_0E_EVENT
     {PAGE15, 1},  //  set page
     {PAGE16, 0},  //  PASSWORD_PAGEJUMP_10_EVENT
     {PAGE17, 0},  //  PASSWORD_PAGEJUMP_11_EVENT
-    {PAGE18, 0},  //  PASSWORD_PAGEJUMP_12_EVENT
+    {PAGE18, 2},  //  setSys
     {PAGE19, 0},  //  PASSWORD_PAGEJUMP_13_EVENT
     {PAGE20, 0},  //  PASSWORD_PAGEJUMP_14_EVENT
     {PAGE21, 0},  //  PASSWORD_PAGEJUMP_15_EVENT
@@ -103,6 +103,7 @@ const u8 funLevel[][2] = {
     {FUN00, 1},  // clear current alarm
     {FUN01, 3},  // clear alarm history
     {FUN02, 3},  // clear curve
+    {FUN03, 5},  // reset password
 };
 
 u16 jumpPage    = 0;
@@ -188,6 +189,7 @@ void touchHandler(void)
             case PASSWORD_FUN_00_EVENT:
             case PASSWORD_FUN_01_EVENT:
             case PASSWORD_FUN_02_EVENT:
+            case PASSWORD_FUN_03_EVENT:
                 passwordFunEventHandle(touchEventFlag);
                 break;
             case PASSWORD_CHANGE_CONFIRM_EVENT:
@@ -377,6 +379,15 @@ void passwordFunOPThandle(u16 fun)
     {
         curveClearHandle();
     }
+    else if (fun == FUN03)
+    {
+        u8 i;
+        for (i = 0; i < LEVEL_NUM; i++)
+        {
+            *((u32 *)password[i]) = defaultPassword[i];
+        }
+        savePassword();
+    }
 }
 
 void pageHandle(u16 page)
@@ -384,11 +395,11 @@ void pageHandle(u16 page)
     u16 cache = 0x005a;
     if (page == PAGE27)
     {
-        WriteDGUS(0xa000 | (page << 8), (u8 *)&cache, 2);
+        WriteDGUS(0xa000 + (page << 8), (u8 *)&cache, 2);
     }
     if (page == PAGE47)
     {
-        WriteDGUS(0xa000 | (page << 8), (u8 *)&cache, 2);
+        WriteDGUS(0xa000 + (page << 8), (u8 *)&cache, 2);
     }
 }
 
@@ -398,11 +409,11 @@ u8 getPasswordLevel(u16 event)
     {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
     }
-    if (event <= PASSWORD_FUN_02_EVENT)
+    if (event <= PASSWORD_FUN_03_EVENT)
     {
         return funLevel[event - PASSWORD_FUN_00_EVENT][1];
     }
-    return LEVEL_NUM;
+    return LEVEL_NUM - 1;
 }
 
 u8 checkPassword(u8 level, u8 *input)
@@ -452,7 +463,7 @@ void passwordChangeConfirmEventHandle(void)
     u16 cache[10];
     u8 i;
     ReadDGUS(0xa620, (u8 *)cache, 16);
-    if (*((u32 *)&cache[2]) != *((u32 *)password[cache[0]]))
+    if (*((u32 *)&cache[2]) != *((u32 *)password[cache[0] + 1]))
     {
         JumpPage(7);
         return;
@@ -462,7 +473,7 @@ void passwordChangeConfirmEventHandle(void)
         JumpPage(8);
         return;
     }
-    *((u32 *)password[cache[0]]) = *((u32 *)&cache[4]);
+    *((u32 *)password[cache[0] + 1]) = *((u32 *)&cache[4]);
     savePassword();
     for (i = 0; i < 10; i++)
     {

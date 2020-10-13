@@ -98,6 +98,7 @@
 #define PASSWORD_FUN_00_EVENT 0xA4F0
 #define PASSWORD_FUN_01_EVENT 0xA4F1
 #define PASSWORD_FUN_02_EVENT 0xA4F2
+#define PASSWORD_FUN_03_EVENT 0xA4F3
 
 #define PASSWORD_CHANGE_CONFIRM_EVENT 0xA600
 #define PASSWORD_CHANGE_CANCLE_EVENT 0xA601
@@ -128,62 +129,10 @@ typedef enum password_mode
 
 enum
 {
-    PAGE00 = 0x00,
-    PAGE01 = 0x01,
-    PAGE02 = 0x02,
-    PAGE03 = 0x03,
-    PAGE04 = 0x04,
-    PAGE05 = 0x05,
-    PAGE06 = 0x06,
-    PAGE07 = 0x07,
-    PAGE08 = 0x08,
-    PAGE09 = 0x09,
-    PAGE10 = 0x0A,
-    PAGE11 = 0x0B,
-    PAGE12 = 0x0C,
-    PAGE13 = 0x0D,
-    PAGE14 = 0x0E,
-    PAGE15 = 0x0F,
-    PAGE16 = 0x10,
-    PAGE17 = 0x11,
-    PAGE18 = 0x12,
-    PAGE19 = 0x13,
-    PAGE20 = 0x14,
-    PAGE21 = 0x15,
-    PAGE22 = 0x16,
-    PAGE23 = 0x17,
-    PAGE24 = 0x18,
-    PAGE25 = 0x19,
-    PAGE26 = 0x1A,
-    PAGE27 = 0x1B,
-    PAGE28 = 0x1C,
-    PAGE29 = 0x1D,
-    PAGE30 = 0x1E,
-    PAGE31 = 0x1F,
-    PAGE32 = 0x20,
-    PAGE33 = 0x21,
-    PAGE34 = 0x22,
-    PAGE35 = 0x23,
-    PAGE36 = 0x24,
-    PAGE37 = 0x25,
-    PAGE38 = 0x26,
-    PAGE39 = 0x27,
-    PAGE40 = 0x28,
-    PAGE41 = 0x29,
-    PAGE42 = 0x2A,
-    PAGE43 = 0x2B,
-    PAGE44 = 0x2C,
-    PAGE45 = 0x2D,
-    PAGE46 = 0x2E,
-    PAGE47 = 0x2F,
-    PAGE48 = 0x30,
-    PAGE49 = 0x31,
-};
-enum
-{
     FUN00 = 0X00,
     FUN01 = 0X01,
     FUN02 = 0X02,
+    FUN03 = 0X03,
 };
 
 extern u8 passwordGotLevel;
@@ -207,6 +156,7 @@ u8 getPasswordLevel(u16 event);
 u8 checkPassword(u8 level, u8* input);
 void passwordInit(void);
 void passwordTask(void);
+void savePassword(void);
 void passwordChangeConfirmEventHandle(void);
 void pageHandle(u16 page);
 
