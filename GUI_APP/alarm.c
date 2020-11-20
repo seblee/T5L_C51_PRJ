@@ -193,18 +193,18 @@ void alarmTask(void)
         return;
     }
     ReadDGUS(0xa021, (u8 *)&cache, 12);  // GET PAGENOW
+    if (alarmCount != (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
+    {
+        if (alarmCount < (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
+        {
+            *((u16 *)&cache[10]) = 1;
+            WriteDGUS(ALARM_BEEP_FLAG, (u8 *)&cache[10], 2);
+        }
+        alarmCount = *((u16 *)&cache[0]) + *((u16 *)&cache[2]);
+    }
+
     if ((*((u16 *)&cache[0]) > 0) || (*((u16 *)&cache[2]) > 0))
     {
-        if (alarmCount != (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
-        {
-            if (alarmCount < (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
-            {
-                *((u16 *)&cache[10]) = 1;
-                WriteDGUS(ALARM_BEEP_FLAG, (u8 *)&cache[10], 2);
-            }
-            alarmCount = *((u16 *)&cache[0]) + *((u16 *)&cache[2]);
-        }
-
         if (*((u16 *)&cache[10]))
             WriteDGUS(WAE_PALY_ADDR, (u8 *)&alarmBeep, 2);  // GET PAGENOW
     }
