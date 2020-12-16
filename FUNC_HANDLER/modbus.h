@@ -53,6 +53,7 @@
 #define BUS_DIS 0X00
 #define BUS_FUN_03H 0x03  //读寄存器地址命令
 #define BUS_FUN_06H 0x06  //写寄存器地址命令
+#define BUS_FUN_10H 0x10
 #define CMD_NUMBER (sizeof(modbusCmdlib) / sizeof(modbosCmd_t))
 #define CHECK_NUMBER (sizeof(dataCheckLib) / sizeof(dataCheckCmd_t))
 

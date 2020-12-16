@@ -454,7 +454,12 @@ void Modbus_Read_Register(modbosCmd_t *CmdNow)
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
+#ifdef MDO_UART2
     Uart2SendStr(modbus_tx_buf, len);
+#endif
+#ifdef MDO_UART5
+    Uart5SendStr(modbus_tx_buf, len);
+#endif
 }
 
 // modbus 06H 发送
@@ -474,7 +479,12 @@ void Modbus_Write_Register06H(modbosCmd_t *CmdNow, u16 value)
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
+#ifdef MDO_UART2
     Uart2SendStr(modbus_tx_buf, len);
+#endif
+#ifdef MDO_UART5
+    Uart5SendStr(modbus_tx_buf, len);
+#endif
 }  // modbus 06H 发送
 void Modbus_Write_Register10H(modbosCmd_t *CmdNow, u16 value)
 {
@@ -484,15 +494,21 @@ void Modbus_Write_Register10H(modbosCmd_t *CmdNow, u16 value)
 
     len                  = 0;
     modbus_tx_buf[len++] = CmdNow->slaveID;
-    modbus_tx_buf[len++] = BUS_FUN_06H;                      // command
+    modbus_tx_buf[len++] = BUS_FUN_10H;                      // command
     modbus_tx_buf[len++] = (CmdNow->slaveAddr >> 8) & 0xFF;  // register
     modbus_tx_buf[len++] = CmdNow->slaveAddr & 0xFF;
+    modbus_tx_buf[len++] = CmdNow->length * 2;
     modbus_tx_buf[len++] = (value >> 8) & 0xFF;  // register value
     modbus_tx_buf[len++] = value & 0xFF;
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
+#ifdef MDO_UART2
     Uart2SendStr(modbus_tx_buf, len);
+#endif
+#ifdef MDO_UART5
+    Uart5SendStr(modbus_tx_buf, len);
+#endif
 }
 //清除modbus RX的相关参数
 void Modbus_RX_Reset(void)

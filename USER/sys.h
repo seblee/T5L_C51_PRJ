@@ -98,6 +98,8 @@ extern data _TKS_FLAGA_type MSFlag;
 #define MS500msFlag MSFlag.bits.b2
 
 #define VP_TEMP 0x3000
+// #define MDO_UART2
+#define MDO_UART5
 /*****************************************************************************
 对外函数声明*/
 void InitSys(void); /* 寄存器配置初始化 */
