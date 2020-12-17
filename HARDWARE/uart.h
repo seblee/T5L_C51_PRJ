@@ -25,10 +25,10 @@ sbit RS485_TX_EN = P0 ^ 1;
 /*****************************************************************************
 宏定义变量*/
 
-#define UART2_EN 0
+#define UART2_EN 1
 #define UART3_EN 0
 #define UART4_EN 0
-#define UART5_EN 1
+#define UART5_EN 0
 
 #if UART2_EN == 1
 #ifndef MDO_UART2
