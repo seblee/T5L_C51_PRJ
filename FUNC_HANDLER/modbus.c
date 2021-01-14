@@ -174,9 +174,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf27, 0x0141, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf28, 0x015a, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf29, 0x01a7, PAGE47},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf80, 0xcf20, 0x0108, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf81, 0xcf21, 0x010a, PAGE47},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf82, 0xcf22, 0x010b, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf83, 0xcf23, 0x010d, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf84, 0xcf24, 0x010e, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf85, 0xcf25, 0x010f, PAGE47},
@@ -185,7 +183,6 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf88, 0xcf28, 0x015a, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf89, 0xcf29, 0x01a7, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf8a, 0xcf2a, 0x023b, PAGE47},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf8b, 0xcf2b, 0x023b, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0A, 0xc8, MODE_PAGE, PAGE52, 0xd420, 0x039c, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE52, 0xd42a, 0x03a8, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x07, 0xc8, MODE_PANP, 0xd500, 0xd520, 0x011a, PAGE53},
@@ -195,6 +192,11 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd584, 0xd524, 0x011e, PAGE53},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd585, 0xd525, 0x011f, PAGE53},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd586, 0xd526, 0x0120, PAGE53},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd600, 0xd620, 0x0108, PAGE54},  //
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd600, 0xd622, 0x010b, PAGE54},  //
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd680, 0xd620, 0x0108, PAGE54},  //
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd682, 0xd622, 0x010b, PAGE54},  //
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd68b, 0xd62b, 0x023b, PAGE54},
 };
 modbosCmd_t modbusCmdNow = {0};
 u8 CmdIndex              = 0;
@@ -291,6 +293,8 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE53, 0xd524, 0xd554, 0xd584},  //
     {BUS_EN, PAGE53, 0xd525, 0xd555, 0xd585},  //
     {BUS_EN, PAGE53, 0xd526, 0xd556, 0xd586},  //
+    {BUS_EN, PAGE54, 0xd620, 0xd650, 0xd680},  //
+    {BUS_EN, PAGE54, 0xd622, 0xd652, 0xd682},  //
 };
 
 _TKS_FLAGA_type modbusFlag = {0};

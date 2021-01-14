@@ -115,7 +115,8 @@
 #define CLEAR_RUNTIME_EVENT_0E 0Xc90e
 #define CLEAR_RUNTIME_EVENT_11 0Xc911
 #define REST_ORIGINAL_PARA 0xcf00
-#define SAVE_FACTORY_CFG 0xcf01
+
+#define SAVE_FACTORY_CFG_EVENT 0xD600
 
 #define LEVEL_NUM 6
 #define PASSWORD_FLASH_START 0x3000
@@ -145,6 +146,8 @@ void inMaintainModEventHandle(void);
 void outMaintainModEventHandle(void);
 void resetOriginalPara(void);
 void saveFactoryCFG(void);
+void setDIPolarityEventHandle(void);
+void setDIMaskEventHandle(void);
 
 void passwordConfirmEventHandle(void);
 void passwordCancleEventHandle(void);

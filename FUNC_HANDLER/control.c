@@ -223,11 +223,10 @@ void touchHandler(void)
             case CLEAR_RUNTIME_EVENT_11:
                 clearRunTimeHandle(touchEventFlag);
                 break;
-
             case REST_ORIGINAL_PARA:
                 resetOriginalPara();
                 break;
-            case SAVE_FACTORY_CFG:
+            case SAVE_FACTORY_CFG_EVENT:
                 saveFactoryCFG();
                 break;
             default:
@@ -290,9 +289,9 @@ void resetOriginalPara(void)
 void saveFactoryCFG(void)
 {
     u16 cache = 0x69;
-    WriteDGUS(0xcf2b, (u8 *)&cache, 2);
+    WriteDGUS(0xd62b, (u8 *)&cache, 2);
     cache = 0x005a;
-    WriteDGUS(0xcf8b, (u8 *)&cache, 2);
+    WriteDGUS(0xd68b, (u8 *)&cache, 2);
 }
 
 void passwordConfirmEventHandle(void)
