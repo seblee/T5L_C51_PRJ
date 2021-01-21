@@ -280,7 +280,65 @@ void alarmTask(void)
             showPagebAK = showPage;
         }
     }
-    else if (picNow == ALARMHISTORYAGE)
+    else
+    {
+        ReadDGUS(alarmStateVP, (u8 *)cache, 16);
+        cache[14] = 0;
+        cache[15] &= 0x07;
+        if (memcmp(cache, alarmState, sizeof(alarmState)))
+        {
+            u16 alarmStateCache[8];
+            alarmDataStrc_t *alarmData;
+            memcpy(alarmStateCache, cache, sizeof(alarmStateCache));
+            for (j = 0; j < 8; j++)
+            {
+                for (i = 0; i < 16; i++)
+                {
+                    if ((alarmState[j] & (1 << i)) != (alarmStateCache[j] & (1 << i)))
+                    {
+                        u8 alarmIndex = i + 16 * j;
+                        ReadDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 48);  // get memory
+                        alarmData = (alarmDataStrc_t *)cache;
+                        if (alarmStateCache[j] & (1 << i))
+                        {
+                            if (alarmData->flag != ALARMDATALAG)
+                            {
+                                alarmData->flag = ALARMDATALAG;
+                                ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
+                                memcpy(&cache[2], &cache[20], 3);
+                                memcpy(&cache[5], &cache[24], 3);
+                                memset(&cache[8], 0, 8);
+                                *((u16 *)&cache[14]) = alarmIndex;
+                                strncpy(&cache[16], &alarmMessage[alarmIndex][0], 32);
+                                WriteDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 48);  // write memory
+                            }
+                        }
+                        else
+                        {
+                            if (alarmData->flag == ALARMDATALAG)
+                            {
+                                ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
+                                memcpy(&cache[8], &cache[20], 3);
+                                memcpy(&cache[11], &cache[24], 3);
+                                *((u16 *)&cache[14]) = alarmIndex;
+                                WriteDGUS(alarmTemp, (u8 *)&cache, 16);  // write memory
+                                saveAlarmHistory();
+                                *((u16 *)&cache[0]) = 0;
+                                WriteDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 2);  // write memory
+                                showPagebAK = showPage + 1;
+                            }
+                        }
+                    }
+                }
+            }
+            // for (i = showIndex; i < (showPage * 10 + 10); i++)
+            // {
+            //     resetAlarmDisplay(i - showPage * 10);
+            // }
+            memcpy(alarmState, alarmStateCache, sizeof(alarmState));
+        }
+    }
+    if (picNow == ALARMHISTORYAGE)
     {
         if (pageBak != picNow)
         {
@@ -326,6 +384,7 @@ void alarmTask(void)
             resetAlarmDisplay(showIndex);
         }
     }
+
 alarmTaskExit:
     pageBak = picNow;
 }
