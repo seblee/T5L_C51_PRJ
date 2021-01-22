@@ -318,8 +318,24 @@ void rdtime(void)
     //	rtcdata[3]=n;
 
     rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
+    WriteDGUS(RTC, (u8*)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
 
-    WriteDGUS(0x0010, (u8*)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
+    if ((rtcdata[5] == 0) && (rtcdata[6] == 0))
+    {
+        u32 timeStamp      = 0;
+        static struct tm p = {0};
+        p.tm_sec           = rtcdata[6];
+        p.tm_min           = rtcdata[5];
+        p.tm_hour          = rtcdata[4];
+        p.tm_mday          = rtcdata[2];
+        p.tm_mon           = rtcdata[1] - 1;
+        p.tm_year          = rtcdata[0] + 100;
+
+        *((u16*)rtcdata)       = 0x5a;
+        *((u16*)(&rtcdata[2])) = 0x12;
+        *((u32*)(&rtcdata[4])) = time_to_stamp(&p, 8);
+        WriteDGUS(0x5015, (u8*)rtcdata, 8);  //写入DGUS变量空间
+    }
 }
 
 /*****************************************************************************
@@ -391,4 +407,38 @@ void RTC_Set_CMD(void)
         time_calibra[1] = 0;
         WriteDGUS(RTC_Set, (uint8_t*)time_calibra, 8);
     }
+}
+
+u32 time_to_stamp(const struct tm* ltm, int utc_diff)
+{
+    const int mon_days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    long tyears, tdays, leap_years, utc_hrs;
+    int is_leap;
+    int i, ryear;
+
+    //判断闰年
+    ryear   = ltm->tm_year + 1900;
+    is_leap = ((ryear % 100 != 0 && ryear % 4 == 0) || (ryear % 400 == 0)) ? 1 : 0;
+
+    tyears = ltm->tm_year - 70;  //时间戳从1970年开始算起
+    if (ltm->tm_mon < 1 && is_leap == 1)
+    {
+        leap_years = (tyears + 2) / 4 - 1;  // 1970年不是闰年，从1972年开始闰年
+                                            //闰年的月份小于1，需要减去一天
+    }
+    else
+    {
+        leap_years = (tyears + 2) / 4;
+    }
+
+    tdays = 0;
+    for (i = 0; i < ltm->tm_mon; ++i)
+    {
+        tdays += mon_days[i];
+    }
+    tdays += ltm->tm_mday - 1;  //减去今天
+    tdays += tyears * 365 + leap_years;
+    utc_hrs = ltm->tm_hour - utc_diff;  //如上面解释所说，时间戳转换北京时间需要+8，那么这里反转需要-8
+
+    return (tdays * 86400) + (utc_hrs * 3600) + (ltm->tm_min * 60) + ltm->tm_sec;
 }

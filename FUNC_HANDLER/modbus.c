@@ -22,7 +22,8 @@
 void Modbus_RX_Reset(void);
 // void Modbus_TX_Reset(void);
 void Modbus_Write_Register06H(modbosCmd_t *CmdNow, u16 value);
-void Modbus_Read_Register(modbosCmd_t *CmdNow);
+void Modbus_Write_Register10H(modbosCmd_t *CmdNow);
+void Modbus_Read_Register03H(modbosCmd_t *CmdNow);
 void modbus_process_command(u8 *pstr, u16 strlen);
 
 u8 modbus_rx_count = 0;                 //接收到的字符串的长度
@@ -38,7 +39,7 @@ u32 modbus_tx_process_tick = 0;  // modbus发送命令的时间间隔
 
 const modbosCmd_t modbusCmdlib[] = {
     // en         id         fun    len  timeout      mod    modP     VP  slaveAddr feedback
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x03, 0xc8, MODE_PARA, 0x5015, 0x5016, 0x0000, 0x00ff},  // rtc
+    {BUS_EN, SLAVE_ID, BUS_FUN_10H, 0x03, 0xc8, MODE_PARA, 0x5015, 0x5016, 0x0000, 0x00ff},  // rtc
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_ALWA, 0x0000, 0xa020, 0x031c, 0x00ff},  //告警数
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE00, 0xa023, 0x0319, 0x00ff},  //位状态
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xa084, 0xa024, 0x0100, PAGE00},  // power switch
@@ -376,6 +377,22 @@ void modbus_process_command(u8 *pstr, u16 strlen)
                     memset(&modbusCmdNow, 0, sizeof(modbosCmd_t));
                     cmdRxFlag = 1;
                     break;
+                case BUS_FUN_10H:
+                    if ((num + 8) > strlen)
+                    {
+                        num = strlen;  //非modbus命令
+                        break;
+                    }
+                    crc_data = crc16table(pstr + num, 6);
+                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) ||
+                        (*(pstr + num + 7) != (crc_data & 0xFF)))  // CRC
+                    {
+                        break;
+                    }
+                    num += 8;
+                    memset(&modbusCmdNow, 0, sizeof(modbosCmd_t));
+                    cmdRxFlag = 1;
+                    break;
                 default:
                     break;
             }
@@ -445,7 +462,7 @@ processCMDLib:
         memcpy(&modbusCmdNow, &modbusCmdlib[CmdIndex], sizeof(modbosCmd_t));
         if (modbusCmdNow.funCode == BUS_FUN_03H)
         {
-            Modbus_Read_Register(&modbusCmdNow);
+            Modbus_Read_Register03H(&modbusCmdNow);
             cmdTxFlag = 1;
         }
         else if (modbusCmdNow.funCode == BUS_FUN_06H)
@@ -455,6 +472,11 @@ processCMDLib:
             Modbus_Write_Register06H(&modbusCmdNow, value);
             cmdTxFlag = 1;
         }
+        else if (modbusCmdNow.funCode == BUS_FUN_10H)
+        {
+            Modbus_Write_Register10H(&modbusCmdNow);
+            cmdTxFlag = 1;
+        }
     }
     else
     {
@@ -462,7 +484,7 @@ processCMDLib:
     }
 }
 // modbus 03H 读取寄存器
-void Modbus_Read_Register(modbosCmd_t *CmdNow)
+void Modbus_Read_Register03H(modbosCmd_t *CmdNow)
 {
     u16 crc_data;
     u8 len;
@@ -510,20 +532,21 @@ void Modbus_Write_Register06H(modbosCmd_t *CmdNow, u16 value)
     Uart5SendStr(modbus_tx_buf, len);
 #endif
 }  // modbus 06H 发送
-void Modbus_Write_Register10H(modbosCmd_t *CmdNow, u16 value)
+void Modbus_Write_Register10H(modbosCmd_t *CmdNow)
 {
     u16 crc_data;
-    u8 len;
-    u8 modbus_tx_buf[20];
+    u8 len = 0;
+    u8 modbus_tx_buf[64];
 
-    len                  = 0;
     modbus_tx_buf[len++] = CmdNow->slaveID;
     modbus_tx_buf[len++] = BUS_FUN_10H;                      // command
     modbus_tx_buf[len++] = (CmdNow->slaveAddr >> 8) & 0xFF;  // register
     modbus_tx_buf[len++] = CmdNow->slaveAddr & 0xFF;
+    modbus_tx_buf[len++] = (CmdNow->length >> 8) & 0xFF;  // register number
+    modbus_tx_buf[len++] = CmdNow->length & 0xFF;
     modbus_tx_buf[len++] = CmdNow->length * 2;
-    modbus_tx_buf[len++] = (value >> 8) & 0xFF;  // register value
-    modbus_tx_buf[len++] = value & 0xFF;
+    ReadDGUS(modbusCmdNow.VPAddr, (u8 *)(&modbus_tx_buf[len]), CmdNow->length * 2);
+    len += CmdNow->length * 2;
     crc_data             = crc16table(modbus_tx_buf, len);
     modbus_tx_buf[len++] = (crc_data >> 8) & 0xFF;
     modbus_tx_buf[len++] = crc_data & 0xFF;
