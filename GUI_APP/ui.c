@@ -85,9 +85,9 @@ void ui(void)
                 if (diagnosisPageInCount < 5)
                 {
                     u16 cache = 1;
-                    WriteDGUS(0xa025, (u8*)&cache, 2);
+                    WriteDGUS(0xa027, (u8*)&cache, 2);
                     cache = 0x005a;
-                    WriteDGUS(0xa085, (u8*)&cache, 2);
+                    WriteDGUS(0xa087, (u8*)&cache, 2);
                     diagnosisPageInCount++;
                 }
                 diagnosisPageOutCount = 0;
@@ -97,9 +97,9 @@ void ui(void)
                 if (diagnosisPageOutCount < 5)
                 {
                     u16 cache = 0;
-                    WriteDGUS(0xa025, (u8*)&cache, 2);
+                    WriteDGUS(0xa027, (u8*)&cache, 2);
                     cache = 0x005a;
-                    WriteDGUS(0xa085, (u8*)&cache, 2);
+                    WriteDGUS(0xa087, (u8*)&cache, 2);
                     diagnosisPageOutCount++;
                 }
                 diagnosisPageInCount = 0;

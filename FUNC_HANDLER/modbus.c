@@ -44,7 +44,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE00, 0xa023, 0x0319, 0x00ff},  //位状态
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xa084, 0xa024, 0x0100, PAGE00},  // power switch
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE00, 0xa025, 0x0104, 0x00ff},  //诊断模式
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PARA, 0xa085, 0xa025, 0x0104, 0x00ff},  //诊断模式
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PARA, 0xa087, 0xa027, 0x0104, 0x00ff},  //诊断模式
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PAGE, PAGE00, 0xa0a0, 0x011a, 0x00ff},  //温湿度
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_ALWA, 0x0000, 0xa0a3, 0x0310, 0x00ff},  //回风温湿度
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE10, 0xaa00, 0x0326, 0x00ff},
@@ -173,7 +173,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc885, 0xc825, 0x0130, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0e, 0xc8, MODE_PAGE, PAGE41, 0xc9b0, 0x0378, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc990, 0xc930, 0x023c, PAGE41},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcc00, 0xcca0, 0x0303, PAGE44},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcc00, 0xcca0, 0x0302, PAGE44},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf20, 0x0108, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xcf00, 0xcf21, 0x010a, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xcf00, 0xcf23, 0x010d, PAGE47},
