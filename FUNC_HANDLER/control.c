@@ -301,7 +301,6 @@ void passwordConfirmEventHandle(void)
     if (checkPassword(currentLevel, cache))
     {
         passwordOperation();
-        passwordGotLevel = currentLevel;
     }
     else
     {
@@ -423,7 +422,10 @@ u8 checkPassword(u8 level, u8 *input)
     for (i = level; i < LEVEL_NUM; i++)
     {
         if (memcmp(input, &password[i][0], 4) == 0)
+        {
+            passwordGotLevel = i;
             return 1;
+        }
     }
     return 0;
 }
