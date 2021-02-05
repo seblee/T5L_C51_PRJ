@@ -48,11 +48,11 @@ void ui(void)
     }
     if (MS500msFlag)
     {
-        if (picNow == 0x000b)
+        if (picNow == PAGE11)
         {
             caculateGroupCtrlPic();
         }
-        if (picNow == 0x0029)
+        if (picNow == PAGE41)
         {
             u8 i;
             u16 hour_reg;
@@ -67,7 +67,7 @@ void ui(void)
             }
             WriteDGUS(0xc920, (u8*)sys_comp_runtime, 28);
         }
-        if (picNow == 0x002c)
+        if (picNow == PAGE44)
         {
             u16 cache[4];
             ReadDGUS(0xcca0, (u8*)&cache[3], 2);
@@ -80,7 +80,7 @@ void ui(void)
         {
             static u8 diagnosisPageInCount  = 0;
             static u8 diagnosisPageOutCount = 0;
-            if (picNow == 0x0027)
+            if (picNow == PAGE39)
             {
                 if (diagnosisPageInCount < 5)
                 {
