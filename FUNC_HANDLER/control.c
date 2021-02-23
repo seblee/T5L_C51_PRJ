@@ -125,6 +125,9 @@ void touchHandler(void)
             case POWER_SWITCH_EVENT:
                 powerSwitchEventHandle();
                 break;
+            case POWER_LOGOUT_EVENT:
+                logoutEventHandle();
+                break;
             case ALARM_CONFIRM_EVENT:
                 alarmConfirmEventHandle();
                 break;
@@ -226,7 +229,7 @@ void touchHandler(void)
             case REST_ORIGINAL_PARA:
                 resetOriginalPara();
                 break;
-            case SAVE_FACTORY_CFG:
+            case SAVE_FACTORY_CFG_EVENT:
                 saveFactoryCFG();
                 break;
             default:
@@ -267,6 +270,10 @@ void powerSwitchEventHandle(void)
     WriteDGUS(0xa024, (u8 *)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xa084, (u8 *)&cache, 2);
+}
+void logoutEventHandle(void)
+{
+    passwordGotLevel = 0;
 }
 
 void inMaintainModEventHandle(void)
@@ -447,10 +454,10 @@ void passwordInit(void)
 }
 void passwordTask(void)
 {
-    if (picNow == PAGE00)
-    {
-        passwordGotLevel = 0;
-    }
+    // if (picNow == PAGE00)
+    // {
+    //     passwordGotLevel = 0;
+    // }
 }
 
 void savePassword(void)

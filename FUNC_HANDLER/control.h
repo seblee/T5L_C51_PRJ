@@ -40,6 +40,7 @@
 #define TOUCH_EVENT_FLAG 0x5014
 
 #define POWER_SWITCH_EVENT 0Xa000
+#define POWER_LOGOUT_EVENT 0Xa001
 #define ALARM_CONFIRM_EVENT 0Xa026
 #define PASSWORD_CONFIRM_EVENT 0Xa400
 #define PASSWORD_CANCLE_EVENT 0Xa401
@@ -115,7 +116,7 @@
 #define CLEAR_RUNTIME_EVENT_0E 0Xc90e
 #define CLEAR_RUNTIME_EVENT_11 0Xc911
 #define REST_ORIGINAL_PARA 0xcf00
-#define SAVE_FACTORY_CFG 0xcf01
+#define SAVE_FACTORY_CFG_EVENT 0xcf01
 
 #define LEVEL_NUM 6
 #define PASSWORD_FLASH_START 0x3000
@@ -141,6 +142,7 @@ void touchHandler(void);
 void resetEventHandle(void);
 void clearRunTimeHandle(u16 eventId);
 void powerSwitchEventHandle(void);
+void logoutEventHandle(void);
 void inMaintainModEventHandle(void);
 void outMaintainModEventHandle(void);
 void resetOriginalPara(void);
