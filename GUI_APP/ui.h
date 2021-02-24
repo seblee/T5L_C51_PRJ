@@ -195,7 +195,8 @@ enum
     PAGE98 = 0x62,
     PAGE99 = 0x63,
 };
-#define STANGBYTIME 300 * 2
+#define STANGBYTIME 300 * 2  // STANGBYTIME/2 S
+#define LOGOUTDELAY 300 * 2  // LOGOUTDELAY/2 S
 
 extern u16 picNow;
 

@@ -45,7 +45,7 @@
 
 u8 password[LEVEL_NUM][4]            = {0};
 const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 519525};
-u8 passwordGotLevel                  = 0xff;
+u8 passwordGotLevel                  = 0;
 
 const u8 pageLevel[][2] = {
     {PAGE00, 0},  //  PASSWORD_PAGEJUMP_00_EVENT

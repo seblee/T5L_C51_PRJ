@@ -36,6 +36,7 @@
 
 #include "ui.h"
 #include "timer.h"
+#include "control.h"
 u16 picNow = 0;
 /**
  * @brief ui task
@@ -118,14 +119,17 @@ void ui(void)
             }
             else
             {
-                if (timerCounter < STANGBYTIME)
+                if (timerCounter < 0xffff)
                     timerCounter++;
-                else if (timerCounter == STANGBYTIME)
+                if (timerCounter == STANGBYTIME)
                 {
-                    timerCounter++;
                     if (picNow != 0)
                         JumpPage(0);
+                }
+                if (timerCounter == LOGOUTDELAY)
+                {
                     //用户等级
+                    logoutEventHandle();
                 }
             }
         }
