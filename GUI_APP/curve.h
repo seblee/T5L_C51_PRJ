@@ -42,7 +42,7 @@
 
 #define CURVE_FLASH_ADDR 0
 #define CURVE_VP_ADDR 0x1000
-#define CURVE_LEN 0x1000
+#define CURVE_LEN 0x2000
 
 // curve0---
 #define Curve0Point 0x0300
@@ -54,11 +54,23 @@
 #define Curve1Len 0x0303
 #define Curve1Start 0x1800
 #define Curve1End 0x1FFE
+// curve2---
+#define Curve2Point 0x0304
+#define Curve2Len 0x0305
+#define Curve2Start 0x2000
+#define Curve2End 0x27FE
+// curve3---
+#define Curve3Point 0x0306
+#define Curve3Len 0x0307
+#define Curve3Start 0x2800
+#define Curve3End 0x2FFE
 
 // #define Curve0Addr 0x5004  // 1个
 // #define Curve1Addr 0x5005  // 1个
 #define Curve0Data 0xa0a3  // 1个
 #define Curve1Data 0xa0a4  // 1个
+#define Curve2Data 0xa0a5  // 1个
+#define Curve3Data 0xa0a6  // 1个
 
 #define CurveMAX 0x07FE
 #define Curveffset 0x1000

@@ -70,6 +70,8 @@ checkout:
     WriteDGUS(Curve0Point, (u8*)&pointTemp, 2);
     // WriteDGUS(Curve1Addr, &pointTemp, 2);
     WriteDGUS(Curve1Point, (u8*)&pointTemp, 2);
+    WriteDGUS(Curve2Point, (u8*)&pointTemp, 2);
+    WriteDGUS(Curve3Point, (u8*)&pointTemp, 2);
     // curveManual    = pointTemp;
     // curveManualBak = pointTemp;
     WriteDGUS(CurveManual, (u8*)&pointTemp, 2);
@@ -77,6 +79,8 @@ checkout:
     temp[0] = 0x07fe;
     WriteDGUS(Curve0Len, (u8*)temp, 2);
     WriteDGUS(Curve1Len, (u8*)temp, 2);
+    WriteDGUS(Curve2Len, (u8*)temp, 2);
+    WriteDGUS(Curve3Len, (u8*)temp, 2);
 
     temp[0] = 0x0006;
     temp[1] = 0x0001;
@@ -111,6 +115,15 @@ void curveProcess(void)
         ReadDGUS(Curve1Data, (u8*)&temp[1], 2);
         WriteDGUS(temp[0], (u8*)&temp[1], 2);
 
+        temp[0] = curvePoint + Curve2Start;
+        ReadDGUS(Curve2Data, (u8*)&temp[1], 2);
+        temp[1] += 200;  //负数显示
+        WriteDGUS(temp[0], (u8*)&temp[1], 2);
+
+        temp[0] = curvePoint + Curve3Start;
+        ReadDGUS(Curve3Data, (u8*)&temp[1], 2);
+        WriteDGUS(temp[0], (u8*)&temp[1], 2);
+
         temp[3] = curvePoint;
         curvePoint++;
         if (curvePoint >= CurveMAX)
@@ -119,6 +132,8 @@ void curveProcess(void)
         }
         WriteDGUS(Curve0Point, (u8*)&curvePoint, 2);
         WriteDGUS(Curve1Point, (u8*)&curvePoint, 2);
+        WriteDGUS(Curve2Point, (u8*)&curvePoint, 2);
+        WriteDGUS(Curve3Point, (u8*)&curvePoint, 2);
         temp[2] = CurveMAX;
         WriteDGUS(CurveManual, (u8*)&temp[2], 2);
         WriteDGUS(CurveManualBak, (u8*)&temp[2], 2);
@@ -136,10 +151,21 @@ void curveProcess(void)
         temp[2] = 0xa55a;
         WriteDGUS(Curvetemp, (u8*)&temp[0], 6);
         T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3], 4);
+
         ReadDGUS(temp[3] + Curve1Start, (u8*)&temp[0], 4);
         temp[2] = 0xa55a;
         WriteDGUS(Curvetemp, (u8*)&temp[0], 6);
         T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x0800, 4);
+
+        ReadDGUS(temp[3] + Curve2Start, (u8*)&temp[0], 4);
+        temp[2] = 0xa55a;
+        WriteDGUS(Curvetemp, (u8*)&temp[0], 6);
+        T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x1000, 4);
+
+        ReadDGUS(temp[3] + Curve3Start, (u8*)&temp[0], 4);
+        temp[2] = 0xa55a;
+        WriteDGUS(Curvetemp, (u8*)&temp[0], 6);
+        T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x1800, 4);
     }
 }
 void dragCuave(void)
@@ -158,6 +184,8 @@ void dragCuave(void)
     }
     WriteDGUS(Curve0Point, (u8*)&temp[2], 2);
     WriteDGUS(Curve1Point, (u8*)&temp[2], 2);
+    WriteDGUS(Curve2Point, (u8*)&temp[2], 2);
+    WriteDGUS(Curve3Point, (u8*)&temp[2], 2);
     temp[0] >>= 2;
     temp[0] += DragerLeft;
     WriteDGUS(DragerX, (u8*)&temp[0], 2);
@@ -177,6 +205,8 @@ void curveClearHandle(void)
     curvePoint = 0;
     WriteDGUS(Curve0Point, (u8*)&curvePoint, 2);
     WriteDGUS(Curve1Point, (u8*)&curvePoint, 2);
+    WriteDGUS(Curve2Point, (u8*)&curvePoint, 2);
+    WriteDGUS(Curve3Point, (u8*)&curvePoint, 2);
 
     cache[2] = CurveMAX;
     WriteDGUS(CurveManual, (u8*)&cache[2], 2);
