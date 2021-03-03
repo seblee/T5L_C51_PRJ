@@ -196,7 +196,7 @@ void curveClearHandle(void)
     u16 cache[16];
     u16 i;
     memset(cache, 0, sizeof(cache));
-    for (i = 0; i < 256; i++)
+    for (i = 0; i < 512; i++)
     {
         WriteDGUS(CURVE_VP_ADDR + (i << 4), (u8*)&cache[0], sizeof(cache));
     }
