@@ -296,9 +296,9 @@ void resetOriginalPara(void)
 void saveFactoryCFG(void)
 {
     u16 cache = 0x69;
-    WriteDGUS(0xcf2b, (u8 *)&cache, 2);
+    WriteDGUS(0xcf2a, (u8 *)&cache, 2);
     cache = 0x005a;
-    WriteDGUS(0xcf8b, (u8 *)&cache, 2);
+    WriteDGUS(0xcf8a, (u8 *)&cache, 2);
 }
 
 void passwordConfirmEventHandle(void)
