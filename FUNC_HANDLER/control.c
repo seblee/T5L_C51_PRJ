@@ -287,7 +287,8 @@ void outMaintainModEventHandle(void)
 
 void resetOriginalPara(void)
 {
-    u16 cache = 0x3c;
+    u16 cache = 17;
+    // u16 cache = 0x3c;
     WriteDGUS(0xcf2a, (u8 *)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xcf8a, (u8 *)&cache, 2);
@@ -295,7 +296,8 @@ void resetOriginalPara(void)
 
 void saveFactoryCFG(void)
 {
-    u16 cache = 0x69;
+    u16 cache = 16;
+    // u16 cache = 0x69;
     WriteDGUS(0xcf2a, (u8 *)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xcf8a, (u8 *)&cache, 2);
