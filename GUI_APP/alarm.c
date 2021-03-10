@@ -126,6 +126,7 @@ const u16 historyShowVP[10] = {
 
 alarmInfoStrc_t alarmInfomation = {0, 0, 0, 0};
 static u16 alarmState[8];
+static u16 alarmStateBak[8];
 static u16 pageBak     = 0;
 static u16 showPage    = 0;
 static u16 showPagebAK = 0;
@@ -222,6 +223,11 @@ void alarmTask(void)
         }
 
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
+        if (memcmp(cache, alarmStateBak, sizeof(alarmState)) != 0)
+        {
+            memcpy(alarmStateBak, cache, sizeof(alarmStateBak));
+            return;
+        }
         cache[14] = 0;
         cache[15] &= 0x07;
         if ((memcmp(cache, alarmState, sizeof(alarmState))) || (showPage != showPagebAK) || (pageBak != picNow))
@@ -283,6 +289,11 @@ void alarmTask(void)
     else
     {
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
+        if (memcmp(cache, alarmStateBak, sizeof(alarmState)) != 0)
+        {
+            memcpy(alarmStateBak, cache, sizeof(alarmStateBak));
+            return;
+        }
         cache[14] = 0;
         cache[15] &= 0x07;
         if (memcmp(cache, alarmState, sizeof(alarmState)))
