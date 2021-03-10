@@ -356,7 +356,7 @@ void modbus_process_command(u8 *pstr, u16 strlen)
                     {
                         break;
                     }
-                    WriteDGUS(modbusCmdNow.VPAddr, (pstr + 3), *(pstr + 2));
+                    WriteDGUS(modbusCmdNow.VPAddr, (pstr + num + 3), len);
                     memset(&modbusCmdNow, 0, sizeof(modbosCmd_t));
                     num       = len + 5;
                     cmdRxFlag = 1;
