@@ -453,13 +453,16 @@ void Modbus_Process_Task(void)
 processCMDLib:
     if (CmdIndex == 0)
         checkChange();
-    modbus_tx_process_tick = SysTick;
+    modbus_tx_process_tick = 0;
+    SysTick                = 0;
     cmdRxFlag              = 0;
     cmdTxFlag              = 0;
+    Modbus_RX_Reset();
     getCmd(&CmdIndex);
     if (CmdIndex < CMD_NUMBER)
     {
         memcpy(&modbusCmdNow, &modbusCmdlib[CmdIndex], sizeof(modbosCmd_t));
+        Modbus_RX_Reset();
         if (modbusCmdNow.funCode == BUS_FUN_03H)
         {
             Modbus_Read_Register03H(&modbusCmdNow);
@@ -477,6 +480,7 @@ processCMDLib:
             Modbus_Write_Register10H(&modbusCmdNow);
             cmdTxFlag = 1;
         }
+        SysTick = 0;
     }
     else
     {

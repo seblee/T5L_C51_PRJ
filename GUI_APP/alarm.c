@@ -223,11 +223,6 @@ void alarmTask(void)
         }
 
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
-        if (memcmp(cache, alarmStateBak, sizeof(alarmState)) != 0)
-        {
-            memcpy(alarmStateBak, cache, sizeof(alarmStateBak));
-            return;
-        }
         cache[14] = 0;
         cache[15] &= 0x07;
         if ((memcmp(cache, alarmState, sizeof(alarmState))) || (showPage != showPagebAK) || (pageBak != picNow))
@@ -289,11 +284,6 @@ void alarmTask(void)
     else
     {
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
-        if (memcmp(cache, alarmStateBak, sizeof(alarmState)) != 0)
-        {
-            memcpy(alarmStateBak, cache, sizeof(alarmStateBak));
-            return;
-        }
         cache[14] = 0;
         cache[15] &= 0x07;
         if (memcmp(cache, alarmState, sizeof(alarmState)))

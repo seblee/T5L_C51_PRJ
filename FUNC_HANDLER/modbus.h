@@ -46,7 +46,7 @@
 #define MODBUS_WRITE_REG_ADDRESS 0x5001  //寄存器写地址
 
 #define MODBUS_SEND_TIME_PERIOD 500  // 0.5秒钟
-#define RX_CHECK_TICK_TIME 10  //超过10个字节的时间没有收到新的字符，认为接收结束，10*10*1000/9600,
+#define RX_CHECK_TICK_TIME 20  //超过20个字节的时间没有收到新的字符，认为接收结束，10*10*1000/9600,
 
 #define SLAVE_ID 0x02  //设备端地址
 #define BUS_EN 0X5A
