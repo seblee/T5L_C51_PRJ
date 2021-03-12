@@ -242,10 +242,13 @@ void touchHandler(void)
 
 void resetEventHandle(void)
 {
-    u16 cache;
-    cache = 0x005a;
-    WriteDGUS(0xc520, (u8 *)&cache, 2);
-    WriteDGUS(0xc580, (u8 *)&cache, 2);
+    u16 cache[2] = (0);
+    // u16 cache = 0x3c;
+    cache[0] = 17;
+    cache[1] = 1;
+    WriteDGUS(0xcf2a, (u8 *)&cache, 4);
+    cache[0] = 0x005a;
+    WriteDGUS(0xcf8a, (u8 *)&cache, 2);
 }
 
 void clearRunTimeHandle(u16 eventId)
@@ -287,19 +290,23 @@ void outMaintainModEventHandle(void)
 
 void resetOriginalPara(void)
 {
-    u16 cache = 17;
+    u16 cache[2] = (0);
     // u16 cache = 0x3c;
-    WriteDGUS(0xcf2a, (u8 *)&cache, 2);
-    cache = 0x005a;
+    cache[0] = 17;
+    cache[1] = 2;
+    WriteDGUS(0xcf2a, (u8 *)&cache, 4);
+    cache[0] = 0x005a;
     WriteDGUS(0xcf8a, (u8 *)&cache, 2);
 }
 
 void saveFactoryCFG(void)
 {
-    u16 cache = 16;
+    u16 cache[2] = (0);
     // u16 cache = 0x69;
-    WriteDGUS(0xcf2a, (u8 *)&cache, 2);
-    cache = 0x005a;
+    cache[0] = 16;
+    cache[1] = 1;
+    WriteDGUS(0xcf2a, (u8 *)&cache, 4);
+    cache[0] = 0x005a;
     WriteDGUS(0xcf8a, (u8 *)&cache, 2);
 }
 
