@@ -204,7 +204,9 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd682, 0xd622, 0x010b, PAGE54},  //
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd68b, 0xd62b, 0x023b, PAGE54},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd820, 0x01f5, PAGE56},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd821, 0x0207, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd880, 0xd820, 0x01f5, PAGE56},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd881, 0xd821, 0x0207, PAGE56},
 };
 modbosCmd_t modbusCmdNow = {0};
 u8 CmdIndex              = 0;
@@ -306,6 +308,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE54, 0xd620, 0xd650, 0xd680},  //
     {BUS_EN, PAGE54, 0xd622, 0xd652, 0xd682},  //
     {BUS_EN, PAGE56, 0xd820, 0xd850, 0xd880},  //
+    {BUS_EN, PAGE56, 0xd821, 0xd851, 0xd881},  //
 };
 
 _TKS_FLAGA_type modbusFlag = {0};
@@ -491,10 +494,9 @@ processCMDLib:
 void Modbus_Read_Register03H(modbosCmd_t *CmdNow)
 {
     u16 crc_data;
-    u8 len;
+    u8 len = 0;
     u8 modbus_tx_buf[20];
 
-    len                  = 0;
     modbus_tx_buf[len++] = CmdNow->slaveID;
     modbus_tx_buf[len++] = BUS_FUN_03H;                      // command
     modbus_tx_buf[len++] = (CmdNow->slaveAddr >> 8) & 0xFF;  // register
@@ -516,10 +518,9 @@ void Modbus_Read_Register03H(modbosCmd_t *CmdNow)
 void Modbus_Write_Register06H(modbosCmd_t *CmdNow, u16 value)
 {
     u16 crc_data;
-    u8 len;
+    u8 len = 0;
     u8 modbus_tx_buf[20];
 
-    len                  = 0;
     modbus_tx_buf[len++] = CmdNow->slaveID;
     modbus_tx_buf[len++] = BUS_FUN_06H;                      // command
     modbus_tx_buf[len++] = (CmdNow->slaveAddr >> 8) & 0xFF;  // register
