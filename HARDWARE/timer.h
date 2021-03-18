@@ -35,6 +35,7 @@ extern uint16_t Toset_Count;
 
 extern u16 data SysTick_RTC;
 extern u32 data SysTick;
+extern u32 data ModbusSysTick;
 
 /*****************************************************************************
 对外函数声明*/

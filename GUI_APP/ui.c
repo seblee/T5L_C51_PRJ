@@ -67,7 +67,7 @@ void ui(void)
             }
             WriteDGUS(0xc920, (u8*)sys_comp_runtime, 28);
         }
-        if (picNow == 0x002c)
+        if (picNow == PAGE44)
         {
             u16 cache[4];
             ReadDGUS(0xcca0, (u8*)&cache[3], 2);

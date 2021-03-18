@@ -31,7 +31,7 @@ u8 modbus_rx_flag  = 0;                 //接收到的字符串的标志，为1�
 u8 modbus_rx_buf[UART_RX_BUF_MAX_LEN];  //接收到的字符串的内容
 
 // extern process_struct process_flag;  //命令状态标志
-extern u32 data SysTick;        //每隔1ms+1
+extern u32 data ModbusSysTick;  //每隔1ms+1
 u32 uart_rx_check_tick    = 0;  //检查串口是否接收结束
 u8 modbus_rx_count_before = 0;  //接收串口的数据
 
@@ -425,7 +425,7 @@ void Modbus_Process_Task(void)
         {
             if (uart_rx_check_tick > 0)
             {
-                if ((SysTick - uart_rx_check_tick) > RX_CHECK_TICK_TIME)
+                if ((ModbusSysTick - uart_rx_check_tick) > RX_CHECK_TICK_TIME)
                 {
                     modbus_process_command(modbus_rx_buf, modbus_rx_count);
                     Modbus_RX_Reset();
@@ -433,23 +433,30 @@ void Modbus_Process_Task(void)
             }
             else
             {
-                uart_rx_check_tick = SysTick;
+                uart_rx_check_tick = ModbusSysTick;
             }
         }
     }
 
     if (cmdTxFlag)
     {
-        if ((cmdRxFlag) || ((SysTick - modbus_tx_process_tick) >= modbusCmdNow.timeout))
+        if ((cmdRxFlag) || ((ModbusSysTick - modbus_tx_process_tick) >= modbusCmdNow.timeout))
         {
             if (cmdRxFlag)
+            {
                 CmdIndex++;
-            goto processCMDLib;
+                goto processCMDLib;
+            }
+            else
+            {
+                cmdTxFlag = 0;
+                return;
+            }
         }
         return;
     }
 
-    if ((SysTick - modbus_tx_process_tick) < MODBUS_SEND_TIME_PERIOD)  //间隔固定时间后再处理UI的设置命令，
+    if ((ModbusSysTick - modbus_tx_process_tick) < MODBUS_SEND_TIME_PERIOD)  //间隔固定时间后再处理UI的设置命令，
     {
         return;
     }
@@ -457,7 +464,7 @@ processCMDLib:
     if (CmdIndex == 0)
         checkChange();
     modbus_tx_process_tick = 0;
-    SysTick                = 0;
+    ModbusSysTick          = 0;
     cmdRxFlag              = 0;
     cmdTxFlag              = 0;
     Modbus_RX_Reset();
@@ -483,7 +490,7 @@ processCMDLib:
             Modbus_Write_Register10H(&modbusCmdNow);
             cmdTxFlag = 1;
         }
-        SysTick = 0;
+        ModbusSysTick = 0;
     }
     else
     {

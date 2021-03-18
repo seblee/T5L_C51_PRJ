@@ -23,6 +23,7 @@ unsigned long ctr_inc  = 0;
 unsigned int ctr1_inc  = 0;
 unsigned long ctr2_inc = 0;
 u16 data SysTick_RTC   = 0;
+u32 data ModbusSysTick = 0;
 u32 data SysTick       = 0;
 //计算key延时
 uint16_t Key2_Count            = 0;
@@ -61,6 +62,7 @@ void T0_ISR_PC(void) interrupt 1
     }
     SysTick_RTC++;
     SysTick++;
+    ModbusSysTick++;
     if (SysTick % 100 == 0)
         timer100msFlag = 1;
     if (SysTick % 500 == 0)
