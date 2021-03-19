@@ -47,6 +47,8 @@ uint8_t time_calibra[8]           = {0};
 uint8_t prtc_set1[8]              = {0};
 const uint8_t code table_week[12] = {0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};  //月修正数据表
 
+bit timSetFlag = 0;
+
 void SDA_IN(void)
 {
     P3MDOUT = P3MDOUT & 0xF7;
@@ -277,6 +279,7 @@ void rdtime(void)
 {
     unsigned char rtcdata[8];
     unsigned char i, n, m;  //, k;
+    static u16 syncTimer = 0;
     i2cstart();
     i2cbw(0x64);
     i2cbw(0x10);
@@ -319,8 +322,9 @@ void rdtime(void)
 
     rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
     WriteDGUS(RTC, (u8*)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
-
-    if ((rtcdata[5] == 0) && (rtcdata[6] == 0))
+    if (syncTimer < 120)
+        syncTimer++;
+    if ((((rtcdata[5] % 10) == 0) && (rtcdata[6] == 0)) || (timSetFlag) || (syncTimer == 110))
     {
         u32 timeStamp      = 0;
         static struct tm p = {0};
@@ -335,6 +339,7 @@ void rdtime(void)
         *((u16*)(&rtcdata[2])) = 0x12;
         *((u32*)(&rtcdata[4])) = time_to_stamp(&p, 8);
         WriteDGUS(0x5015, (u8*)rtcdata, 8);  //写入DGUS变量空间
+        timSetFlag = 0;
     }
 }
 
@@ -406,6 +411,7 @@ void RTC_Set_CMD(void)
         time_calibra[0] = 0;
         time_calibra[1] = 0;
         WriteDGUS(RTC_Set, (uint8_t*)time_calibra, 8);
+        timSetFlag = 1;
     }
 }
 
