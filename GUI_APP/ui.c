@@ -70,7 +70,7 @@ void ui(void)
         if (picNow == PAGE44)
         {
             u16 cache[6];
-            ReadDGUS(0xcca0, (u8*)&cache[4], 2);
+            ReadDGUS(0xcca0, (u8*)&cache[4], 4);
             cache[0] = ((cache[4] >> 4) & 0x0f00);
             cache[0] |= ((cache[4] >> 7) & 0x1f);
             cache[1] = ((cache[4] & 0x007f) << 8);
