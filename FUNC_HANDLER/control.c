@@ -447,7 +447,7 @@ void passwordInit(void)
 }
 void passwordTask(void)
 {
-    if (picNow == PAGE00)
+    if (picNow == PAGE57)
     {
         passwordGotLevel = 0;
     }

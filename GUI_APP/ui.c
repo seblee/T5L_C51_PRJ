@@ -48,11 +48,25 @@ void ui(void)
     }
     if (MS500msFlag)
     {
-        if (picNow == 0x000b)
+        if (picNow == PAGE00)
+        {
+            static u8 counter = 0;
+            if (counter < 6)
+            {
+                counter++;
+            }
+            else if (counter == 6)
+            {
+                JumpPage(PAGE57);
+                counter++;
+            }
+        }
+
+        if (picNow == PAGE11)
         {
             caculateGroupCtrlPic();
         }
-        if (picNow == 0x0029)
+        if (picNow == PAGE41)
         {
             u8 i;
             u16 hour_reg;
@@ -74,14 +88,14 @@ void ui(void)
             cache[0] = ((cache[4] >> 4) & 0x0f00);
             cache[0] |= ((cache[4] >> 7) & 0x1f);
             cache[1] = ((cache[4] & 0x007f) << 8);
-            cache[2] = SOFTWARE_VER;
-            cache[3] = cache[5];
+            cache[2] = cache[5];
+            cache[3] = SOFTWARE_VER;
             WriteDGUS(0xcc20, (u8*)cache, 8);
         }
         {
             static u8 diagnosisPageInCount  = 0;
             static u8 diagnosisPageOutCount = 0;
-            if (picNow == 0x0027)
+            if (picNow == PAGE39)
             {
                 if (diagnosisPageInCount < 5)
                 {
@@ -124,8 +138,8 @@ void ui(void)
                 else if (timerCounter == STANGBYTIME)
                 {
                     timerCounter++;
-                    if (picNow != 0)
-                        JumpPage(0);
+                    if (picNow != PAGE57)
+                        JumpPage(PAGE57);
                     //用户等级
                 }
             }
