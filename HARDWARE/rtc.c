@@ -38,8 +38,7 @@
 #include "string.h"
 #include "dgus.h"
 
-//**********************RX8130接口程序，SDA 10K上拉到3.3V**************
-//上电时运行一次initrtc()，然后0.5秒间隔运行一次rdtime()读取时间到DGUS相应系统接口
+// sd2068 然后0.5秒间隔运行一次rdtime()读取时间到DGUS相应系统接口
 
 uint8_t RTC_temp[7] = {0};
 //时间校准
@@ -189,75 +188,12 @@ unsigned char i2cbr(void)
     return (dat);
 }
 
-//检查8130有没有掉电，掉电则初始化8130，设置时间为2017.01.01 星期一 00:00:00
-void init_rtc(void)
-{
-    unsigned char i;
-    //检查有没有掉电
-    i2cstart();
-    i2cbw(0x64);
-    i2cbw(0x1d);
-    i2cstop();
-    i2cstart();
-    i2cbw(0x65);
-    i = i2cbr();
-    mack();
-    i2cbr();
-    mnak();
-    i2cstop();
-    if ((i & 0x02) == 0x02)
-    {                //重新配置时间
-        i2cstart();  // 30=00
-        i2cbw(0x64);
-        i2cbw(0x30);
-        i2cbw(0x00);
-        i2cstop();
-        i2cstart();  // 1C-1F=48 00 40 10
-        i2cbw(0x64);
-        i2cbw(0x1C);
-        i2cbw(0x48);
-        i2cbw(0x00);
-        i2cbw(0x40);
-        i2cbw(0x10);
-        i2cstop();
-        i2cstart();  // 10-16=RTC设置值 BCD格式
-        i2cbw(0x64);
-        i2cbw(0x10);
-        i2cbw(0x00);  //秒
-        i2cbw(0x00);  //分
-        i2cbw(0x00);  //时
-        i2cbw(0x01);  //星期
-        i2cbw(0x01);  //日
-        i2cbw(0x01);  //月
-        i2cbw(0x17);  //年
-        i2cstop();
-        i2cstart();  // 1E-1F 00 10
-        i2cbw(0x64);
-        i2cbw(0x1E);
-        i2cbw(0x00);
-        i2cbw(0x10);
-        i2cstop();
-    }
-}
-
 void RTC_Set_Time(u8* prtc_set)
 {
+    WriteTimeOn();
     i2cstart();  // 30=00
     i2cbw(0x64);
-    i2cbw(0x30);
     i2cbw(0x00);
-    i2cstop();
-    i2cstart();  // 1C-1F=48 00 40 10
-    i2cbw(0x64);
-    i2cbw(0x1C);
-    i2cbw(0x48);
-    i2cbw(0x00);
-    i2cbw(0x40);
-    i2cbw(0x10);
-    i2cstop();
-    i2cstart();  // 10-16=RTC设置值 BCD格式
-    i2cbw(0x64);
-    i2cbw(0x10);
     i2cbw(prtc_set[6]);  //秒
     i2cbw(prtc_set[5]);  //分
     i2cbw(prtc_set[4]);  //时
@@ -268,22 +204,18 @@ void RTC_Set_Time(u8* prtc_set)
     i2cstop();
     i2cstart();  // 1E-1F 00 10
     i2cbw(0x64);
-    i2cbw(0x1E);
+    i2cbw(0x12);
     i2cbw(0x00);
-    i2cbw(0x10);
     i2cstop();
+    WriteTimeOff();
 }
 
 //把RTC读取并处理，写到DGUS对应的变量空间，主程序中每0.5秒调用一次
 void rdtime(void)
 {
     unsigned char rtcdata[8];
-    unsigned char i, n, m;  //, k;
+    unsigned char i, n, m, k;
     static u16 syncTimer = 0;
-    i2cstart();
-    i2cbw(0x64);
-    i2cbw(0x10);
-    i2cstop();
     i2cstart();
     i2cbw(0x65);
     for (i = 6; i > 0; i--)
@@ -300,27 +232,23 @@ void rdtime(void)
         m          = rtcdata[i] % 16;
         rtcdata[i] = n * 10 + m;
     }
-    for (i = 4; i < 7; i++)  //时分秒转换成HEX
+    k          = rtcdata[4] & 0xa0;
+    n          = (rtcdata[4] & 0x1f) / 16;
+    m          = (rtcdata[4] & 0x1f) % 16;
+    rtcdata[4] = n * 10 + m;
+    if (k == 0x20)
+    {
+        rtcdata[4] += 12;
+    }
+
+    for (i = 5; i < 7; i++)  //时分秒转换成HEX
     {
         n          = rtcdata[i] / 16;
         m          = rtcdata[i] % 16;
         rtcdata[i] = n * 10 + m;
     }
-    //处理星期的数据格式
-    //	n=0;
-    //	m=rtcdata[3];
-    //	for(i=0;i<7;i++)
-    //	{
-    //		if(m&0x01)
-    //		{
-    //			break;
-    //		}
-    //		n++;
-    //		m=(m>>1);
-    //	}
-    //	rtcdata[3]=n;
 
-    rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
+    // rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
     WriteDGUS(RTC, (u8*)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
     if (syncTimer < 120)
         syncTimer++;
@@ -396,7 +324,7 @@ void RTC_Set_CMD(void)
         prtc_set1[0] = time_calibra1[2];
         prtc_set1[1] = time_calibra1[3];
         prtc_set1[2] = time_calibra1[4];
-        prtc_set1[4] = time_calibra1[5];
+        prtc_set1[4] = time_calibra1[5] | 0x80;
         prtc_set1[5] = time_calibra1[6];
         prtc_set1[6] = time_calibra1[7];
         temp[1]      = RTC_Get_Week(time_calibra[2], time_calibra[3], time_calibra[4]);
@@ -447,4 +375,31 @@ u32 time_to_stamp(const struct tm* ltm, int utc_diff)
     utc_hrs = ltm->tm_hour - utc_diff;  //如上面解释所说，时间戳转换北京时间需要+8，那么这里反转需要-8
 
     return (tdays * 86400) + (utc_hrs * 3600) + (ltm->tm_min * 60) + ltm->tm_sec;
+}
+
+/******写sd2068允许程序******/
+void WriteTimeOn(void)
+{
+    i2cstart();
+    i2cbw(0x64);
+    i2cbw(0x10);  //设置写地址10H
+    i2cbw(0x80);  //置WRTC1=1
+    i2cstop();
+
+    i2cstart();
+    i2cbw(0x64);
+    i2cbw(0x0F);  //设置写地址0FH
+    i2cbw(0x84);  //置WRTC2,WRTC3=1
+    i2cstop();
+}
+
+/******写sd2068禁止程序******/
+void WriteTimeOff(void)
+{
+    i2cstart();
+    i2cbw(0x64);
+    i2cbw(0x0F);  //设置写地址0FH
+    i2cbw(0x0);   //置WRTC2,WRTC3=0
+    i2cbw(0x0);   //置WRTC1=0(10H地址)
+    i2cstop();
 }

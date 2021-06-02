@@ -58,7 +58,6 @@
 void main(void)
 {
     InitSys();
-    init_rtc();  //硬件RTC初始化
     Modbus_UART_Init();
     curveInit();
     alarmInit();
@@ -77,8 +76,8 @@ void main(void)
             timer100msFlag = 0;
             timer500msFlag = 0;
         }
-        WDT_RST();               //喂狗
-        if (SysTick_RTC >= 500)  //原来是500，调试改为50
+        WDT_RST();  //喂狗
+        if (SysTick_RTC >= 500)
         {
             rdtime();  //更新硬件RTC时间
                        // Uart2SendStr(test, strlen(test));

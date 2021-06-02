@@ -85,9 +85,10 @@ void mnak(void);
 void cack(void);
 void i2cbw(unsigned char dat);
 unsigned char i2cbr(void);
-void init_rtc(void);
 void RTC_Set_Time(u8* prtc_set);
 void rdtime(void);
+void WriteTimeOn(void);
+void WriteTimeOff(void);
 
 void RTC_Set_CMD();
 uint8_t RTC_Get_Week(uint8_t, uint8_t, uint8_t);
