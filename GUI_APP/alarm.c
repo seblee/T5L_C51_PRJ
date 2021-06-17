@@ -206,8 +206,8 @@ void alarmTask(void)
 
     if ((*((u16 *)&cache[0]) > 0) || (*((u16 *)&cache[2]) > 0))
     {
-        if (*((u16 *)&cache[10]))
-            WriteDGUS(WAE_PALY_ADDR, (u8 *)&alarmBeep, 2);  // GET PAGENOW
+        // if (*((u16 *)&cache[10]))
+        //     WriteDGUS(WAE_PALY_ADDR, (u8 *)&alarmBeep, 2);  // GET PAGENOW
     }
 
     if (picNow == CURRENTALARMPAGE)
