@@ -83,14 +83,15 @@ void ui(void)
         }
         if (picNow == PAGE44)
         {
-            u16 cache[6];
-            ReadDGUS(0xcca0, (u8*)&cache[4], 4);
-            cache[0] = ((cache[4] >> 4) & 0x0f00);
-            cache[0] |= ((cache[4] >> 7) & 0x1f);
-            cache[1] = ((cache[4] & 0x007f) << 8);
-            cache[2] = cache[5];
-            cache[3] = SOFTWARE_VER;
-            WriteDGUS(0xcc20, (u8*)cache, 8);
+            u16 cache[10];
+            ReadDGUS(0xcca0, (u8*)&cache[8], 4);
+            cache[0] = ((cache[8] >> 4) & 0x0f00);
+            cache[0] |= ((cache[8] >> 7) & 0x1f);
+            cache[1] = ((cache[8] & 0x007f) << 8);
+            cache[2] = cache[9];
+            cache[3] = SOFTWARE_VER >> 16;
+            cache[4] = SOFTWARE_VER & 0xffff;
+            WriteDGUS(0xcc20, (u8*)cache, 10);
         }
         {
             static u8 diagnosisPageInCount  = 0;
