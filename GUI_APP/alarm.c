@@ -291,7 +291,7 @@ void alarmTask(void)
             u16 alarmStateCache[8];
             alarmDataStrc_t *alarmData;
             memcpy(alarmStateCache, cache, sizeof(alarmStateCache));
-            for (j = 0; j < 8; j++)
+            for (j = 0; j < 6; j++)
             {
                 for (i = 0; i < 16; i++)
                 {
