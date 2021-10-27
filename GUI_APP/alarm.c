@@ -231,7 +231,7 @@ void alarmTask(void)
             memcpy(alarmState, cache, sizeof(alarmState));
             showIndex = 0;
 
-            for (j = 0; j < 8; j++)
+            for (j = 0; j < 6; j++)
             {
                 for (i = 0; i < 16; i++)
                 {
