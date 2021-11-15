@@ -90,7 +90,7 @@ sbit P2_1 = P2 ^ 1;
 //电压反馈，低电平表示按键有效
 sbit KEY1_Vin_F = P2 ^ 2;
 
-#define SOFTWARE_VER 0x01010206  // version
+#define SOFTWARE_VER 0x01010207  // version
 
 extern data _TKS_FLAGA_type MSFlag;
 #define MS1msFlag MSFlag.bits.b0
