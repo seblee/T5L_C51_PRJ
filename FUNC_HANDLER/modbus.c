@@ -179,7 +179,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc885, 0xc825, 0x0130, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0e, 0xc8, MODE_PAGE, PAGE41, 0xc9b0, 0x0378, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc990, 0xc930, 0x023c, PAGE41},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xcc00, 0xcca0, 0x0302, PAGE44},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PANP, 0xcc00, 0xcca0, 0x0302, PAGE44},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xcf00, 0xcf20, 0x010d, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf24, 0x0141, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf25, 0x015a, PAGE47},
@@ -211,6 +211,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd820, 0x01f5, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd821, 0x0207, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0c, 0xc8, MODE_PANP, 0xd800, 0xd822, 0x01bc, PAGE56},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0c, 0xc8, MODE_PANP, 0xd800, 0xd82e, 0x0280, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd880, 0xd820, 0x01f5, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd881, 0xd821, 0x0207, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd882, 0xd822, 0x01bc, PAGE56},
@@ -225,6 +226,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd88b, 0xd82b, 0x01c5, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd88c, 0xd82c, 0x01c6, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd88d, 0xd82d, 0x01c7, PAGE56},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd88e, 0xd82e, 0x027f, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE58, 0xda20, 0x03cd, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE58, 0xda21, 0x03cf, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE58, 0xda22, 0x03d1, 0x00ff},
@@ -376,6 +378,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE56, 0xd82b, 0xd85b, 0xd88b},  //
     {BUS_EN, PAGE56, 0xd82c, 0xd85c, 0xd88c},  //
     {BUS_EN, PAGE56, 0xd82d, 0xd85d, 0xd88d},  //
+    {BUS_EN, PAGE56, 0xd82e, 0xd85e, 0xd88e},  //
     {BUS_EN, PAGE59, 0xdb20, 0xdb50, 0xdb80},  //
     {BUS_EN, PAGE59, 0xdb21, 0xdb51, 0xdb81},  //
     {BUS_EN, PAGE59, 0xdb22, 0xdb52, 0xdb82},  //
@@ -763,16 +766,9 @@ void checkChange(void)
 
 void forcedOutputHnadle(void)
 {
-    u16 cache[7] = {0};
-    ReadDGUS(0xc7a0, (u8 *)cache, 12);
-    cache[7] = 0x00;
-    cache[7] |= ((cache[0] & 1) << 0x00);
-    cache[7] |= ((cache[1] & 1) << 0x01);
-    cache[7] |= ((cache[2] & 1) << 0x02);
-    cache[7] |= ((cache[3] & 1) << 0x06);
-    cache[7] |= ((cache[4] & 1) << 0x0c);
-    cache[7] |= ((cache[5] & 1) << 0x0d);
-    WriteDGUS(0xc722, (u8 *)&cache[7], 2);
-    cache[7] = 0x005a;
-    WriteDGUS(0xc782, (u8 *)&cache[7], 2);
+    u16 cache = 0;
+    ReadDGUS(0xc7a0, (u8 *)&cache, 2);
+    WriteDGUS(0xc722, (u8 *)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xc782, (u8 *)&cache, 2);
 }

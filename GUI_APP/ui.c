@@ -83,15 +83,37 @@ void ui(void)
         }
         if (picNow == PAGE44)
         {
+            u16 cache[16];
+            ReadDGUS(0xcca0, (u8*)&cache[8], 6);
+
+            cache[0] = (cache[8] >> 4) & 0xff00;
+            cache[0] |= (cache[8] >> 7) & 0x001f;
+            cache[1] = (cache[8] & 0x007f) << 8;
+            cache[1] |= (cache[10] >> 8) & 0x00ff;
+            cache[2] = cache[10] << 8;
+            cache[3] = cache[9];
+
+            cache[4] = SOFTWARE_VER_H >> 16;
+            cache[5] = SOFTWARE_VER_H & 0xffff;
+            cache[6] = SOFTWARE_VER_L >> 16;
+            cache[7] = SOFTWARE_VER_L & 0xffff;
+            WriteDGUS(0xcc20, (u8*)cache, 16);
+        }
+        if (picNow == PAGE47)
+        {
             u16 cache[10];
-            ReadDGUS(0xcca0, (u8*)&cache[8], 4);
-            cache[0] = ((cache[8] >> 4) & 0x0f00);
-            cache[0] |= ((cache[8] >> 7) & 0x1f);
-            cache[1] = ((cache[8] & 0x007f) << 8);
-            cache[2] = cache[9];
-            cache[3] = SOFTWARE_VER >> 16;
-            cache[4] = SOFTWARE_VER & 0xffff;
-            WriteDGUS(0xcc20, (u8*)cache, 10);
+            static u16 cacheCf10 = 0;
+            ReadDGUS(0xcf10, (u8*)&cache[0], 2);
+            ReadDGUS(0xcf22, (u8*)&cache[2], 2);
+            if (cacheCf10 != cache[0])
+            {
+                cacheCf10 = cache[0];
+                cache[2] &= 0xff3f;
+                cache[2] |= (cache[0] & 3) << 6;
+                WriteDGUS(0xcf22, (u8*)&cache[2], 2);
+            }
+            cache[3] = (cache[2] >> 6) & 3;
+            WriteDGUS(0xcf11, (u8*)&cache[3], 2);
         }
         {
             static u8 diagnosisPageInCount  = 0;
