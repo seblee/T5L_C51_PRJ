@@ -257,10 +257,10 @@ void touchHandler(void)
                 outMaintainModEventHandle();
                 break;
 
-            case CLEAR_RUNTIME_EVENT_0D:
-            case CLEAR_RUNTIME_EVENT_07:
-            case CLEAR_RUNTIME_EVENT_01:
             case CLEAR_RUNTIME_EVENT_0E:
+            case CLEAR_RUNTIME_EVENT_0C:
+            case CLEAR_RUNTIME_EVENT_01:
+            case CLEAR_RUNTIME_EVENT_06:
             case CLEAR_RUNTIME_EVENT_11:
                 clearRunTimeHandle(touchEventFlag);
                 break;
