@@ -322,9 +322,9 @@ void rdtime(void)
 
     rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
     WriteDGUS(RTC, (u8*)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
-    if (syncTimer < 120)
+    if (syncTimer < 840)
         syncTimer++;
-    if ((((rtcdata[5] % 10) == 0) && (rtcdata[6] == 0)) || (timSetFlag) || (syncTimer == 110))
+    if (((rtcdata[5] != 0) && (rtcdata[6] != 0) && (syncTimer >= 839)) || timSetFlag)
     {
         u32 timeStamp      = 0;
         static struct tm p = {0};
@@ -339,6 +339,7 @@ void rdtime(void)
         *((u16*)(&rtcdata[2])) = 0x12;
         *((u32*)(&rtcdata[4])) = time_to_stamp(&p, 8);
         WriteDGUS(0x5015, (u8*)rtcdata, 8);  //写入DGUS变量空间
+        syncTimer  = 0;
         timSetFlag = 0;
     }
 }

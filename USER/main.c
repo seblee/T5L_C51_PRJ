@@ -81,8 +81,8 @@ void main(void)
         if (SysTick_RTC >= 500)  //原来是500，调试改为50
         {
             rdtime();  //更新硬件RTC时间
-                       // Uart2SendStr(test, strlen(test));
             SysTick_RTC = 0;
+            // Uart2SendStr(test, strlen(test));
             RTC_Set_CMD();
         }
         // HandleProc();
