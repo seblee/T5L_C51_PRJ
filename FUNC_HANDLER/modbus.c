@@ -273,6 +273,17 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdd85, 0xdd25, 0x01ed, PAGE61},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdd86, 0xdd26, 0x01ee, PAGE61},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE62, 0xde20, 0x0375, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PANP, 0xdf00, 0xdf20, 0x0237, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x06, 0xc8, MODE_PANP, 0xdf00, 0xdf23, 0x029e, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdf80, 0xdf20, 0x0237, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdf81, 0xdf21, 0x0238, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdf82, 0xdf22, 0x0239, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf83, 0xdf23, 0x029e, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf84, 0xdf24, 0x029f, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf85, 0xdf25, 0x02a0, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf86, 0xdf26, 0x02a1, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf87, 0xdf27, 0x02a2, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf88, 0xdf28, 0x02a3, PAGE63},
 };
 modbosCmd_t modbusCmdNow = {0};
 u8 CmdIndex              = 0;
@@ -412,6 +423,15 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE61, 0xdd24, 0xdd54, 0xdd84},  //
     {BUS_EN, PAGE61, 0xdd25, 0xdd55, 0xdd85},  //
     {BUS_EN, PAGE61, 0xdd26, 0xdd56, 0xdd86},  //
+    {BUS_EN, PAGE63, 0xdf20, 0xdf50, 0xdf80},  //
+    {BUS_EN, PAGE63, 0xdf21, 0xdf51, 0xdf81},  //
+    {BUS_EN, PAGE63, 0xdf22, 0xdf52, 0xdf82},  //
+    {BUS_EN, PAGE63, 0xdf23, 0xdf53, 0xdf83},  //
+    {BUS_EN, PAGE63, 0xdf24, 0xdf54, 0xdf84},  //
+    {BUS_EN, PAGE63, 0xdf25, 0xdf55, 0xdf85},  //
+    {BUS_EN, PAGE63, 0xdf26, 0xdf56, 0xdf86},  //
+    {BUS_EN, PAGE63, 0xdf27, 0xdf57, 0xdf87},  //
+    {BUS_EN, PAGE63, 0xdf28, 0xdf58, 0xdf88},  //
 };
 
 _TKS_FLAGA_type modbusFlag = {0};
