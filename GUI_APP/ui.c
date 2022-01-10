@@ -167,6 +167,25 @@ void ui(void)
                 }
             }
         }
+        // lockDevice
+        {
+            u16 cache;
+            ReadDGUS(0xe020, (u8*)&cache, 2);
+            if (picNow == PAGE65)
+            {
+                if (cache != 246)
+                {
+                    JumpPage(PAGE57);
+                }
+            }
+            else
+            {
+                if (cache == 246)
+                {
+                    JumpPage(PAGE65);
+                }
+            }
+        }
     }
 }
 /**

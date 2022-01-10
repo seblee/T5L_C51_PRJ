@@ -112,7 +112,7 @@ const u8 pageLevel[][2] = {
     {PAGE61, 0},  //  PASSWORD_PAGEJUMP_3D_EVENT
     {PAGE62, 0},  //  PASSWORD_PAGEJUMP_3E_EVENT
     {PAGE63, 0},  //  PASSWORD_PAGEJUMP_3F_EVENT
-    {PAGE64, 0},  //  PASSWORD_PAGEJUMP_40_EVENT
+    {PAGE64, 3},  //  PASSWORD_PAGEJUMP_40_EVENT
     {PAGE65, 0},  //  PASSWORD_PAGEJUMP_41_EVENT
     {PAGE66, 0},  //  PASSWORD_PAGEJUMP_42_EVENT
     {PAGE67, 0},  //  PASSWORD_PAGEJUMP_43_EVENT
@@ -437,6 +437,10 @@ void pageHandle(u16 page)
         WriteDGUS(0xa000 + (page << 8), (u8 *)&cache, 2);
     }
     if (page == PAGE47)
+    {
+        WriteDGUS(0xa000 + (page << 8), (u8 *)&cache, 2);
+    }
+    if (page == PAGE64)
     {
         WriteDGUS(0xa000 + (page << 8), (u8 *)&cache, 2);
     }

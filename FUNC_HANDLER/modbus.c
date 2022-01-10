@@ -290,6 +290,10 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf86, 0xdf26, 0x02a1, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf87, 0xdf27, 0x02a2, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf88, 0xdf28, 0x02a3, PAGE63},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_ALWA, 0x0000, 0xe020, 0x03be, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE64, 0xe021, 0x03c9, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe082, 0xe022, 0x0001, PAGE64},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe180, 0xe120, 0x0001, PAGE65},
 };
 modbosCmd_t modbusCmdNow = {0};
 u8 CmdIndex              = 0;
