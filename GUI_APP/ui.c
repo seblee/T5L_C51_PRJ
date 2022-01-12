@@ -157,12 +157,16 @@ void ui(void)
             else
             {
                 if (timerCounter < STANGBYTIME)
+                {
+                    if (picNow == PAGE64)
+                        JumpPage(PAGE57);
                     timerCounter++;
+                }
                 else if (timerCounter == STANGBYTIME)
                 {
                     timerCounter++;
-                    if (picNow != PAGE57)
-                        JumpPage(PAGE57);
+                    if (picNow != PAGE64)
+                        JumpPage(PAGE64);
                     //用户等级
                 }
             }

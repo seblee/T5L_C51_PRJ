@@ -77,7 +77,7 @@ void main(void)
             timer100msFlag = 0;
             timer500msFlag = 0;
         }
-        WDT_RST();               //喂狗
+        WDT_RST();               //喂狗(4,660,912 
         if (SysTick_RTC >= 500)  //原来是500，调试改为50
         {
             rdtime();  //更新硬件RTC时间
