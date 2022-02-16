@@ -149,6 +149,9 @@ void touchHandler(void)
             case ALARM_CONFIRM_EVENT:
                 alarmConfirmEventHandle();
                 break;
+            case POWER_CTRL_EVENT:
+                powerControlEventHandle();
+                break;
             case PASSWORD_CONFIRM_EVENT:
                 passwordConfirmEventHandle();
                 break;
@@ -526,4 +529,10 @@ void passwordChangeConfirmEventHandle(void)
 
 void passwordChangeCancleEventHandle(void)
 {
+}
+
+void powerControlEventHandle(void)
+{
+    u16 cache;
+    ReadDGUS(0xa620, (u8 *)cache, 2);
 }
