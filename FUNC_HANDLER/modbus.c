@@ -38,7 +38,7 @@ u8 modbus_rx_count_before = 0;  //接收串口的数据
 u32 modbus_tx_process_tick = 0;  // modbus发送命令的时间间隔
 
 const modbosCmd_t modbusCmdlib[] = {
-    // en         id         fun    len  timeout      mod    modP     VP  slaveAddr feedback
+    // en       id         fun      len  timeout   mod      modP     VP  slaveAddr feedback
     {BUS_EN, SLAVE_ID, BUS_FUN_10H, 0x03, 0xc8, MODE_PARA, 0x5015, 0x5016, 0x0000, 0x00ff},  // rtc
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_ALWA, 0x0000, 0xa020, 0x031c, 0x00ff},  //告警数
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa023, 0x0319, 0x00ff},  //位状态
@@ -290,8 +290,11 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf86, 0xdf26, 0x02a1, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf87, 0xdf27, 0x02a2, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf88, 0xdf28, 0x02a3, PAGE63},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xe100, 0xe120, 0x02ec, PAGE65},
-    {BUS_EN, SLAVE_ID, BUS_FUN_10H, 0x02, 0xc8, MODE_PANP, 0xe182, 0xe122, 0x02ee, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xe120, 0x02eb, 0x00ff},  //首页 开机控制状态
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE65, 0xe120, 0x02eb, 0x00ff},  //开机控制状态
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xe100, 0xe121, 0x02ec, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe123, 0x02ee, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe124, 0x02ef, PAGE65},
 };
 modbosCmd_t modbusCmdNow = {0};
 u8 CmdIndex              = 0;
@@ -443,6 +446,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE63, 0xdf26, 0xdf56, 0xdf86},  //
     {BUS_EN, PAGE63, 0xdf27, 0xdf57, 0xdf87},  //
     {BUS_EN, PAGE63, 0xdf28, 0xdf58, 0xdf88},  //
+    // {BUS_EN, PAGE65, 0xe123, 0xe153, 0xe183},  //
 };
 
 _TKS_FLAGA_type modbusFlag = {0};

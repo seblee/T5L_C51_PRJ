@@ -156,6 +156,11 @@ enum
     FUN02 = 0X02,
     FUN03 = 0X03,
 };
+enum
+{
+    PWOER_LOCK   = 0,
+    PWOER_UNLOCK = 0xa5,
+};
 
 extern u8 passwordGotLevel;
 
@@ -182,6 +187,7 @@ void passwordInit(void);
 void passwordTask(void);
 void savePassword(void);
 void passwordChangeConfirmEventHandle(void);
+void powerControlEventHandle(void);
 void pageHandle(u16 page);
 
 #endif

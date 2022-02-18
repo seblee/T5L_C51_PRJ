@@ -36,6 +36,7 @@
 
 #include "ui.h"
 #include "timer.h"
+#include "control.h"
 u16 picNow = 0;
 /**
  * @brief ui task
@@ -44,7 +45,7 @@ void ui(void)
 {
     if (MS1msFlag)
     {
-        ReadDGUS(0x0014, (u8*)(&picNow), 2);
+        ReadDGUS(0x0014, (u8 *)(&picNow), 2);
     }
     if (MS500msFlag)
     {
@@ -71,7 +72,7 @@ void ui(void)
             u8 i;
             u16 hour_reg;
             u16 mb_comp_runtime[14], sys_comp_runtime[14];
-            ReadDGUS(0xc9b0, (u8*)mb_comp_runtime, 28);
+            ReadDGUS(0xc9b0, (u8 *)mb_comp_runtime, 28);
 
             for (i = 0; i < 7; i++)
             {
@@ -79,12 +80,12 @@ void ui(void)
                 sys_comp_runtime[i]     = hour_reg / 24;
                 sys_comp_runtime[i + 7] = hour_reg % 24;
             }
-            WriteDGUS(0xc920, (u8*)sys_comp_runtime, 28);
+            WriteDGUS(0xc920, (u8 *)sys_comp_runtime, 28);
         }
         if (picNow == PAGE44)
         {
             u16 cache[16];
-            ReadDGUS(0xcca0, (u8*)&cache[8], 6);
+            ReadDGUS(0xcca0, (u8 *)&cache[8], 6);
 
             cache[0] = (cache[8] >> 4) & 0xff00;
             cache[0] |= (cache[8] >> 7) & 0x001f;
@@ -97,23 +98,32 @@ void ui(void)
             cache[5] = SOFTWARE_VER_H & 0xffff;
             cache[6] = SOFTWARE_VER_L >> 16;
             cache[7] = SOFTWARE_VER_L & 0xffff;
-            WriteDGUS(0xcc20, (u8*)cache, 16);
+            WriteDGUS(0xcc20, (u8 *)cache, 16);
         }
         if (picNow == PAGE47)
         {
             u16 cache[10];
             static u16 cacheCf10 = 0;
-            ReadDGUS(0xcf10, (u8*)&cache[0], 2);
-            ReadDGUS(0xcf22, (u8*)&cache[2], 2);
+            ReadDGUS(0xcf10, (u8 *)&cache[0], 2);
+            ReadDGUS(0xcf22, (u8 *)&cache[2], 2);
             if (cacheCf10 != cache[0])
             {
                 cacheCf10 = cache[0];
                 cache[2] &= 0xff3f;
                 cache[2] |= (cache[0] & 3) << 6;
-                WriteDGUS(0xcf22, (u8*)&cache[2], 2);
+                WriteDGUS(0xcf22, (u8 *)&cache[2], 2);
             }
             cache[3] = (cache[2] >> 6) & 3;
-            WriteDGUS(0xcf11, (u8*)&cache[3], 2);
+            WriteDGUS(0xcf11, (u8 *)&cache[3], 2);
+        }
+        if (picNow == PAGE65)
+        {
+            u16 cache;
+            ReadDGUS(0xe120, (u8 *)cache, 2);
+            if (cache == PWOER_UNLOCK)
+            {
+                JumpPage(PAGE57);
+            }
         }
         {
             static u8 diagnosisPageInCount  = 0;
@@ -123,9 +133,9 @@ void ui(void)
                 if (diagnosisPageInCount < 5)
                 {
                     u16 cache = 1;
-                    WriteDGUS(0xa027, (u8*)&cache, 2);
+                    WriteDGUS(0xa027, (u8 *)&cache, 2);
                     cache = 0x005a;
-                    WriteDGUS(0xa087, (u8*)&cache, 2);
+                    WriteDGUS(0xa087, (u8 *)&cache, 2);
                     diagnosisPageInCount++;
                 }
                 diagnosisPageOutCount = 0;
@@ -135,9 +145,9 @@ void ui(void)
                 if (diagnosisPageOutCount < 5)
                 {
                     u16 cache = 0;
-                    WriteDGUS(0xa027, (u8*)&cache, 2);
+                    WriteDGUS(0xa027, (u8 *)&cache, 2);
                     cache = 0x005a;
-                    WriteDGUS(0xa087, (u8*)&cache, 2);
+                    WriteDGUS(0xa087, (u8 *)&cache, 2);
                     diagnosisPageOutCount++;
                 }
                 diagnosisPageInCount = 0;
@@ -147,11 +157,11 @@ void ui(void)
         {
             static u16 timerCounter = 0;
             u16 cache;
-            ReadDGUS(0x0016, (u8*)&cache, 2);
+            ReadDGUS(0x0016, (u8 *)&cache, 2);
             if (cache != 0)
             {
                 cache = 0;
-                WriteDGUS(0x0016, (u8*)&cache, 2);
+                WriteDGUS(0x0016, (u8 *)&cache, 2);
                 timerCounter = 0;
             }
             else
@@ -223,7 +233,7 @@ void caculateGroupCtrlPic(void)
     u16 lw_teamwork_icon_sta[GROUP_DEVICE_COUNT] = {0};
     short status, temp;
 
-    ReadDGUS(0xab20, (u8*)mb_teamwork_sts_regs, sizeof(mb_teamwork_sts_regs));
+    ReadDGUS(0xab20, (u8 *)mb_teamwork_sts_regs, sizeof(mb_teamwork_sts_regs));
 
     for (i = 0; i < 16; i++)
     {
@@ -361,5 +371,5 @@ void caculateGroupCtrlPic(void)
             lw_teamwork_icon_sta[i] = 0;
         }
     }
-    WriteDGUS(0xaba0, (u8*)lw_teamwork_icon_sta, sizeof(lw_teamwork_icon_sta));
+    WriteDGUS(0xaba0, (u8 *)lw_teamwork_icon_sta, sizeof(lw_teamwork_icon_sta));
 }

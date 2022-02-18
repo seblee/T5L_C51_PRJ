@@ -534,5 +534,13 @@ void passwordChangeCancleEventHandle(void)
 void powerControlEventHandle(void)
 {
     u16 cache;
-    ReadDGUS(0xa620, (u8 *)cache, 2);
+    ReadDGUS(0xe120, (u8 *)cache, 2);
+    if (cache != PWOER_UNLOCK)
+    {
+        JumpPage(PAGE65);
+    }
+    else
+    {
+        JumpPage(PAGE51);
+    }
 }
