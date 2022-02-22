@@ -214,6 +214,8 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd681, 0xd621, 0x010a, PAGE54},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd682, 0xd622, 0x010b, PAGE54},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd683, 0xd623, 0x01a7, PAGE54},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd700, 0xd720, 0x02ea, PAGE55},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd780, 0xd720, 0x02ea, PAGE55},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd820, 0x01f5, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd821, 0x0207, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0c, 0xc8, MODE_PANP, 0xd800, 0xd822, 0x01bc, PAGE56},
@@ -292,12 +294,13 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf88, 0xdf28, 0x02a3, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xe120, 0x02eb, 0x00ff},  //首页 开机控制状态
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE65, 0xe120, 0x02eb, 0x00ff},  //开机控制状态
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xe100, 0xe121, 0x02ec, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE65, 0xe121, 0x02ec, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe123, 0x02ee, PAGE65},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe124, 0x02ef, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd780, 0xd720, 0x02ea, PAGE65},
 };
 modbosCmd_t modbusCmdNow = {0};
-u8 CmdIndex              = 0;
+u16 CmdIndex             = 0;
 
 const dataCheckCmd_t dataCheckLib[] = {
     // en     page  data    back   flag
@@ -398,6 +401,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE54, 0xd621, 0xd651, 0xd681},  //
     {BUS_EN, PAGE54, 0xd622, 0xd652, 0xd682},  //
     {BUS_EN, PAGE54, 0xd623, 0xd653, 0xd683},  //
+    {BUS_EN, PAGE55, 0xd720, 0xd750, 0xd780},  //
     {BUS_EN, PAGE56, 0xd820, 0xd850, 0xd880},  //
     {BUS_EN, PAGE56, 0xd821, 0xd851, 0xd881},  //
     {BUS_EN, PAGE56, 0xd822, 0xd852, 0xd882},  //
@@ -446,7 +450,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE63, 0xdf26, 0xdf56, 0xdf86},  //
     {BUS_EN, PAGE63, 0xdf27, 0xdf57, 0xdf87},  //
     {BUS_EN, PAGE63, 0xdf28, 0xdf58, 0xdf88},  //
-    // {BUS_EN, PAGE65, 0xe123, 0xe153, 0xe183},  //
+    {BUS_EN, PAGE65, 0xd720, 0xd750, 0xd780},  //
 };
 
 _TKS_FLAGA_type modbusFlag = {0};
@@ -465,10 +469,10 @@ void modbus_process_command(u8 *pstr, u16 strlen)
     u16 len;
 
     // printf("Modbus string:");
-    for (num = 0; num < strlen; num++)
-    {
-        // printf("%02X ", (u16)(*(pstr + num)));
-    }
+    // for (num = 0; num < strlen; num++)
+    // {
+    // printf("%02X ", (u16)(*(pstr + num)));
+    // }
     // printf(",length:%d\r\n", strlen);
 
     if (strlen < 5)
@@ -724,9 +728,9 @@ void Modbus_UART_Init(void)
     modbus_tx_process_tick = 0;  //初始化 0
 }
 
-void getCmd(u8 *index)
+void getCmd(u16 *index)
 {
-    u8 i;
+    u16 i;
     for (i = *index; i < CMD_NUMBER; i++)
     {
         if ((modbusCmdlib[i].modbusEn != BUS_EN) || (modbusCmdlib[i].length == 0))
@@ -796,7 +800,7 @@ getCmdExit:
 
 void checkChange(void)
 {
-    u16 cache[20] = {0};
+    u16 cache[4] = {0};
     u16 i;
     for (i = 0; i < CHECK_NUMBER; i++)
     {
