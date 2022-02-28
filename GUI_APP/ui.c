@@ -119,7 +119,7 @@ void ui(void)
         if (picNow == PAGE65)
         {
             u16 cache;
-            ReadDGUS(0xe120, (u8 *)cache, 2);
+            ReadDGUS(0xe120, (u8 *)&cache, 2);
             if (cache == PWOER_UNLOCK)
             {
                 JumpPage(PAGE57);
