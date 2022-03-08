@@ -45,6 +45,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xa084, 0xa024, 0x0100, PAGE57},  // power switch
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa025, 0x0104, 0x00ff},  //诊断模式
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PARA, 0xa087, 0xa027, 0x0104, 0x00ff},  //诊断模式
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa028, 0x01cc, 0x00ff},  // logo
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PAGE, PAGE57, 0xa0a0, 0x011a, 0x00ff},  //温湿度
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_ALWA, 0x0000, 0xa0a3, 0x0310, 0x00ff},  //回风温湿度
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE10, 0xaa00, 0x0326, 0x00ff},
@@ -214,8 +215,10 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd681, 0xd621, 0x010a, PAGE54},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd682, 0xd622, 0x010b, PAGE54},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd683, 0xd623, 0x01a7, PAGE54},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd700, 0xd720, 0x02ea, PAGE55},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd780, 0xd720, 0x02ea, PAGE55},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd700, 0xd720, 0x02f4, PAGE55},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd700, 0xd721, 0x01cc, PAGE55},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd780, 0xd720, 0x02f4, PAGE55},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd781, 0xd721, 0x01cc, PAGE55},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd820, 0x01f5, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xd800, 0xd821, 0x0207, PAGE56},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0c, 0xc8, MODE_PANP, 0xd800, 0xd822, 0x01bc, PAGE56},
@@ -292,12 +295,12 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf86, 0xdf26, 0x02a1, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf87, 0xdf27, 0x02a2, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf88, 0xdf28, 0x02a3, PAGE63},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xe120, 0x02eb, 0x00ff},  //首页 开机控制状态
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE65, 0xe120, 0x02eb, 0x00ff},  //开机控制状态
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE65, 0xe121, 0x02ec, 0x00ff},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe123, 0x02ee, PAGE65},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe124, 0x02ef, PAGE65},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd780, 0xd720, 0x02ea, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xe120, 0x02f5, 0x00ff},  //首页 开机控制状态
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE65, 0xe120, 0x02f5, 0x00ff},  //开机控制状态
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE65, 0xe121, 0x02f6, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe123, 0x02f8, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe124, 0x02f9, PAGE65},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xd780, 0xd720, 0x02f4, PAGE65},
 };
 modbosCmd_t modbusCmdNow = {0};
 u16 CmdIndex             = 0;
@@ -402,6 +405,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE54, 0xd622, 0xd652, 0xd682},  //
     {BUS_EN, PAGE54, 0xd623, 0xd653, 0xd683},  //
     {BUS_EN, PAGE55, 0xd720, 0xd750, 0xd780},  //
+    {BUS_EN, PAGE55, 0xd721, 0xd751, 0xd781},  //
     {BUS_EN, PAGE56, 0xd820, 0xd850, 0xd880},  //
     {BUS_EN, PAGE56, 0xd821, 0xd851, 0xd881},  //
     {BUS_EN, PAGE56, 0xd822, 0xd852, 0xd882},  //

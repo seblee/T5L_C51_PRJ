@@ -149,8 +149,9 @@ void touchHandler(void)
             case ALARM_CONFIRM_EVENT:
                 alarmConfirmEventHandle();
                 break;
-            case POWER_CTRL_EVENT:
-                powerControlEventHandle();
+            case POWER_CTRL_EVENT01:
+            case POWER_CTRL_EVENT02:
+                powerControlEventHandle(touchEventFlag);
                 break;
             case PASSWORD_CONFIRM_EVENT:
                 passwordConfirmEventHandle();
@@ -268,7 +269,8 @@ void touchHandler(void)
                 clearRunTimeHandle(touchEventFlag);
                 break;
             case REST_ORIGINAL_PARA:
-                resetOriginalPara();
+            case SAVE_FACTORY_PARA:
+                factoryParaOpt(touchEventFlag);
                 break;
             case SAVE_FACTORY_CFG_EVENT:
                 saveFactoryCFG();
@@ -322,9 +324,9 @@ void outMaintainModEventHandle(void)
 {
 }
 
-void resetOriginalPara(void)
+void factoryParaOpt(u16 eventId)
 {
-    u16 cache = 0x3c;
+    u16 cache = eventId & 0xff;
     WriteDGUS(0xcf2a, (u8 *)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xcf8a, (u8 *)&cache, 2);
@@ -531,7 +533,7 @@ void passwordChangeCancleEventHandle(void)
 {
 }
 
-void powerControlEventHandle(void)
+void powerControlEventHandle(u16 eventId)
 {
     u16 cache;
     ReadDGUS(0xe120, (u8 *)&cache, 2);
@@ -539,7 +541,7 @@ void powerControlEventHandle(void)
     {
         JumpPage(PAGE65);
     }
-    else
+    else if (eventId == POWER_CTRL_EVENT01)
     {
         JumpPage(PAGE51);
     }

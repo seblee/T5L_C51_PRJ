@@ -41,7 +41,8 @@
 
 #define POWER_SWITCH_EVENT 0Xa000
 #define ALARM_CONFIRM_EVENT 0Xa026
-#define POWER_CTRL_EVENT 0Xa027
+#define POWER_CTRL_EVENT01 0Xa027
+#define POWER_CTRL_EVENT02 0Xa028
 #define PASSWORD_CONFIRM_EVENT 0Xa400
 #define PASSWORD_CANCLE_EVENT 0Xa401
 #define PASSWORD_PAGEJUMP_START 0xa4a0
@@ -135,7 +136,8 @@
 #define CLEAR_RUNTIME_EVENT_01 0Xc901
 #define CLEAR_RUNTIME_EVENT_06 0Xc906
 #define CLEAR_RUNTIME_EVENT_11 0Xc911
-#define REST_ORIGINAL_PARA 0xcf00
+#define REST_ORIGINAL_PARA 0xcf3c
+#define SAVE_FACTORY_PARA 0xcf69
 
 #define SAVE_FACTORY_CFG_EVENT 0xD600
 
@@ -170,7 +172,7 @@ void clearRunTimeHandle(u16 eventId);
 void powerSwitchEventHandle(void);
 void inMaintainModEventHandle(void);
 void outMaintainModEventHandle(void);
-void resetOriginalPara(void);
+void factoryParaOpt(u16 eventId);
 void saveFactoryCFG(void);
 void setDIPolarityEventHandle(void);
 void setDIMaskEventHandle(void);
@@ -187,7 +189,7 @@ void passwordInit(void);
 void passwordTask(void);
 void savePassword(void);
 void passwordChangeConfirmEventHandle(void);
-void powerControlEventHandle(void);
+void powerControlEventHandle(u16 eventId);
 void pageHandle(u16 page);
 
 #endif
