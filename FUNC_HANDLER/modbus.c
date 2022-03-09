@@ -55,6 +55,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE10, 0xaa0d, 0x036c, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE10, 0xaa0e, 0x034f, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE10, 0xaa0f, 0x0369, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE10, 0xcf23, 0x0110, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x1f, 0xc8, MODE_PAGE, PAGE11, 0xab20, 0x038c, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xac80, 0xac20, 0x023a, PAGE12},  //清楚当前告警
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x06, 0xc8, MODE_ALWA, 0x000d, 0xaea0, 0x0320, 0x00ff},  //告警

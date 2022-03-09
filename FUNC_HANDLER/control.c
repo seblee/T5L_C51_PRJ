@@ -265,7 +265,8 @@ void touchHandler(void)
                 clearRunTimeHandle(touchEventFlag);
                 break;
             case REST_ORIGINAL_PARA:
-                resetOriginalPara();
+            case SAVE_FACTORY_PARA:
+                factoryParaOpt(touchEventFlag);
                 break;
             case SAVE_FACTORY_CFG_EVENT:
                 saveFactoryCFG();
@@ -319,9 +320,9 @@ void outMaintainModEventHandle(void)
 {
 }
 
-void resetOriginalPara(void)
+void factoryParaOpt(u16 eventId)
 {
-    u16 cache = 0x3c;
+    u16 cache = eventId & 0xff;
     WriteDGUS(0xcf2a, (u8 *)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xcf8a, (u8 *)&cache, 2);
