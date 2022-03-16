@@ -16,18 +16,18 @@
 
 /*****************************************************************************
 全局变量*/
-uint16_t Wait_Count    = 0;
-uint16_t Key_Count     = 0;
-uint16_t Toset_Count   = 0;
-unsigned long ctr_inc  = 0;
-unsigned int ctr1_inc  = 0;
-unsigned long ctr2_inc = 0;
-u16 data SysTick_RTC   = 0;
-u32 data ModbusSysTick = 0;
-u32 data SysTick       = 0;
+uint16_t      Wait_Count    = 0;
+uint16_t      Key_Count     = 0;
+uint16_t      Toset_Count   = 0;
+unsigned long ctr_inc       = 0;
+unsigned int  ctr1_inc      = 0;
+unsigned long ctr2_inc      = 0;
+u16 data      SysTick_RTC   = 0;
+u32 data      ModbusSysTick = 0;
+u32 data      SysTick       = 0;
 //计算key延时
-uint16_t Key2_Count            = 0;
-data _TKS_FLAGA_type timerFlag = {0};
+uint16_t             Key2_Count = 0;
+data _TKS_FLAGA_type timerFlag  = {0};
 /*****************************************************************************
 定时器0*/
 void T0_Init(void)
@@ -45,8 +45,7 @@ void T0_ISR_PC(void) interrupt 1
     TL0 = T1MS;
     Wait_Count++;
 
-    if (Wait_Count > 1000)
-    {
+    if (Wait_Count > 1000) {
         Wait_Count = 0;
         Key_Count++;
         Toset_Count++;
@@ -56,8 +55,7 @@ void T0_ISR_PC(void) interrupt 1
     ctr_inc++;
     ctr1_inc++;
     ctr2_inc++;
-    if (Key2_Count < 65500)
-    {
+    if (Key2_Count < 65500) {
         Key2_Count++;
     }
     SysTick_RTC++;

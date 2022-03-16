@@ -42,49 +42,40 @@ u16 picNow = 0;
  */
 void ui(void)
 {
-    if (MS1msFlag)
-    {
-        ReadDGUS(0x0014, (u8*)(&picNow), 2);
+    if (MS1msFlag) {
+        ReadDGUS(0x0014, (u8 *)(&picNow), 2);
     }
-    if (MS500msFlag)
-    {
-        if (picNow == PAGE00)
-        {
+    if (MS500msFlag) {
+        if (picNow == PAGE00) {
             static u8 counter = 0;
-            if (counter < 6)
-            {
+            if (counter < 6) {
                 counter++;
             }
-            else if (counter == 6)
-            {
+            else if (counter == 6) {
                 JumpPage(PAGE57);
                 counter++;
             }
         }
 
-        if (picNow == PAGE11)
-        {
+        if (picNow == PAGE11) {
             caculateGroupCtrlPic();
         }
-        if (picNow == PAGE41)
-        {
-            u8 i;
+        if (picNow == PAGE41) {
+            u8  i;
             u16 hour_reg;
             u16 mb_comp_runtime[14], sys_comp_runtime[14];
-            ReadDGUS(0xc9b0, (u8*)mb_comp_runtime, 28);
+            ReadDGUS(0xc9b0, (u8 *)mb_comp_runtime, 28);
 
-            for (i = 0; i < 7; i++)
-            {
+            for (i = 0; i < 7; i++) {
                 hour_reg                = (mb_comp_runtime[2 * i] << 4) + (mb_comp_runtime[2 * i + 1] >> 12);
                 sys_comp_runtime[i]     = hour_reg / 24;
                 sys_comp_runtime[i + 7] = hour_reg % 24;
             }
-            WriteDGUS(0xc920, (u8*)sys_comp_runtime, 28);
+            WriteDGUS(0xc920, (u8 *)sys_comp_runtime, 28);
         }
-        if (picNow == PAGE44)
-        {
+        if (picNow == PAGE44) {
             u16 cache[16];
-            ReadDGUS(0xcca0, (u8*)&cache[8], 6);
+            ReadDGUS(0xcca0, (u8 *)&cache[8], 6);
 
             cache[0] = (cache[8] >> 4) & 0xff00;
             cache[0] |= (cache[8] >> 7) & 0x001f;
@@ -97,47 +88,41 @@ void ui(void)
             cache[5] = SOFTWARE_VER_H & 0xffff;
             cache[6] = SOFTWARE_VER_L >> 16;
             cache[7] = SOFTWARE_VER_L & 0xffff;
-            WriteDGUS(0xcc20, (u8*)cache, 16);
+            WriteDGUS(0xcc20, (u8 *)cache, 16);
         }
-        if (picNow == PAGE47)
-        {
-            u16 cache[10];
+        if (picNow == PAGE47) {
+            u16        cache[10];
             static u16 cacheCf10 = 0;
-            ReadDGUS(0xcf10, (u8*)&cache[0], 2);
-            ReadDGUS(0xcf22, (u8*)&cache[2], 2);
-            if (cacheCf10 != cache[0])
-            {
+            ReadDGUS(0xcf10, (u8 *)&cache[0], 2);
+            ReadDGUS(0xcf22, (u8 *)&cache[2], 2);
+            if (cacheCf10 != cache[0]) {
                 cacheCf10 = cache[0];
                 cache[2] &= 0xff3f;
                 cache[2] |= (cache[0] & 3) << 6;
-                WriteDGUS(0xcf22, (u8*)&cache[2], 2);
+                WriteDGUS(0xcf22, (u8 *)&cache[2], 2);
             }
             cache[3] = (cache[2] >> 6) & 3;
-            WriteDGUS(0xcf11, (u8*)&cache[3], 2);
+            WriteDGUS(0xcf11, (u8 *)&cache[3], 2);
         }
         {
             static u8 diagnosisPageInCount  = 0;
             static u8 diagnosisPageOutCount = 0;
-            if (picNow == PAGE39)
-            {
-                if (diagnosisPageInCount < 5)
-                {
+            if (picNow == PAGE39) {
+                if (diagnosisPageInCount < 5) {
                     u16 cache = 1;
-                    WriteDGUS(0xa027, (u8*)&cache, 2);
+                    WriteDGUS(0xa027, (u8 *)&cache, 2);
                     cache = 0x005a;
-                    WriteDGUS(0xa087, (u8*)&cache, 2);
+                    WriteDGUS(0xa087, (u8 *)&cache, 2);
                     diagnosisPageInCount++;
                 }
                 diagnosisPageOutCount = 0;
             }
-            else
-            {
-                if (diagnosisPageOutCount < 5)
-                {
+            else {
+                if (diagnosisPageOutCount < 5) {
                     u16 cache = 0;
-                    WriteDGUS(0xa027, (u8*)&cache, 2);
+                    WriteDGUS(0xa027, (u8 *)&cache, 2);
                     cache = 0x005a;
-                    WriteDGUS(0xa087, (u8*)&cache, 2);
+                    WriteDGUS(0xa087, (u8 *)&cache, 2);
                     diagnosisPageOutCount++;
                 }
                 diagnosisPageInCount = 0;
@@ -146,20 +131,17 @@ void ui(void)
 
         {
             static u16 timerCounter = 0;
-            u16 cache;
-            ReadDGUS(0x0016, (u8*)&cache, 2);
-            if (cache != 0)
-            {
+            u16        cache;
+            ReadDGUS(0x0016, (u8 *)&cache, 2);
+            if (cache != 0) {
                 cache = 0;
-                WriteDGUS(0x0016, (u8*)&cache, 2);
+                WriteDGUS(0x0016, (u8 *)&cache, 2);
                 timerCounter = 0;
             }
-            else
-            {
+            else {
                 if (timerCounter < STANGBYTIME)
                     timerCounter++;
-                else if (timerCounter == STANGBYTIME)
-                {
+                else if (timerCounter == STANGBYTIME) {
                     timerCounter++;
                     if (picNow != PAGE57)
                         JumpPage(PAGE57);
@@ -214,26 +196,22 @@ enum
 void caculateGroupCtrlPic(void)
 {
 #define GROUP_DEVICE_COUNT 18
-    u16 mb_teamwork_sts_regs[31] = {0};
-    u8 i;
-    u16 lw_teamwork_icon_sta[GROUP_DEVICE_COUNT] = {0};
+    u16   mb_teamwork_sts_regs[31] = {0};
+    u8    i;
+    u16   lw_teamwork_icon_sta[GROUP_DEVICE_COUNT] = {0};
     short status, temp;
 
-    ReadDGUS(0xab20, (u8*)mb_teamwork_sts_regs, sizeof(mb_teamwork_sts_regs));
+    ReadDGUS(0xab20, (u8 *)mb_teamwork_sts_regs, sizeof(mb_teamwork_sts_regs));
 
-    for (i = 0; i < 16; i++)
-    {
+    for (i = 0; i < 16; i++) {
         //在线状态
-        if ((mb_teamwork_sts_regs[SYS_STS_ONLINE_0] & (1 << i)) != 0)
-        {
+        if ((mb_teamwork_sts_regs[SYS_STS_ONLINE_0] & (1 << i)) != 0) {
             //运行
-            if ((mb_teamwork_sts_regs[SYS_STS_FINALOUT_0] & (1 << i)) != 0)
-            {
+            if ((mb_teamwork_sts_regs[SYS_STS_FINALOUT_0] & (1 << i)) != 0) {
                 // get equipment status
                 temp   = SYS_STS_STA_0_3 + (i / 4);
                 status = (mb_teamwork_sts_regs[temp] >> (4 * (i % 4))) & 0x000f;
-                switch (status)
-                {
+                switch (status) {
                     case 0x00:
                         lw_teamwork_icon_sta[i] = 5;
                         break;
@@ -263,8 +241,7 @@ void caculateGroupCtrlPic(void)
                         break;
                 }
                 //故障
-                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0)
-                {
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0) {
                     lw_teamwork_icon_sta[i] += 8;
                 }
                 else  //正常
@@ -274,8 +251,7 @@ void caculateGroupCtrlPic(void)
             }
             else  //备用
             {     //故障
-                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0)
-                {
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0) {
                     lw_teamwork_icon_sta[i] = 2;
                 }
                 else  //正常
@@ -284,24 +260,19 @@ void caculateGroupCtrlPic(void)
                 }
             }
         }
-        else
-        {
+        else {
             lw_teamwork_icon_sta[i] = 0;
         }
     }
-    for (i = 16; i < GROUP_DEVICE_COUNT; i++)
-    {
+    for (i = 16; i < GROUP_DEVICE_COUNT; i++) {
         //在线状态
-        if ((mb_teamwork_sts_regs[SYS_STS_ONLINE_1] & (1 << (i - 16))) != 0)
-        {
+        if ((mb_teamwork_sts_regs[SYS_STS_ONLINE_1] & (1 << (i - 16))) != 0) {
             //运行
-            if ((mb_teamwork_sts_regs[SYS_STS_FINALOUT_1] & (1 << (i - 16))) != 0)
-            {
+            if ((mb_teamwork_sts_regs[SYS_STS_FINALOUT_1] & (1 << (i - 16))) != 0) {
                 // get equipment status
                 temp   = SYS_STS_STA_0_3 + (i / 4);
                 status = (mb_teamwork_sts_regs[temp] >> (4 * (i % 4))) & 0x000f;
-                switch (status)
-                {
+                switch (status) {
                     case 0x00:
                         lw_teamwork_icon_sta[i] = 5;
                         break;
@@ -331,8 +302,7 @@ void caculateGroupCtrlPic(void)
                         break;
                 }
                 //故障
-                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0)
-                {
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0) {
                     lw_teamwork_icon_sta[i] += 8;
                 }
                 else  //正常
@@ -342,8 +312,7 @@ void caculateGroupCtrlPic(void)
             }
             else  //备用
             {     //故障
-                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0)
-                {
+                if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0) {
                     lw_teamwork_icon_sta[i] = 2;
                 }
                 else  //正常
@@ -352,10 +321,9 @@ void caculateGroupCtrlPic(void)
                 }
             }
         }
-        else
-        {
+        else {
             lw_teamwork_icon_sta[i] = 0;
         }
     }
-    WriteDGUS(0xaba0, (u8*)lw_teamwork_icon_sta, sizeof(lw_teamwork_icon_sta));
+    WriteDGUS(0xaba0, (u8 *)lw_teamwork_icon_sta, sizeof(lw_teamwork_icon_sta));
 }

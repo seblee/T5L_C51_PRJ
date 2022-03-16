@@ -34,13 +34,13 @@
  * ******************************************************************
  */
 
-#include "sys.h"
 #include "alarm.h"
+#include "ChineseCharacter.h"
 #include "T5L_lib.h"
 #include "dgus.h"
-#include "ui.h"
+#include "sys.h"
 #include "timer.h"
-#include "ChineseCharacter.h"
+#include "ui.h"
 
 #define START_Xs 105
 #define START_Ys 100
@@ -57,7 +57,7 @@
 #define STRING_Xe 685
 #define STRING_Ye 125
 
-#define END_X 295
+#define END_X    295
 #define STRING_X 485
 const dgus_hex_t showStartDesConst = {
     0x3fc9,    //.VP
@@ -120,18 +120,17 @@ const u16 alarmShowDescriptionVP[10][3] = {
     {SHOWTIMESTART9, SHOWTIMEEND9, SHOWSTRING9},  //
 };
 const u16 historyShowVP[10] = {
-    HISTORYSHOWVP0, HISTORYSHOWVP1, HISTORYSHOWVP2, HISTORYSHOWVP3, HISTORYSHOWVP4,
-    HISTORYSHOWVP5, HISTORYSHOWVP6, HISTORYSHOWVP7, HISTORYSHOWVP8, HISTORYSHOWVP9,
+    HISTORYSHOWVP0, HISTORYSHOWVP1, HISTORYSHOWVP2, HISTORYSHOWVP3, HISTORYSHOWVP4, HISTORYSHOWVP5, HISTORYSHOWVP6, HISTORYSHOWVP7, HISTORYSHOWVP8, HISTORYSHOWVP9,
 };
 
 alarmInfoStrc_t alarmInfomation = {0, 0, 0, 0};
-static u16 alarmState[8];
-static u16 alarmStateBak[8];
-static u16 pageBak     = 0;
-static u16 showPage    = 0;
-static u16 showPagebAK = 0;
-u8 showIndex           = 0;
-static u8 alarmCount   = 0;
+static u16      alarmState[8];
+static u16      alarmStateBak[8];
+static u16      pageBak     = 0;
+static u16      showPage    = 0;
+static u16      showPagebAK = 0;
+u8              showIndex   = 0;
+static u8       alarmCount  = 0;
 
 const u16 alarmBeep = 0x0005;
 
@@ -142,33 +141,28 @@ const u16 alarmBeep = 0x0005;
  ******************************************************************/
 void alarmInit(void)
 {
-    u8 cache[32] = {0};
-    u16 i;
+    u8               cache[32] = {0};
+    u16              i;
     alarmDataStrc_t *alarmData = (alarmDataStrc_t *)cache;
     alarmInfoStrc_t *alarmInfo = (alarmInfoStrc_t *)cache;
 
-    for (i = 0; i < ALARM_LEN; i++)
-    {
+    for (i = 0; i < ALARM_LEN; i++) {
         T5L_Flash(READRFLASH, alarmTemp, ALARM_FLASH_START + i * 8, 8);
 
         ReadDGUS(alarmTemp, (u8 *)&cache, sizeof(alarmDataStrc_t));
-        if (alarmData->flag == ALARMDATALAG)
-        {
+        if (alarmData->flag == ALARMDATALAG) {
             continue;
         }
-        else if (alarmInfo->flag == ALARMINFOFLAG)
-        {
+        else if (alarmInfo->flag == ALARMINFOFLAG) {
             memcpy(&alarmInfomation, alarmInfo, sizeof(alarmInfoStrc_t));
             break;
         }
-        else
-        {
+        else {
             break;
         }
     }
 
-    for (i = 0; i < 10; i++)
-    {
+    for (i = 0; i < 10; i++) {
         u16 showTemp[16] = {0};
         memcpy(showTemp, &showStartDesConst, sizeof(dgus_hex_t));
         ((dgus_hex_t *)showTemp)->Y      = START_Ys + 27 * i;
@@ -189,59 +183,47 @@ void alarmTask(void)
 {
     u8 cache[50];
     u8 i, j;
-    if (MS500msFlag != 1)
-    {
+    if (MS500msFlag != 1) {
         return;
     }
     ReadDGUS(0xa021, (u8 *)&cache, 12);  // GET PAGENOW
-    if (alarmCount != (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
-    {
-        if (alarmCount < (*((u16 *)&cache[0]) + *((u16 *)&cache[2])))
-        {
+    if (alarmCount != (*((u16 *)&cache[0]) + *((u16 *)&cache[2]))) {
+        if (alarmCount < (*((u16 *)&cache[0]) + *((u16 *)&cache[2]))) {
             *((u16 *)&cache[10]) = 1;
             WriteDGUS(ALARM_BEEP_FLAG, (u8 *)&cache[10], 2);
         }
         alarmCount = *((u16 *)&cache[0]) + *((u16 *)&cache[2]);
     }
 
-    if ((*((u16 *)&cache[0]) > 0) || (*((u16 *)&cache[2]) > 0))
-    {
+    if ((*((u16 *)&cache[0]) > 0) || (*((u16 *)&cache[2]) > 0)) {
         if (*((u16 *)&cache[10]))
             WriteDGUS(WAE_PALY_ADDR, (u8 *)&alarmBeep, 2);  // GET PAGENOW
     }
 
-    if (picNow == CURRENTALARMPAGE)
-    {
-        if (pageBak != picNow)
-        {
+    if (picNow == CURRENTALARMPAGE) {
+        if (pageBak != picNow) {
             showPage = 0;
             WriteDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // set
         }
-        else
-        {
+        else {
             ReadDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // GET PAGENOW
         }
 
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
         cache[14] = 0;
         cache[15] &= 0x07;
-        if ((memcmp(cache, alarmState, sizeof(alarmState))) || (showPage != showPagebAK) || (pageBak != picNow))
-        {
+        if ((memcmp(cache, alarmState, sizeof(alarmState))) || (showPage != showPagebAK) || (pageBak != picNow)) {
             alarmDataStrc_t *alarmData;
             memcpy(alarmState, cache, sizeof(alarmState));
             showIndex = 0;
 
-            for (j = 0; j < 8; j++)
-            {
-                for (i = 0; i < 16; i++)
-                {
+            for (j = 0; j < 8; j++) {
+                for (i = 0; i < 16; i++) {
                     u8 alarmIndex = i + 16 * j;
                     ReadDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 48);  // get memory
                     alarmData = (alarmDataStrc_t *)cache;
-                    if (alarmState[j] & (1 << i))
-                    {
-                        if (alarmData->flag != ALARMDATALAG)
-                        {
+                    if (alarmState[j] & (1 << i)) {
+                        if (alarmData->flag != ALARMDATALAG) {
                             alarmData->flag = ALARMDATALAG;
                             ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
                             memcpy(&cache[2], &cache[20], 3);
@@ -251,17 +233,13 @@ void alarmTask(void)
                             strncpy(&cache[16], &alarmMessage[alarmIndex][0], 32);
                             WriteDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 48);  // write memory
                         }
-                        if ((showIndex >= (showPage * 10)) && (showIndex < (showPage * 10 + 10)))
-                        {
-                            setAlarmDisplay((showIndex - (showPage * 10)), (alarmVPStart + alarmIndex * 24),
-                                            CURRENTALARMPAGE);
+                        if ((showIndex >= (showPage * 10)) && (showIndex < (showPage * 10 + 10))) {
+                            setAlarmDisplay((showIndex - (showPage * 10)), (alarmVPStart + alarmIndex * 24), CURRENTALARMPAGE);
                         }
                         showIndex++;
                     }
-                    else
-                    {
-                        if (alarmData->flag == ALARMDATALAG)
-                        {
+                    else {
+                        if (alarmData->flag == ALARMDATALAG) {
                             ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
                             memcpy(&cache[8], &cache[20], 3);
                             memcpy(&cache[11], &cache[24], 3);
@@ -274,36 +252,28 @@ void alarmTask(void)
                     }
                 }
             }
-            for (i = showIndex; i < (showPage * 10 + 10); i++)
-            {
+            for (i = showIndex; i < (showPage * 10 + 10); i++) {
                 resetAlarmDisplay(i - showPage * 10);
             }
             showPagebAK = showPage;
         }
     }
-    else
-    {
+    else {
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
         cache[14] = 0;
         cache[15] &= 0x07;
-        if (memcmp(cache, alarmState, sizeof(alarmState)))
-        {
-            u16 alarmStateCache[8];
+        if (memcmp(cache, alarmState, sizeof(alarmState))) {
+            u16              alarmStateCache[8];
             alarmDataStrc_t *alarmData;
             memcpy(alarmStateCache, cache, sizeof(alarmStateCache));
-            for (j = 0; j < 6; j++)
-            {
-                for (i = 0; i < 16; i++)
-                {
-                    if ((alarmState[j] & (1 << i)) != (alarmStateCache[j] & (1 << i)))
-                    {
+            for (j = 0; j < 6; j++) {
+                for (i = 0; i < 16; i++) {
+                    if ((alarmState[j] & (1 << i)) != (alarmStateCache[j] & (1 << i))) {
                         u8 alarmIndex = i + 16 * j;
                         ReadDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 48);  // get memory
                         alarmData = (alarmDataStrc_t *)cache;
-                        if (alarmStateCache[j] & (1 << i))
-                        {
-                            if (alarmData->flag != ALARMDATALAG)
-                            {
+                        if (alarmStateCache[j] & (1 << i)) {
+                            if (alarmData->flag != ALARMDATALAG) {
                                 alarmData->flag = ALARMDATALAG;
                                 ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
                                 memcpy(&cache[2], &cache[20], 3);
@@ -314,10 +284,8 @@ void alarmTask(void)
                                 WriteDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 48);  // write memory
                             }
                         }
-                        else
-                        {
-                            if (alarmData->flag == ALARMDATALAG)
-                            {
+                        else {
+                            if (alarmData->flag == ALARMDATALAG) {
                                 ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
                                 memcpy(&cache[8], &cache[20], 3);
                                 memcpy(&cache[11], &cache[24], 3);
@@ -339,16 +307,13 @@ void alarmTask(void)
             memcpy(alarmState, alarmStateCache, sizeof(alarmState));
         }
     }
-    if (picNow == ALARMHISTORYAGE)
-    {
-        if (pageBak != picNow)
-        {
+    if (picNow == ALARMHISTORYAGE) {
+        if (pageBak != picNow) {
             showPage = 0;
             WriteDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // set
             goto refreshHistory;
         }
-        else
-        {
+        else {
             ReadDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // GET PAGENOW
             if (showPage != showPagebAK)
                 goto refreshHistory;
@@ -356,19 +321,15 @@ void alarmTask(void)
         goto alarmTaskExit;
     refreshHistory:
         showPagebAK = showPage;
-        for (showIndex = 0; showIndex < 10; showIndex++)
-        {
+        for (showIndex = 0; showIndex < 10; showIndex++) {
             u16 addressTemp;
-            if ((10 * showPage + showIndex) >= alarmInfomation.length)
-            {
+            if ((10 * showPage + showIndex) >= alarmInfomation.length) {
                 break;
             }
-            if (alarmInfomation.head_ptr > (10 * showPage + showIndex))
-            {
+            if (alarmInfomation.head_ptr > (10 * showPage + showIndex)) {
                 addressTemp = alarmInfomation.head_ptr - (10 * showPage + showIndex + 1);
             }
-            else
-            {
+            else {
                 addressTemp = (ALARM_LEN + alarmInfomation.head_ptr) - (10 * showPage + showIndex + 1);
             }
 
@@ -380,8 +341,7 @@ void alarmTask(void)
             setAlarmDisplay(showIndex, historyShowVP[showIndex], ALARMHISTORYAGE);
         }
 
-        for (showIndex; showIndex < 10; showIndex++)
-        {
+        for (showIndex; showIndex < 10; showIndex++) {
             resetAlarmDisplay(showIndex);
         }
     }
@@ -406,21 +366,17 @@ void saveAlarmHistory(void)
 {
     T5L_Flash(WRITERFLASH, alarmTemp, ALARM_FLASH_START + alarmInfomation.head_ptr * 8, 8);
     alarmInfomation.head_ptr++;
-    if (alarmInfomation.head_ptr >= ALARM_LEN)
-    {
+    if (alarmInfomation.head_ptr >= ALARM_LEN) {
         alarmInfomation.head_ptr = 0;
     }
-    if (alarmInfomation.length >= ALARM_LEN)
-    {
+    if (alarmInfomation.length >= ALARM_LEN) {
         alarmInfomation.length = ALARM_LEN;
         alarmInfomation.tail_ptr++;
-        if (alarmInfomation.tail_ptr >= ALARM_LEN)
-        {
+        if (alarmInfomation.tail_ptr >= ALARM_LEN) {
             alarmInfomation.tail_ptr = 0;
         }
     }
-    else
-    {
+    else {
         alarmInfomation.length++;
     }
     alarmInfomation.flag = ALARMINFOFLAG;

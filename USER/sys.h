@@ -64,26 +64,26 @@ typedef struct
 
 typedef union
 {
-    _FLAG_bits bits;
+    _FLAG_bits    bits;
     unsigned char byte;
 } _TKS_FLAGA_type;
 
-#define DWIN_OK (0x00)
-#define DWIN_ERROR (0xFF)
-#define DWIN_NULL_POINT (0x02) /* 空指针 */
+#define DWIN_OK          (0x00)
+#define DWIN_ERROR       (0xFF)
+#define DWIN_NULL_POINT  (0x02) /* 空指针 */
 #define DWIN_PARAM_ERROR (0x03)
-#define NULL ((void *)0)                /* 数据NULL */
-#define FOSC (206438400UL)              /* T5L主频=晶体频率(11.0592M)*56/3 */
-#define T1MS (65536 - FOSC / 12 / 1000) /* 10MS定时器 */
+#define NULL             ((void *)0)                /* 数据NULL */
+#define FOSC             (206438400UL)              /* T5L主频=晶体频率(11.0592M)*56/3 */
+#define T1MS             (65536 - FOSC / 12 / 1000) /* 10MS定时器 */
 
 /*****************************************************************************
 宏定义函数*/
-#define WDT_ON() MUX_SEL |= 0x02  /******开启看门狗*********/
+#define WDT_ON()  MUX_SEL |= 0x02 /******开启看门狗*********/
 #define WDT_OFF() MUX_SEL &= 0xFD /******关闭看门狗*********/
 #define WDT_RST() MUX_SEL |= 0x01 /******喂狗*********/
 
 //电源开关宏定义
-#define POWER_ON() P2_1 = 1;
+#define POWER_ON()  P2_1 = 1;
 #define POWER_OFF() P2_1 = 0;
 //电源开关引脚
 sbit P2_1 = P2 ^ 1;
@@ -91,10 +91,10 @@ sbit P2_1 = P2 ^ 1;
 sbit KEY1_Vin_F = P2 ^ 2;
 
 #define SOFTWARE_VER_H (u32)0x02010700  // version
-#define SOFTWARE_VER_L (u32)0x12000000  // version
+#define SOFTWARE_VER_L (u32)0x13000000  // version
 
 extern data _TKS_FLAGA_type MSFlag;
-#define MS1msFlag MSFlag.bits.b0
+#define MS1msFlag   MSFlag.bits.b0
 #define MS100msFlag MSFlag.bits.b1
 #define MS500msFlag MSFlag.bits.b2
 

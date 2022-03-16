@@ -1,5 +1,5 @@
-#include <T5LOS8051.H>
 #include "T5L_lib.h"
+#include <T5LOS8051.H>
 //检查指定DGUS变量地址的DATA3清零的话就退出
 void wait_ok(unsigned int addr)
 {
@@ -7,8 +7,7 @@ void wait_ok(unsigned int addr)
     ADR_M   = (unsigned char)(addr >> 8);
     ADR_L   = (unsigned char)(addr);
     ADR_INC = 0x00;
-    do
-    {
+    do {
         for (addr = 0; addr < 1000; addr++)  //释放变量空间一段时间
         {
             DATA2 = DATA1;
@@ -65,20 +64,17 @@ void read_dgusii_vp(unsigned int addr, unsigned char *buf, unsigned int len)
     RAMMODE = 0xAF;
     while (APP_ACK == 0)
         ;
-    while (len > 0)
-    {
+    while (len > 0) {
         APP_EN = 1;
         while (APP_EN == 1)
             ;
-        if ((i == 0) && (len > 0))
-        {
+        if ((i == 0) && (len > 0)) {
             *buf++ = DATA3;
             *buf++ = DATA2;
             i      = 1;
             len--;
         }
-        if ((i == 1) && (len > 0))
-        {
+        if ((i == 1) && (len > 0)) {
             *buf++ = DATA1;
             *buf++ = DATA0;
             i      = 0;
@@ -101,8 +97,7 @@ void write_dgusii_vp(unsigned int addr, unsigned char *buf, unsigned int len)
     RAMMODE = 0x8F;
     while (APP_ACK == 0)
         ;
-    if (i && len > 0)
-    {
+    if (i && len > 0) {
         RAMMODE = 0x83;
         DATA1   = *buf++;
         DATA0   = *buf++;
@@ -112,8 +107,7 @@ void write_dgusii_vp(unsigned int addr, unsigned char *buf, unsigned int len)
         len--;
     }
     RAMMODE = 0x8F;
-    while (len >= 2)
-    {
+    while (len >= 2) {
         DATA3  = *buf++;
         DATA2  = *buf++;
         DATA1  = *buf++;
@@ -123,8 +117,7 @@ void write_dgusii_vp(unsigned int addr, unsigned char *buf, unsigned int len)
             ;
         len = len - 2;
     }
-    if (len)
-    {
+    if (len) {
         RAMMODE = 0x8C;
         DATA3   = *buf++;
         DATA2   = *buf++;
