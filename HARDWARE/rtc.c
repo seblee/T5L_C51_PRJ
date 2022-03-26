@@ -141,8 +141,7 @@ void i2cbw(unsigned char dat)
     for (i = 0; i < 8; i++) {
         if (dat & 0x80) {
             RTC_SDA = 1;
-        }
-        else {
+        } else {
             RTC_SDA = 0;
         }
         dat = (dat << 1);
@@ -168,8 +167,7 @@ unsigned char i2cbr(void)
         dat = (dat << 1);
         if (RTC_SDA) {
             dat = dat | 0x01;
-        }
-        else {
+        } else {
             dat = dat & 0xFE;
         }
         // dat=(dat<<1);
@@ -416,8 +414,7 @@ u32 time_to_stamp(const struct tm *ltm, int utc_diff)
     if (ltm->tm_mon < 1 && is_leap == 1) {
         leap_years = (tyears + 2) / 4 - 1;  // 1970年不是闰年，从1972年开始闰年
                                             //闰年的月份小于1，需要减去一天
-    }
-    else {
+    } else {
         leap_years = (tyears + 2) / 4;
     }
 

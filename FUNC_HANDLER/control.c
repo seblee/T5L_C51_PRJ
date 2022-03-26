@@ -48,83 +48,82 @@ const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 519525};
 u8        passwordGotLevel           = 0xff;
 
 const u8 pageLevel[][2] = {
-    {PAGE00, 0},  //  PASSWORD_PAGEJUMP_00_EVENT
-    {PAGE01, 0},  //  PASSWORD_PAGEJUMP_01_EVENT
-    {PAGE02, 0},  //  PASSWORD_PAGEJUMP_02_EVENT
-    {PAGE03, 0},  //  PASSWORD_PAGEJUMP_03_EVENT
-    {PAGE04, 0},  //  PASSWORD_PAGEJUMP_04_EVENT
-    {PAGE05, 0},  //  PASSWORD_PAGEJUMP_05_EVENT
-    {PAGE06, 0},  //  PASSWORD_PAGEJUMP_06_EVENT
-    {PAGE07, 0},  //  PASSWORD_PAGEJUMP_07_EVENT
-    {PAGE08, 0},  //  PASSWORD_PAGEJUMP_08_EVENT
-    {PAGE09, 0},  //  PASSWORD_PAGEJUMP_09_EVENT
-    {PAGE10, 0},  //  PASSWORD_PAGEJUMP_0A_EVENT
-    {PAGE11, 0},  //  PASSWORD_PAGEJUMP_0B_EVENT
-    {PAGE12, 0},  //  PASSWORD_PAGEJUMP_0C_EVENT
-    {PAGE13, 0},  //  PASSWORD_PAGEJUMP_0D_EVENT
-    {PAGE14, 0},  //  PASSWORD_PAGEJUMP_0E_EVENT
-    {PAGE15, 1},  //  set page
-    {PAGE16, 0},  //  PASSWORD_PAGEJUMP_10_EVENT
-    {PAGE17, 0},  //  PASSWORD_PAGEJUMP_11_EVENT
-    {PAGE18, 2},  //  setSys
-    {PAGE19, 0},  //  PASSWORD_PAGEJUMP_13_EVENT
-    {PAGE20, 0},  //  PASSWORD_PAGEJUMP_14_EVENT
-    {PAGE21, 0},  //  PASSWORD_PAGEJUMP_15_EVENT
-    {PAGE22, 0},  //  PASSWORD_PAGEJUMP_16_EVENT
-    {PAGE23, 0},  //  PASSWORD_PAGEJUMP_17_EVENT
-    {PAGE24, 0},  //  PASSWORD_PAGEJUMP_18_EVENT
-    {PAGE25, 0},  //  PASSWORD_PAGEJUMP_19_EVENT
-    {PAGE26, 0},  //  PASSWORD_PAGEJUMP_1A_EVENT
-    {PAGE27, 2},  //  alarmSet
-    {PAGE28, 0},  //  PASSWORD_PAGEJUMP_1C_EVENT
-    {PAGE29, 0},  //  PASSWORD_PAGEJUMP_1D_EVENT
-    {PAGE30, 0},  //  PASSWORD_PAGEJUMP_1E_EVENT
-    {PAGE31, 0},  //  PASSWORD_PAGEJUMP_1F_EVENT
-    {PAGE32, 0},  //  PASSWORD_PAGEJUMP_20_EVENT
-    {PAGE33, 0},  //  PASSWORD_PAGEJUMP_21_EVENT
-    {PAGE34, 0},  //  PASSWORD_PAGEJUMP_22_EVENT
-    {PAGE35, 0},  //  PASSWORD_PAGEJUMP_23_EVENT
-    {PAGE36, 0},  //  PASSWORD_PAGEJUMP_24_EVENT
-    {PAGE37, 0},  //  PASSWORD_PAGEJUMP_25_EVENT
-    {PAGE38, 2},  //  MAINTAIM PAGE
-    {PAGE39, 0},  //  PASSWORD_PAGEJUMP_27_EVENT
-    {PAGE40, 0},  //  PASSWORD_PAGEJUMP_28_EVENT
-    {PAGE41, 0},  //  PASSWORD_PAGEJUMP_29_EVENT
-    {PAGE42, 0},  //  PASSWORD_PAGEJUMP_2A_EVENT
-    {PAGE43, 0},  //  PASSWORD_PAGEJUMP_2B_EVENT
-    {PAGE44, 0},  //  PASSWORD_PAGEJUMP_2C_EVENT
-    {PAGE45, 0},  //  PASSWORD_PAGEJUMP_2D_EVENT
-    {PAGE46, 0},  //  PASSWORD_PAGEJUMP_2E_EVENT
-    {PAGE47, 3},  //  sysConfig
-    {PAGE48, 0},  //  PASSWORD_PAGEJUMP_30_EVENT
-    {PAGE49, 0},  //  PASSWORD_PAGEJUMP_31_EVENT
-    {PAGE50, 0},  //  PASSWORD_PAGEJUMP_32_EVENT
-    {PAGE51, 0},  //  PASSWORD_PAGEJUMP_33_EVENT
-    {PAGE52, 0},  //  PASSWORD_PAGEJUMP_34_EVENT
-    {PAGE53, 0},  //  PASSWORD_PAGEJUMP_35_EVENT
-    {PAGE54, 0},  //  PASSWORD_PAGEJUMP_36_EVENT
-    {PAGE55, 0},  //  PASSWORD_PAGEJUMP_37_EVENT
-    {PAGE56, 0},  //  PASSWORD_PAGEJUMP_38_EVENT
-    {PAGE57, 0},  //  PASSWORD_PAGEJUMP_39_EVENT
-    {PAGE58, 0},  //  PASSWORD_PAGEJUMP_3A_EVENT
-    {PAGE59, 0},  //  PASSWORD_PAGEJUMP_3B_EVENT
-    {PAGE60, 0},  //  PASSWORD_PAGEJUMP_3C_EVENT
-    {PAGE61, 0},  //  PASSWORD_PAGEJUMP_3D_EVENT
-    {PAGE62, 0},  //  PASSWORD_PAGEJUMP_3E_EVENT
-    {PAGE63, 0},  //  PASSWORD_PAGEJUMP_3F_EVENT
-    {PAGE64, 0},  //  PASSWORD_PAGEJUMP_40_EVENT
-    {PAGE65, 0},  //  PASSWORD_PAGEJUMP_41_EVENT
-    {PAGE66, 0},  //  PASSWORD_PAGEJUMP_42_EVENT
-    {PAGE67, 0},  //  PASSWORD_PAGEJUMP_43_EVENT
-    {PAGE68, 0},  //  PASSWORD_PAGEJUMP_44_EVENT
-    {PAGE69, 0},  //  PASSWORD_PAGEJUMP_45_EVENT
-
+    {PAGE00, 0}, //  PASSWORD_PAGEJUMP_00_EVENT
+    {PAGE01, 0}, //  PASSWORD_PAGEJUMP_01_EVENT
+    {PAGE02, 0}, //  PASSWORD_PAGEJUMP_02_EVENT
+    {PAGE03, 0}, //  PASSWORD_PAGEJUMP_03_EVENT
+    {PAGE04, 0}, //  PASSWORD_PAGEJUMP_04_EVENT
+    {PAGE05, 0}, //  PASSWORD_PAGEJUMP_05_EVENT
+    {PAGE06, 0}, //  PASSWORD_PAGEJUMP_06_EVENT
+    {PAGE07, 0}, //  PASSWORD_PAGEJUMP_07_EVENT
+    {PAGE08, 0}, //  PASSWORD_PAGEJUMP_08_EVENT
+    {PAGE09, 0}, //  PASSWORD_PAGEJUMP_09_EVENT
+    {PAGE10, 0}, //  PASSWORD_PAGEJUMP_0A_EVENT
+    {PAGE11, 0}, //  PASSWORD_PAGEJUMP_0B_EVENT
+    {PAGE12, 0}, //  PASSWORD_PAGEJUMP_0C_EVENT
+    {PAGE13, 0}, //  PASSWORD_PAGEJUMP_0D_EVENT
+    {PAGE14, 0}, //  PASSWORD_PAGEJUMP_0E_EVENT
+    {PAGE15, 1}, //  set page
+    {PAGE16, 0}, //  PASSWORD_PAGEJUMP_10_EVENT
+    {PAGE17, 0}, //  PASSWORD_PAGEJUMP_11_EVENT
+    {PAGE18, 2}, //  setSys
+    {PAGE19, 0}, //  PASSWORD_PAGEJUMP_13_EVENT
+    {PAGE20, 0}, //  PASSWORD_PAGEJUMP_14_EVENT
+    {PAGE21, 0}, //  PASSWORD_PAGEJUMP_15_EVENT
+    {PAGE22, 0}, //  PASSWORD_PAGEJUMP_16_EVENT
+    {PAGE23, 0}, //  PASSWORD_PAGEJUMP_17_EVENT
+    {PAGE24, 0}, //  PASSWORD_PAGEJUMP_18_EVENT
+    {PAGE25, 0}, //  PASSWORD_PAGEJUMP_19_EVENT
+    {PAGE26, 0}, //  PASSWORD_PAGEJUMP_1A_EVENT
+    {PAGE27, 2}, //  alarmSet
+    {PAGE28, 0}, //  PASSWORD_PAGEJUMP_1C_EVENT
+    {PAGE29, 0}, //  PASSWORD_PAGEJUMP_1D_EVENT
+    {PAGE30, 0}, //  PASSWORD_PAGEJUMP_1E_EVENT
+    {PAGE31, 0}, //  PASSWORD_PAGEJUMP_1F_EVENT
+    {PAGE32, 0}, //  PASSWORD_PAGEJUMP_20_EVENT
+    {PAGE33, 0}, //  PASSWORD_PAGEJUMP_21_EVENT
+    {PAGE34, 0}, //  PASSWORD_PAGEJUMP_22_EVENT
+    {PAGE35, 0}, //  PASSWORD_PAGEJUMP_23_EVENT
+    {PAGE36, 0}, //  PASSWORD_PAGEJUMP_24_EVENT
+    {PAGE37, 0}, //  PASSWORD_PAGEJUMP_25_EVENT
+    {PAGE38, 2}, //  MAINTAIM PAGE
+    {PAGE39, 0}, //  PASSWORD_PAGEJUMP_27_EVENT
+    {PAGE40, 0}, //  PASSWORD_PAGEJUMP_28_EVENT
+    {PAGE41, 0}, //  PASSWORD_PAGEJUMP_29_EVENT
+    {PAGE42, 0}, //  PASSWORD_PAGEJUMP_2A_EVENT
+    {PAGE43, 0}, //  PASSWORD_PAGEJUMP_2B_EVENT
+    {PAGE44, 0}, //  PASSWORD_PAGEJUMP_2C_EVENT
+    {PAGE45, 0}, //  PASSWORD_PAGEJUMP_2D_EVENT
+    {PAGE46, 0}, //  PASSWORD_PAGEJUMP_2E_EVENT
+    {PAGE47, 3}, //  sysConfig
+    {PAGE48, 0}, //  PASSWORD_PAGEJUMP_30_EVENT
+    {PAGE49, 0}, //  PASSWORD_PAGEJUMP_31_EVENT
+    {PAGE50, 0}, //  PASSWORD_PAGEJUMP_32_EVENT
+    {PAGE51, 0}, //  PASSWORD_PAGEJUMP_33_EVENT
+    {PAGE52, 0}, //  PASSWORD_PAGEJUMP_34_EVENT
+    {PAGE53, 0}, //  PASSWORD_PAGEJUMP_35_EVENT
+    {PAGE54, 0}, //  PASSWORD_PAGEJUMP_36_EVENT
+    {PAGE55, 0}, //  PASSWORD_PAGEJUMP_37_EVENT
+    {PAGE56, 0}, //  PASSWORD_PAGEJUMP_38_EVENT
+    {PAGE57, 0}, //  PASSWORD_PAGEJUMP_39_EVENT
+    {PAGE58, 0}, //  PASSWORD_PAGEJUMP_3A_EVENT
+    {PAGE59, 0}, //  PASSWORD_PAGEJUMP_3B_EVENT
+    {PAGE60, 0}, //  PASSWORD_PAGEJUMP_3C_EVENT
+    {PAGE61, 0}, //  PASSWORD_PAGEJUMP_3D_EVENT
+    {PAGE62, 0}, //  PASSWORD_PAGEJUMP_3E_EVENT
+    {PAGE63, 0}, //  PASSWORD_PAGEJUMP_3F_EVENT
+    {PAGE64, 0}, //  PASSWORD_PAGEJUMP_40_EVENT
+    {PAGE65, 0}, //  PASSWORD_PAGEJUMP_41_EVENT
+    {PAGE66, 0}, //  PASSWORD_PAGEJUMP_42_EVENT
+    {PAGE67, 0}, //  PASSWORD_PAGEJUMP_43_EVENT
+    {PAGE68, 0}, //  PASSWORD_PAGEJUMP_44_EVENT
+    {PAGE69, 0}, //  PASSWORD_PAGEJUMP_45_EVENT
 };
 const u8 funLevel[][2] = {
-    {FUN00, 1},  // clear current alarm
-    {FUN01, 3},  // clear alarm history
-    {FUN02, 3},  // clear curve
-    {FUN03, 5},  // reset password
+    {FUN00, 1}, // clear current alarm
+    {FUN01, 3}, // clear alarm history
+    {FUN02, 3}, // clear curve
+    {FUN03, 5}, // reset password
 };
 
 u16                     jumpPage    = 0;
@@ -242,19 +241,18 @@ void touchHandler(void)
             case CUR_ALARM_CLEAR_EVENT:
                 curAlarmClearHandle();
                 break;
-            case OUTPUT_EVENT:
-                forcedOutputHnadle();
-                break;
             case RESET_EVENT:
                 resetEventHandle();
                 break;
             case IN_MAINTAIN_MOD_EVENT:
                 inMaintainModEventHandle();
                 break;
+            case OUTPUT_EVENT:
+                forcedOutputHandle();
+                break;
             case OUT_MAINTAIN_MOD_EVENT:
                 outMaintainModEventHandle();
                 break;
-
             case CLEAR_RUNTIME_EVENT_0E:
             case CLEAR_RUNTIME_EVENT_0C:
             case CLEAR_RUNTIME_EVENT_01:
@@ -298,8 +296,7 @@ void powerSwitchEventHandle(void)
     ReadDGUS(0xa023, (u8 *)&cache, 2);
     if (cache & 1) {
         cache = 0;
-    }
-    else {
+    } else {
         cache = 1;
     }
     WriteDGUS(0xa024, (u8 *)&cache, 2);
@@ -312,7 +309,13 @@ void inMaintainModEventHandle(void)
     u16 cache = 0x005a;
     WriteDGUS(0xc700, (u8 *)&cache, 2);
 }
-void outMaintainModEventHandle(void) {}
+void outMaintainModEventHandle(void)
+{
+    u16 cache = 0;
+    WriteDGUS(0xa027, (u8 *)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xa087, (u8 *)&cache, 2);
+}
 
 void factoryParaOpt(u16 eventId)
 {
@@ -336,8 +339,7 @@ void passwordConfirmEventHandle(void)
     ReadDGUS(0xa420, cache, 4);
     if (checkPassword(currentLevel, cache)) {
         passwordOperation();
-    }
-    else {
+    } else {
         JumpPage(5);
     }
     memset(cache, 0, 4);
@@ -357,8 +359,7 @@ void passwordPageJumpEventHandle(u16 event)
     mode         = PWM_PAGEJUMP;
     if (currentLevel <= passwordGotLevel) {
         passwordOperation();
-    }
-    else {
+    } else {
         JumpPage(4);
     }
 }
@@ -371,8 +372,7 @@ void passwordFunEventHandle(u16 event)
     mode         = PWM_FUN;
     if (currentLevel <= passwordGotLevel) {
         passwordOperation();
-    }
-    else {
+    } else {
         JumpPage(4);
     }
 }
@@ -396,14 +396,11 @@ void passwordFunOPThandle(u16 fun)
 {
     if (fun == FUN00) {
         curAlarmClearHandle();
-    }
-    else if (fun == FUN01) {
+    } else if (fun == FUN01) {
         alarmClearHandle();
-    }
-    else if (fun == FUN02) {
+    } else if (fun == FUN02) {
         curveClearHandle();
-    }
-    else if (fun == FUN03) {
+    } else if (fun == FUN03) {
         u8 i;
         for (i = 0; i < LEVEL_NUM; i++) {
             *((u32 *)password[i]) = defaultPassword[i];

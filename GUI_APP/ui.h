@@ -34,45 +34,23 @@
  * ******************************************************************
  */
 
-/**
- *                   .::::.
- *                 .::::::::.
- *                :::::::::::
- *             ..:::::::::::'
- *          '::::::::::::'
- *            .::::::::::
- *       '::::::::::::::..        女神助攻,流量冲天
- *            ..::::::::::::.     永不宕机,代码无bug
- *          ``::::::::::::::::
- *           ::::``:::::::::'        .:::.
- *          ::::'   ':::::'       .::::::::.
- *        .::::'      ::::     .:::::::'::::.
- *       .:::'       :::::  .:::::::::' ':::::.
- *      .::'        :::::.:::::::::'      ':::::.
- *     .::'         ::::::::::::::'         ``::::.
- * ...:::           ::::::::::::'              ``::.
- *```` ':.          ':::::::::'                  ::::..
- *                   '.:::::'                    ':'````..
- *******************************************************************/
 #ifndef __UI_H
 #define __UI_H
 
-#include "sys.h"
 #include "dgus.h"
+#include "sys.h"
 
-typedef struct dgus_hex
-{
-    u16 VP;
-    u16 X;
-    u16 Y;
-    u16 Color;
-    u8 Byte_Num;
-    u8 Lib_ID;
-    u8 Font_x;
+typedef struct dgus_hex {
+    u16  VP;
+    u16  X;
+    u16  Y;
+    u16  Color;
+    u8   Byte_Num;
+    u8   Lib_ID;
+    u8   Font_x;
     char String_Code[15];
 } dgus_hex_t;
-typedef struct dgus_string
-{
+typedef struct dgus_string {
     u16 VP;
     u16 X;
     u16 Y;
@@ -82,18 +60,17 @@ typedef struct dgus_string
     u16 Xe;
     u16 Ye;
     u16 Text_length;
-    u8 Font0_ID;
-    u8 Font1_ID;
-    u8 Font_X_Dots;
-    u8 Font_Y_Dots;
-    u8 Encode_Mode;
-    u8 HOR_Dis;
-    u8 VER_Dis;
-    u8 NC;
+    u8  Font0_ID;
+    u8  Font1_ID;
+    u8  Font_X_Dots;
+    u8  Font_Y_Dots;
+    u8  Encode_Mode;
+    u8  HOR_Dis;
+    u8  VER_Dis;
+    u8  NC;
 } dgus_string_t;
 
-enum
-{
+enum {
     PAGE00 = 0x00,
     PAGE01 = 0x01,
     PAGE02 = 0x02,

@@ -41,8 +41,7 @@
 #define UART_TX_BUF_MAX_LEN 128
 #define UART_RX_BUF_MAX_LEN 128
 
-#define MODBUS_READ_REG_ADDRESS 0x4001  //寄存器首地址
-
+#define MODBUS_READ_REG_ADDRESS  0x4001  //寄存器首地址
 #define MODBUS_WRITE_REG_ADDRESS 0x5001  //寄存器写地址
 
 #define MODBUS_SEND_TIME_PERIOD 500  // 0.5秒钟
@@ -57,8 +56,7 @@
 #define CMD_NUMBER   (sizeof(modbusCmdlib) / sizeof(modbosCmd_t))
 #define CHECK_NUMBER (sizeof(dataCheckLib) / sizeof(dataCheckCmd_t))
 
-typedef struct modbosCmd
-{
+typedef struct modbosCmd {
     u8  modbusEn;
     u8  slaveID;
     u8  funCode;
@@ -70,8 +68,7 @@ typedef struct modbosCmd
     u16 slaveAddr;
     u16 feedback;
 } modbosCmd_t;
-typedef struct dataCheckCmd
-{
+typedef struct dataCheckCmd {
     u8  Enable;
     u8  page;
     u16 dataAddr;
@@ -79,8 +76,7 @@ typedef struct dataCheckCmd
     u16 flagAddr;
 } dataCheckCmd_t;
 
-enum
-{
+enum {
     MODE_ALWA = 0,
     MODE_PAGE = 1,
     MODE_PARA = 2,
@@ -98,6 +94,6 @@ void Modbus_UART_Init(void);
 void Modbus_Process_Task(void);
 void getCmd(u16 *index);
 void checkChange(void);
-void forcedOutputHnadle(void);
+void forcedOutputHandle(void);
 
 #endif

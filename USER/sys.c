@@ -13,9 +13,9 @@
 /*****************************************************************************
 自定义头文件*/
 #include "sys.h"
-#include "uart.h"
-#include "timer.h"
 #include "T5L_lib.h"
+#include "timer.h"
+#include "uart.h"
 /*****************************************************************************
 全局变量*/
 data _TKS_FLAGA_type MSFlag;

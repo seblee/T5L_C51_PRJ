@@ -50,8 +50,7 @@ typedef unsigned short u16;
 typedef unsigned long u32;
 #endif
 
-typedef struct
-{
+typedef struct {
     unsigned char b0 : 1;
     unsigned char b1 : 1;
     unsigned char b2 : 1;
@@ -62,8 +61,7 @@ typedef struct
     unsigned char b7 : 1;
 } _FLAG_bits;
 
-typedef union
-{
+typedef union {
     _FLAG_bits    bits;
     unsigned char byte;
 } _TKS_FLAGA_type;
@@ -91,7 +89,7 @@ sbit P2_1 = P2 ^ 1;
 sbit KEY1_Vin_F = P2 ^ 2;
 
 #define SOFTWARE_VER_H (u32)0x02010700  // version
-#define SOFTWARE_VER_L (u32)0x13000000  // version
+#define SOFTWARE_VER_L (u32)0x14000000  // version
 
 extern data _TKS_FLAGA_type MSFlag;
 #define MS1msFlag   MSFlag.bits.b0

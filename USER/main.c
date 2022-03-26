@@ -43,16 +43,16 @@
 #include "sys.h"
 // #include "handle.h"
 //#include "password.h"
-#include "uart.h"
-#include "timer.h"
-#include "rtc.h"
-#include "modbus.h"
-#include "ui.h"
-#include "curve.h"
-#include "string.h"
-#include "alarm.h"
 #include "ChineseCharacter.h"
+#include "alarm.h"
 #include "control.h"
+#include "curve.h"
+#include "modbus.h"
+#include "rtc.h"
+#include "string.h"
+#include "timer.h"
+#include "uart.h"
+#include "ui.h"
 /*****************************************************************************
 主函数*/
 void main(void)
@@ -63,10 +63,8 @@ void main(void)
     curveInit();
     alarmInit();
     passwordInit();
-    while (1)
-    {
-        if (timer1msFlag)
-        {
+    while (1) {
+        if (timer1msFlag) {
             MS1msFlag = 1;
             if (timer100msFlag)
                 MS100msFlag = 1;
@@ -92,8 +90,7 @@ void main(void)
         alarmTask();
         touchHandler();
         passwordTask();
-        if (MS1msFlag)
-        {
+        if (MS1msFlag) {
             MS1msFlag   = 0;
             MS100msFlag = 0;
             MS500msFlag = 0;

@@ -57,8 +57,7 @@ void password(void)
             if (password1[i] == 0) {
                 //如果密码为空，则什么都不做
                 continue;
-            }
-            else {
+            } else {
                 //将数据库1008地址的密码读到10A0变量地址中做对比
                 // ReadNorFlash(0x000010, 0x10A0, 4);
                 // ReadDGUS(0x10A0, password2, 8);
@@ -80,16 +79,14 @@ void password(void)
                     incflag = 1;
                     return;
                     //如果密码不一样，比较是否原始密码
-                }
-                else if (char_cmp(password1, Super_Password, 8) == 0) {
+                } else if (char_cmp(password1, Super_Password, 8) == 0) {
                     //如果密码一样,切页到密码正确页面,清空密码框
                     JumpPage(4);
                     WriteDGUS(PSW_LOGIN, Vp_Clear, sizeof(Vp_Clear));
                     DelayMs(500);
                     incflag = 1;
                     return;
-                }
-                else {
+                } else {
                     //如果密码不一样,切页到密码错误页面,清空密码框
                     JumpPage(10);
                     WriteDGUS(PSW_LOGIN, Vp_Clear, sizeof(Vp_Clear));
@@ -101,8 +98,7 @@ void password(void)
                 }
             }
         }
-    }
-    else {
+    } else {
         incflag = 1;
     }
 }
@@ -126,8 +122,7 @@ void reconfirm_password(void)
             if (password3[i] == 0) {
                 //如果密码为空，则什么都不做
                 continue;
-            }
-            else {
+            } else {
                 if (incflag1) {
                     WriteDGUS(DHW_MONI, zuobiao2, sizeof(zuobiao2));
                     incflag1 = 0;
@@ -137,8 +132,7 @@ void reconfirm_password(void)
                     if (password4[k] == 0) {
                         //如果密码为空，则什么都不做
                         continue;
-                    }
-                    else if (char_cmp(password3, password4, 8) == 0) {
+                    } else if (char_cmp(password3, password4, 8) == 0) {
                         WriteDGUS(0x6010, password3, 8);
                         DelayMs(20);
                         WriteDGUS(0x0008, Write_Flash, sizeof(Write_Flash));
@@ -157,8 +151,7 @@ void reconfirm_password(void)
                         incflag0 = 1;
                         incflag1 = 1;
                         return;
-                    }
-                    else {
+                    } else {
                         //如果密码不一样,切页到密码错误页面,清空密码框
                         JumpPage(12);
                         DelayMs(1800);
@@ -175,8 +168,7 @@ void reconfirm_password(void)
                 return;
             }
         }
-    }
-    else {
+    } else {
         incflag0 = 1;
         incflag1 = 1;
     }
@@ -193,8 +185,7 @@ void ctr_cmd(void)
     ReadDGUS(0x2005, Temp_Addr2, 2);
     if (Temp_Addr2[1] == 0) {
         ctr_inc = 0;
-    }
-    else if (ctr_inc > 120000) {
+    } else if (ctr_inc > 120000) {
         Temp_Addr2[1] = 0;
         WriteDGUS(0x2005, Temp_Addr2, 2);
         Uart2SendStr(stop_open, sizeof(stop_open));
@@ -203,8 +194,7 @@ void ctr_cmd(void)
     ReadDGUS(0x2007, Temp_Addr3, 2);
     if (Temp_Addr3[1] == 0) {
         ctr1_inc = 0;
-    }
-    else if (ctr1_inc > 10000) {
+    } else if (ctr1_inc > 10000) {
         Temp_Addr3[1] = 0;
         WriteDGUS(0x2007, Temp_Addr3, 2);
         Uart2SendStr(stop_open1, sizeof(stop_open1));
@@ -273,8 +263,7 @@ void Save_cmd(void)
             } while (Temp_Addr[0] == 0xA5);
             DelayMs(100);
         }
-    }
-    else  //无改变
+    } else  //无改变
     {
         return;
     }
@@ -289,14 +278,12 @@ void Nop_cmd(void)
             ctr2_inc = 0;
             page2[0] = 0;
             WriteDGUS(0x0016, page2, sizeof(page2));
-        }
-        else {
+        } else {
             if (ctr2_inc > 120000) {
                 JumpPage(0);
             }
         }
-    }
-    else {
+    } else {
         ctr2_inc = 0;
         return;
     }

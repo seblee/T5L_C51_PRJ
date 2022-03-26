@@ -56,8 +56,7 @@ void ReadDGUS(uint32_t Addr, uint8_t *pBuf, uint16_t Len)
     if (1 == Aoffset) { /*地址为奇数*/
         if (1 == Len) {
             APP_DATA3 = 0, APP_DATA2 = 0, APP_DATA1 = 1, APP_DATA0 = 0;
-        }
-        else {
+        } else {
             APP_DATA3 = 0, APP_DATA2 = 0, APP_DATA1 = 1, APP_DATA0 = 1;
         }
         APP_EN = 1;
@@ -66,8 +65,7 @@ void ReadDGUS(uint32_t Addr, uint8_t *pBuf, uint16_t Len)
         if (1 == Len) {
             *pBuf++ = DATA1;
             Len     = Len - 1;
-        }
-        else {
+        } else {
             *pBuf++ = DATA1;
             *pBuf++ = DATA0;
             Len     = Len - 2;
@@ -107,8 +105,7 @@ void ReadDGUS(uint32_t Addr, uint8_t *pBuf, uint16_t Len)
                     break;
             }
             break;
-        }
-        else {
+        } else {
             APP_DATA3 = 1, APP_DATA2 = 1, APP_DATA1 = 1, APP_DATA0 = 1;
             APP_EN = 1;
             while (APP_EN)
@@ -167,15 +164,13 @@ void WriteDGUS(uint32_t Addr, uint8_t *pBuf, uint16_t Len)
     if (1 == Aoffset) { /*地址为奇数*/
         if (1 == Len) {
             APP_DATA3 = 0, APP_DATA2 = 0, APP_DATA1 = 1, APP_DATA0 = 0;
-        }
-        else {
+        } else {
             APP_DATA3 = 0, APP_DATA2 = 0, APP_DATA1 = 1, APP_DATA0 = 1;
         }
         if (1 == Len) {
             DATA1 = *pBuf++;
             Len   = Len - 1;
-        }
-        else {
+        } else {
             DATA1 = *pBuf++;
             DATA0 = *pBuf++;
             Len   = Len - 2;
@@ -218,8 +213,7 @@ void WriteDGUS(uint32_t Addr, uint8_t *pBuf, uint16_t Len)
             while (APP_EN)
                 ;
             break;
-        }
-        else {
+        } else {
             APP_DATA3 = 1, APP_DATA2 = 1, APP_DATA1 = 1, APP_DATA0 = 1;
             DATA3  = *pBuf++;
             DATA2  = *pBuf++;

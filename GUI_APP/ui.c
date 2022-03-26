@@ -50,8 +50,7 @@ void ui(void)
             static u8 counter = 0;
             if (counter < 6) {
                 counter++;
-            }
-            else if (counter == 6) {
+            } else if (counter == 6) {
                 JumpPage(PAGE57);
                 counter++;
             }
@@ -116,13 +115,9 @@ void ui(void)
                     diagnosisPageInCount++;
                 }
                 diagnosisPageOutCount = 0;
-            }
-            else {
+            } else {
                 if (diagnosisPageOutCount < 5) {
-                    u16 cache = 0;
-                    WriteDGUS(0xa027, (u8 *)&cache, 2);
-                    cache = 0x005a;
-                    WriteDGUS(0xa087, (u8 *)&cache, 2);
+
                     diagnosisPageOutCount++;
                 }
                 diagnosisPageInCount = 0;
@@ -137,8 +132,7 @@ void ui(void)
                 cache = 0;
                 WriteDGUS(0x0016, (u8 *)&cache, 2);
                 timerCounter = 0;
-            }
-            else {
+            } else {
                 if (timerCounter < STANGBYTIME)
                     timerCounter++;
                 else if (timerCounter == STANGBYTIME) {
@@ -168,8 +162,7 @@ void JumpPage(uint16_t pageId)
     // } while (temp[0] != 0);
 }
 
-enum
-{
+enum {
     SYS_STS_FSM = 0,     // 140
     SYS_STS_MALFUN_0,    // 141
     SYS_STS_MALFUN_1,    // 142
@@ -243,24 +236,17 @@ void caculateGroupCtrlPic(void)
                 //故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0) {
                     lw_teamwork_icon_sta[i] += 8;
+                } else {  //正常
+                          //保持原值
                 }
-                else  //正常
-                {
-                    //保持原值
-                }
-            }
-            else  //备用
-            {     //故障
+            } else {  //备用 故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0) {
                     lw_teamwork_icon_sta[i] = 2;
-                }
-                else  //正常
-                {
+                } else {  //正常
                     lw_teamwork_icon_sta[i] = 1;
                 }
             }
-        }
-        else {
+        } else {
             lw_teamwork_icon_sta[i] = 0;
         }
     }
@@ -304,24 +290,16 @@ void caculateGroupCtrlPic(void)
                 //故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0) {
                     lw_teamwork_icon_sta[i] += 8;
+                } else {  //正常
                 }
-                else  //正常
-                {
-                    //保持原值
-                }
-            }
-            else  //备用
-            {     //故障
+            } else {  //备用故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0) {
                     lw_teamwork_icon_sta[i] = 2;
-                }
-                else  //正常
-                {
+                } else {  //正常
                     lw_teamwork_icon_sta[i] = 1;
                 }
             }
-        }
-        else {
+        } else {
             lw_teamwork_icon_sta[i] = 0;
         }
     }

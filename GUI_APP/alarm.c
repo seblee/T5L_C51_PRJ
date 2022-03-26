@@ -108,16 +108,16 @@ const dgus_string_t showStringDesConst = {
 };
 
 const u16 alarmShowDescriptionVP[10][3] = {
-    {SHOWTIMESTART0, SHOWTIMEEND0, SHOWSTRING0},  //
-    {SHOWTIMESTART1, SHOWTIMEEND1, SHOWSTRING1},  //
-    {SHOWTIMESTART2, SHOWTIMEEND2, SHOWSTRING2},  //
-    {SHOWTIMESTART3, SHOWTIMEEND3, SHOWSTRING3},  //
-    {SHOWTIMESTART4, SHOWTIMEEND4, SHOWSTRING4},  //
-    {SHOWTIMESTART5, SHOWTIMEEND5, SHOWSTRING5},  //
-    {SHOWTIMESTART6, SHOWTIMEEND6, SHOWSTRING6},  //
-    {SHOWTIMESTART7, SHOWTIMEEND7, SHOWSTRING7},  //
-    {SHOWTIMESTART8, SHOWTIMEEND8, SHOWSTRING8},  //
-    {SHOWTIMESTART9, SHOWTIMEEND9, SHOWSTRING9},  //
+    {SHOWTIMESTART0, SHOWTIMEEND0, SHOWSTRING0}, //
+    {SHOWTIMESTART1, SHOWTIMEEND1, SHOWSTRING1}, //
+    {SHOWTIMESTART2, SHOWTIMEEND2, SHOWSTRING2}, //
+    {SHOWTIMESTART3, SHOWTIMEEND3, SHOWSTRING3}, //
+    {SHOWTIMESTART4, SHOWTIMEEND4, SHOWSTRING4}, //
+    {SHOWTIMESTART5, SHOWTIMEEND5, SHOWSTRING5}, //
+    {SHOWTIMESTART6, SHOWTIMEEND6, SHOWSTRING6}, //
+    {SHOWTIMESTART7, SHOWTIMEEND7, SHOWSTRING7}, //
+    {SHOWTIMESTART8, SHOWTIMEEND8, SHOWSTRING8}, //
+    {SHOWTIMESTART9, SHOWTIMEEND9, SHOWSTRING9}, //
 };
 const u16 historyShowVP[10] = {
     HISTORYSHOWVP0, HISTORYSHOWVP1, HISTORYSHOWVP2, HISTORYSHOWVP3, HISTORYSHOWVP4, HISTORYSHOWVP5, HISTORYSHOWVP6, HISTORYSHOWVP7, HISTORYSHOWVP8, HISTORYSHOWVP9,
@@ -152,12 +152,10 @@ void alarmInit(void)
         ReadDGUS(alarmTemp, (u8 *)&cache, sizeof(alarmDataStrc_t));
         if (alarmData->flag == ALARMDATALAG) {
             continue;
-        }
-        else if (alarmInfo->flag == ALARMINFOFLAG) {
+        } else if (alarmInfo->flag == ALARMINFOFLAG) {
             memcpy(&alarmInfomation, alarmInfo, sizeof(alarmInfoStrc_t));
             break;
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -204,8 +202,7 @@ void alarmTask(void)
         if (pageBak != picNow) {
             showPage = 0;
             WriteDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // set
-        }
-        else {
+        } else {
             ReadDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // GET PAGENOW
         }
 
@@ -237,8 +234,7 @@ void alarmTask(void)
                             setAlarmDisplay((showIndex - (showPage * 10)), (alarmVPStart + alarmIndex * 24), CURRENTALARMPAGE);
                         }
                         showIndex++;
-                    }
-                    else {
+                    } else {
                         if (alarmData->flag == ALARMDATALAG) {
                             ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
                             memcpy(&cache[8], &cache[20], 3);
@@ -257,8 +253,7 @@ void alarmTask(void)
             }
             showPagebAK = showPage;
         }
-    }
-    else {
+    } else {
         ReadDGUS(alarmStateVP, (u8 *)cache, 16);
         cache[14] = 0;
         cache[15] &= 0x07;
@@ -283,8 +278,7 @@ void alarmTask(void)
                                 strncpy(&cache[16], &alarmMessage[alarmIndex][0], 32);
                                 WriteDGUS(alarmVPStart + alarmIndex * 24, (u8 *)&cache, 48);  // write memory
                             }
-                        }
-                        else {
+                        } else {
                             if (alarmData->flag == ALARMDATALAG) {
                                 ReadDGUS(0x0010, (u8 *)&cache[20], 8);  // read time
                                 memcpy(&cache[8], &cache[20], 3);
@@ -312,8 +306,7 @@ void alarmTask(void)
             showPage = 0;
             WriteDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // set
             goto refreshHistory;
-        }
-        else {
+        } else {
             ReadDGUS(ALARMPAGEADDR, (u8 *)&showPage, 2);  // GET PAGENOW
             if (showPage != showPagebAK)
                 goto refreshHistory;
@@ -328,8 +321,7 @@ void alarmTask(void)
             }
             if (alarmInfomation.head_ptr > (10 * showPage + showIndex)) {
                 addressTemp = alarmInfomation.head_ptr - (10 * showPage + showIndex + 1);
-            }
-            else {
+            } else {
                 addressTemp = (ALARM_LEN + alarmInfomation.head_ptr) - (10 * showPage + showIndex + 1);
             }
 
@@ -375,8 +367,7 @@ void saveAlarmHistory(void)
         if (alarmInfomation.tail_ptr >= ALARM_LEN) {
             alarmInfomation.tail_ptr = 0;
         }
-    }
-    else {
+    } else {
         alarmInfomation.length++;
     }
     alarmInfomation.flag = ALARMINFOFLAG;

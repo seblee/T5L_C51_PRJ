@@ -39,11 +39,11 @@
 
 #define TOUCH_EVENT_FLAG 0x5014
 
-#define POWER_SWITCH_EVENT 0Xa000
-#define ALARM_CONFIRM_EVENT 0Xa026
-#define PASSWORD_CONFIRM_EVENT 0Xa400
-#define PASSWORD_CANCLE_EVENT 0Xa401
-#define PASSWORD_PAGEJUMP_START 0xa4a0
+#define POWER_SWITCH_EVENT         0Xa000
+#define ALARM_CONFIRM_EVENT        0Xa026
+#define PASSWORD_CONFIRM_EVENT     0Xa400
+#define PASSWORD_CANCLE_EVENT      0Xa401
+#define PASSWORD_PAGEJUMP_START    0xa4a0
 #define PASSWORD_PAGEJUMP_00_EVENT 0xA4A0  // PAGE00
 #define PASSWORD_PAGEJUMP_01_EVENT 0xA4A1  // PAGE01
 #define PASSWORD_PAGEJUMP_02_EVENT 0xA4A2  // PAGE02
@@ -121,36 +121,34 @@
 #define PASSWORD_FUN_03_EVENT 0xA4F3
 
 #define PASSWORD_CHANGE_CONFIRM_EVENT 0xA600
-#define PASSWORD_CHANGE_CANCLE_EVENT 0xA601
+#define PASSWORD_CHANGE_CANCLE_EVENT  0xA601
 
-#define ALARM_CLEAR_EVENT 0Xac00
-#define CUR_ALARM_CLEAR_EVENT 0Xac01
-#define RESET_EVENT 0Xc500
-#define IN_MAINTAIN_MOD_EVENT 0Xc600
-#define OUTPUT_EVENT 0Xc700
+#define ALARM_CLEAR_EVENT      0Xac00
+#define CUR_ALARM_CLEAR_EVENT  0Xac01
+#define RESET_EVENT            0Xc500
+#define IN_MAINTAIN_MOD_EVENT  0Xc600
+#define OUTPUT_EVENT           0Xc700
 #define OUT_MAINTAIN_MOD_EVENT 0Xc701
 #define CLEAR_RUNTIME_EVENT_0E 0Xc90e
 #define CLEAR_RUNTIME_EVENT_0C 0Xc90c
 #define CLEAR_RUNTIME_EVENT_01 0Xc901
 #define CLEAR_RUNTIME_EVENT_06 0Xc906
 #define CLEAR_RUNTIME_EVENT_11 0Xc911
-#define REST_ORIGINAL_PARA 0xcf3c
-#define SAVE_FACTORY_PARA 0xcf69
+#define REST_ORIGINAL_PARA     0xcf3c
+#define SAVE_FACTORY_PARA      0xcf69
 
 #define SAVE_FACTORY_CFG_EVENT 0xD600
 
-#define LEVEL_NUM 6
+#define LEVEL_NUM            6
 #define PASSWORD_FLASH_START 0x3000
 #define PASSWORD_FLASH_LENTH (LEVEL_NUM - 1) * 2
 
-typedef enum password_mode
-{
+typedef enum password_mode {
     PWM_PAGEJUMP = 0x0000,
     PWM_FUN      = 0x0001,
 } _password_mode_t;
 
-enum
-{
+enum {
     FUN00 = 0X00,
     FUN01 = 0X01,
     FUN02 = 0X02,
@@ -176,8 +174,8 @@ void passwordPageJumpEventHandle(u16 event);
 void passwordFunEventHandle(u16 event);
 void passwordOperation(void);
 void passwordFunOPThandle(u16 fun);
-u8 getPasswordLevel(u16 event);
-u8 checkPassword(u8 level, u8* input);
+u8   getPasswordLevel(u16 event);
+u8   checkPassword(u8 level, u8 *input);
 void passwordInit(void);
 void passwordTask(void);
 void savePassword(void);
