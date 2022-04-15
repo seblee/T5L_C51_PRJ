@@ -149,6 +149,20 @@ void ui(void)
                 }
             }
         }
+
+        {
+            u16 cache;
+            ReadDGUS(0xe000, (u8 *)&cache, 2);
+            if (cache & 0x0100) {
+                if (picNow != PAGE65) {
+                    JumpPage(PAGE65);
+                }
+            } else {
+                if (picNow == PAGE65) {
+                    JumpPage(PAGE57);
+                }
+            }
+        }
     }
 }
 /**

@@ -139,7 +139,9 @@
 
 #define SAVE_FACTORY_CFG_EVENT 0xD600
 
-#define LEVEL_NUM            6
+#define UNLOCK_EVENT 0xe000
+
+#define LEVEL_NUM            7
 #define PASSWORD_FLASH_START 0x3000
 #define PASSWORD_FLASH_LENTH (LEVEL_NUM - 1) * 2
 
@@ -167,6 +169,8 @@ void factoryParaOpt(u16 eventId);
 void saveFactoryCFG(void);
 void setDIPolarityEventHandle(void);
 void setDIMaskEventHandle(void);
+
+void unlockEventHandle(void);
 
 void passwordConfirmEventHandle(void);
 void passwordCancleEventHandle(void);

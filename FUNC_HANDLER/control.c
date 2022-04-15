@@ -44,7 +44,7 @@
 #include "ui.h"
 
 u8        password[LEVEL_NUM][4]     = {0};
-const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 519525};
+const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 200908, 519525};
 u8        passwordGotLevel           = 0xff;
 
 const u8 pageLevel[][2] = {
@@ -112,7 +112,7 @@ const u8 pageLevel[][2] = {
     {PAGE61, 0}, //  PASSWORD_PAGEJUMP_3D_EVENT
     {PAGE62, 0}, //  PASSWORD_PAGEJUMP_3E_EVENT
     {PAGE63, 0}, //  PASSWORD_PAGEJUMP_3F_EVENT
-    {PAGE64, 0}, //  PASSWORD_PAGEJUMP_40_EVENT
+    {PAGE64, 5}, //  unLock
     {PAGE65, 0}, //  PASSWORD_PAGEJUMP_41_EVENT
     {PAGE66, 0}, //  PASSWORD_PAGEJUMP_42_EVENT
     {PAGE67, 0}, //  PASSWORD_PAGEJUMP_43_EVENT
@@ -123,7 +123,7 @@ const u8 funLevel[][2] = {
     {FUN00, 1}, // clear current alarm
     {FUN01, 3}, // clear alarm history
     {FUN02, 3}, // clear curve
-    {FUN03, 5}, // reset password
+    {FUN03, 6}, // reset password
 };
 
 u16                     jumpPage    = 0;
@@ -267,6 +267,9 @@ void touchHandler(void)
             case SAVE_FACTORY_CFG_EVENT:
                 saveFactoryCFG();
                 break;
+            case UNLOCK_EVENT:
+                unlockEventHandle();
+                break;
             default:
                 break;
         }
@@ -331,6 +334,14 @@ void saveFactoryCFG(void)
     WriteDGUS(0xd62b, (u8 *)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xd68b, (u8 *)&cache, 2);
+}
+
+void unlockEventHandle(void)
+{
+    u16 cache = 0x23;
+    WriteDGUS(0xe020, (u8 *)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xe080, (u8 *)&cache, 2);
 }
 
 void passwordConfirmEventHandle(void)
@@ -422,7 +433,7 @@ void pageHandle(u16 page)
 
 u8 getPasswordLevel(u16 event)
 {
-    if (event <= PASSWORD_PAGEJUMP_31_EVENT) {
+    if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
     }
     if (event <= PASSWORD_FUN_03_EVENT) {

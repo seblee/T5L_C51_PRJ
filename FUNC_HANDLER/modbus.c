@@ -307,6 +307,11 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdf89, 0xdf29, 0x0201, PAGE63}, //
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdf8a, 0xdf2a, 0x0202, PAGE63}, //
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdf8b, 0xdf2b, 0x0203, PAGE63}, //
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE64, 0xe022, 0x03be, 0x00ff}, //
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE64, 0xe023, 0x03c9, 0x00ff}, //
+    {BUS_EN, SLAVE_ID, BUS_FUN_10H, 0x02, 0xc8, MODE_PANP, 0xe080, 0xe020, 0x0000, PAGE64}, //
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_ALWA, 0x0000, 0xe000, 0x03cc, 0x00ff}, //  lock state
+    {BUS_EN, SLAVE_ID, BUS_FUN_10H, 0x02, 0xc8, MODE_PANP, 0xe080, 0xe020, 0x0000, PAGE65}, //
 };
 modbosCmd_t modbusCmdNow = {0};
 u16         CmdIndex     = 0;
