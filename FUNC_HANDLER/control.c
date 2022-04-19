@@ -34,6 +34,7 @@
  * ******************************************************************
  */
 
+/* Private includes ----------------------------------------------------------*/
 #include "control.h"
 #include "T5L_lib.h"
 #include "alarm.h"
@@ -43,6 +44,13 @@
 #include "timer.h"
 #include "ui.h"
 
+/* Private typedef -----------------------------------------------------------*/
+
+/* Private define ------------------------------------------------------------*/
+
+/* Private macro -------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
 u8        password[LEVEL_NUM][4]     = {0};
 const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 200908, 519525};
 u8        passwordGotLevel           = 0xff;
@@ -124,6 +132,7 @@ const u8 funLevel[][2] = {
     {FUN01, 3}, // clear alarm history
     {FUN02, 3}, // clear curve
     {FUN03, 6}, // reset password
+    {FUN04, 2}, // sysSet
 };
 
 u16                     jumpPage    = 0;
@@ -131,6 +140,9 @@ u16                     currentPage = 0;
 static _password_mode_t mode;
 static u16              funOpt       = 0;
 static u8               currentLevel = 0;
+/* Private function prototypes -----------------------------------------------*/
+static void sysSetPageSwitch(void);
+/* Private user code ---------------------------------------------------------*/
 
 void touchHandler(void)
 {
@@ -228,6 +240,7 @@ void touchHandler(void)
             case PASSWORD_FUN_01_EVENT:
             case PASSWORD_FUN_02_EVENT:
             case PASSWORD_FUN_03_EVENT:
+            case PASSWORD_FUN_04_EVENT:
                 passwordFunEventHandle(touchEventFlag);
                 break;
             case PASSWORD_CHANGE_CONFIRM_EVENT:
@@ -309,7 +322,14 @@ void powerSwitchEventHandle(void)
 
 void inMaintainModEventHandle(void)
 {
-    u16 cache = 0x005a;
+    u16 cache = 0;
+    ReadDGUS(0xcf27, (u8 *)&cache, 2);
+    if (cache > 2) {
+        JumpPage(67);
+    } else {
+        JumpPage(39);
+    }
+    cache = 0x005a;
     WriteDGUS(0xc700, (u8 *)&cache, 2);
 }
 void outMaintainModEventHandle(void)
@@ -396,27 +416,32 @@ void passwordOperation(void)
             pageHandle(jumpPage);
             break;
         case PWM_FUN:
-            passwordFunOPThandle(funOpt);
-            JumpPage(currentPage);
+            passwordFunOPThandle(funOpt, currentPage);
             break;
         default:
             break;
     }
 }
-void passwordFunOPThandle(u16 fun)
+void passwordFunOPThandle(u16 fun, u16 page)
 {
     if (fun == FUN00) {
+        JumpPage(page);
         curAlarmClearHandle();
     } else if (fun == FUN01) {
+        JumpPage(page);
         alarmClearHandle();
     } else if (fun == FUN02) {
+        JumpPage(page);
         curveClearHandle();
     } else if (fun == FUN03) {
         u8 i;
         for (i = 0; i < LEVEL_NUM; i++) {
             *((u32 *)password[i]) = defaultPassword[i];
         }
+        JumpPage(page);
         savePassword();
+    } else if (fun == FUN04) {
+        sysSetPageSwitch();
     }
 }
 
@@ -436,7 +461,7 @@ u8 getPasswordLevel(u16 event)
     if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
     }
-    if (event <= PASSWORD_FUN_03_EVENT) {
+    if (event <= PASSWORD_FUN_04_EVENT) {
         return funLevel[event - PASSWORD_FUN_00_EVENT][1];
     }
     return LEVEL_NUM - 1;
@@ -504,3 +529,17 @@ void passwordChangeConfirmEventHandle(void)
 }
 
 void passwordChangeCancleEventHandle(void) {}
+
+/**
+ * @brief
+ */
+static void sysSetPageSwitch(void)
+{
+    u16 cache = 0;
+    ReadDGUS(0xcf27, (u8 *)&cache, 2);
+    if (cache > 2) {
+        JumpPage(66);
+    } else {
+        JumpPage(18);
+    }
+}
