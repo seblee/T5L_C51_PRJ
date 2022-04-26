@@ -23,11 +23,12 @@ data _TKS_FLAGA_type SYSFlag;
 /*****************************************************************************
 延时us*//*振荡周期T=1/206438400*/
 // void DelayUs(uint16_t n)
-//{
-//  uint16_t i,j;
-//  for(i=0;i<n;i++)
-//    for(j=0;j<15;j++);
-//}
+// {
+//     uint16_t i, j;
+//     for (i = 0; i < n; i++)
+//         for (j = 0; j < 15; j++)
+//             ;
+// }
 /*****************************************************************************
 延时ms*/
 void DelayMs(uint16_t n)
@@ -41,16 +42,16 @@ void DelayMs(uint16_t n)
 /*****************************************************************************
 初始化T5L必须配置的寄存器*/
 // void InitCFG(void)
-//{
-//  CKCON      = 0x00;
-//  T2CON      = 0x70;
-//  DPC        = 0x00;
-//  PAGESEL    = 0x01;
-//  D_PAGESEL  = 0x02;
-//  MUX_SEL    = 0x60;
-//  PORTDRV    = 0x01;
-//  RAMMODE    = 0x00;
-//}
+// {
+//     CKCON     = 0x00;
+//     T2CON     = 0x70;
+//     DPC       = 0x00;
+//     PAGESEL   = 0x01;
+//     D_PAGESEL = 0x02;
+//     MUX_SEL   = 0x60;
+//     PORTDRV   = 0x01;
+//     RAMMODE   = 0x00;
+// }
 
 /*****************************************************************************
 中断配置*/
@@ -94,7 +95,7 @@ void EX1_ISR_PC(void) interrupt 2
 void InitSys(void)
 {
     EA = 0;
-    //  InitCFG();      /*改为在A51启动文件初始化*/
+    // InitCFG(); /*改为在A51启动文件初始化*/
     InitInt();
     InitGPIO();
     InitUart();
