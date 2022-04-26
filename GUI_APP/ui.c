@@ -120,7 +120,7 @@ void ui(void)
         {
             u16 cache;
             ReadDGUS(0xe120, (u8 *)&cache, 2);
-            if (cache == PWOER_UNLOCK)
+            if (cache != PWOER_LOCK)
             {
                 JumpPage(PAGE57);
             }

@@ -160,8 +160,10 @@ enum
 };
 enum
 {
-    PWOER_LOCK   = 0,
-    PWOER_UNLOCK = 0xa5,
+    PWOER_LOCK_IDEL = 0,
+    PWOER_UNLOCK    = 0,
+    PWOER_LOCK      = 0xa5,
+    PWOER_LOCK_EN   = 0x0A5A,
 };
 
 extern u8 passwordGotLevel;
