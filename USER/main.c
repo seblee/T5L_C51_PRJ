@@ -39,20 +39,18 @@
 
 /*****************************************************************************
 自定义头文件*/
-#include "T5LOS8051.H"
-#include "sys.h"
-// #include "handle.h"
-//#include "password.h"
-#include "uart.h"
-#include "timer.h"
-#include "rtc.h"
-#include "modbus.h"
-#include "ui.h"
-#include "curve.h"
-#include "string.h"
-#include "alarm.h"
 #include "ChineseCharacter.h"
+#include "T5LOS8051.H"
+#include "alarm.h"
 #include "control.h"
+#include "curve.h"
+#include "modbus.h"
+#include "rtc.h"
+#include "string.h"
+#include "sys.h"
+#include "timer.h"
+#include "uart.h"
+#include "ui.h"
 /*****************************************************************************
 主函数*/
 void main(void)
@@ -63,10 +61,8 @@ void main(void)
     curveInit();
     alarmInit();
     passwordInit();
-    while (1)
-    {
-        if (timer1msFlag)
-        {
+    while (1) {
+        if (timer1msFlag) {
             MS1msFlag = 1;
             if (timer100msFlag)
                 MS100msFlag = 1;
@@ -77,7 +73,7 @@ void main(void)
             timer100msFlag = 0;
             timer500msFlag = 0;
         }
-        WDT_RST();               //喂狗(4,660,912 
+        WDT_RST();               //喂狗(4,660,912
         if (SysTick_RTC >= 500)  //原来是500，调试改为50
         {
             rdtime();  //更新硬件RTC时间
@@ -92,8 +88,7 @@ void main(void)
         alarmTask();
         touchHandler();
         passwordTask();
-        if (MS1msFlag)
-        {
+        if (MS1msFlag) {
             MS1msFlag   = 0;
             MS100msFlag = 0;
             MS500msFlag = 0;

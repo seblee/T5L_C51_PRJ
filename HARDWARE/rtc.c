@@ -35,17 +35,17 @@
  */
 #include "rtc.h"
 // #include "handle.h"
-#include "string.h"
 #include "dgus.h"
+#include "string.h"
 
 //**********************RX8130接口程序，SDA 10K上拉到3.3V**************
 //上电时运行一次initrtc()，然后0.5秒间隔运行一次rdtime()读取时间到DGUS相应系统接口
 
 uint8_t RTC_temp[7] = {0};
 //时间校准
-uint8_t time_calibra[8]           = {0};
-uint8_t prtc_set1[8]              = {0};
-const uint8_t code table_week[12] = {0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};  //月修正数据表
+uint8_t            time_calibra[8] = {0};
+uint8_t            prtc_set1[8]    = {0};
+const uint8_t code table_week[12]  = {0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};  //月修正数据表
 
 bit timSetFlag = 0;
 
@@ -61,10 +61,8 @@ void SDA_OUT(void)
 void delayus(unsigned char t)
 {
     char i;
-    while (t)
-    {
-        for (i = 0; i < 50; i++)
-        {
+    while (t) {
+        for (i = 0; i < 50; i++) {
             i = i;
         }
         t--;
@@ -124,10 +122,8 @@ void cack(void)
     delayus(5);
     RTC_SCL = 1;
     delayus(5);
-    for (i = 0; i < 50; i++)
-    {
-        if (!RTC_SDA)
-        {
+    for (i = 0; i < 50; i++) {
+        if (!RTC_SDA) {
             break;
         }
         delayus(5);
@@ -142,14 +138,10 @@ void i2cbw(unsigned char dat)
 {
     char i;
     SDA_OUT();
-    for (i = 0; i < 8; i++)
-    {
-        if (dat & 0x80)
-        {
+    for (i = 0; i < 8; i++) {
+        if (dat & 0x80) {
             RTC_SDA = 1;
-        }
-        else
-        {
+        } else {
             RTC_SDA = 0;
         }
         dat = (dat << 1);
@@ -165,21 +157,17 @@ void i2cbw(unsigned char dat)
 // i2c 读取1个字节数据
 unsigned char i2cbr(void)
 {
-    char i;
+    char          i;
     unsigned char dat;
     SDA_IN();
-    for (i = 0; i < 8; i++)
-    {
+    for (i = 0; i < 8; i++) {
         delayus(5);
         RTC_SCL = 1;
         delayus(5);
         dat = (dat << 1);
-        if (RTC_SDA)
-        {
+        if (RTC_SDA) {
             dat = dat | 0x01;
-        }
-        else
-        {
+        } else {
             dat = dat & 0xFE;
         }
         // dat=(dat<<1);
@@ -205,9 +193,8 @@ void init_rtc(void)
     i2cbr();
     mnak();
     i2cstop();
-    if ((i & 0x02) == 0x02)
-    {                //重新配置时间
-        i2cstart();  // 30=00
+    if ((i & 0x02) == 0x02) {  //重新配置时间
+        i2cstart();            // 30=00
         i2cbw(0x64);
         i2cbw(0x30);
         i2cbw(0x00);
@@ -240,7 +227,7 @@ void init_rtc(void)
     }
 }
 
-void RTC_Set_Time(u8* prtc_set)
+void RTC_Set_Time(u8 *prtc_set)
 {
     i2cstart();  // 30=00
     i2cbw(0x64);
@@ -279,15 +266,14 @@ void rdtime(void)
 {
     unsigned char rtcdata[8];
     unsigned char i, n, m;  //, k;
-    static u16 syncTimer = 0;
+    static u16    syncTimer = 0;
     i2cstart();
     i2cbw(0x64);
     i2cbw(0x10);
     i2cstop();
     i2cstart();
     i2cbw(0x65);
-    for (i = 6; i > 0; i--)
-    {
+    for (i = 6; i > 0; i--) {
         rtcdata[i] = i2cbr();
         mack();
     }
@@ -321,24 +307,23 @@ void rdtime(void)
     //	rtcdata[3]=n;
 
     rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
-    WriteDGUS(RTC, (u8*)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
+    WriteDGUS(RTC, (u8 *)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
     if (syncTimer < 840)
         syncTimer++;
-    if (((rtcdata[5] != 0) && (rtcdata[6] != 0) && (syncTimer >= 839)) || timSetFlag)
-    {
-        u32 timeStamp      = 0;
-        static struct tm p = {0};
-        p.tm_sec           = rtcdata[6];
-        p.tm_min           = rtcdata[5];
-        p.tm_hour          = rtcdata[4];
-        p.tm_mday          = rtcdata[2];
-        p.tm_mon           = rtcdata[1] - 1;
-        p.tm_year          = rtcdata[0] + 100;
+    if (((rtcdata[5] != 0) && (rtcdata[6] != 0) && (syncTimer >= 839)) || timSetFlag) {
+        u32              timeStamp = 0;
+        static struct tm p         = {0};
+        p.tm_sec                   = rtcdata[6];
+        p.tm_min                   = rtcdata[5];
+        p.tm_hour                  = rtcdata[4];
+        p.tm_mday                  = rtcdata[2];
+        p.tm_mon                   = rtcdata[1] - 1;
+        p.tm_year                  = rtcdata[0] + 100;
 
-        *((u16*)rtcdata)       = 0x5a;
-        *((u16*)(&rtcdata[2])) = 0x12;
-        *((u32*)(&rtcdata[4])) = time_to_stamp(&p, 8);
-        WriteDGUS(0x5015, (u8*)rtcdata, 8);  //写入DGUS变量空间
+        *((u16 *)rtcdata)       = 0x5a;
+        *((u16 *)(&rtcdata[2])) = 0x12;
+        *((u32 *)(&rtcdata[4])) = time_to_stamp(&p, 8);
+        WriteDGUS(0x5015, (u8 *)rtcdata, 8);  //写入DGUS变量空间
         syncTimer  = 0;
         timSetFlag = 0;
     }
@@ -358,7 +343,7 @@ void rdtime(void)
 */
 uint8_t RTC_Get_Week(uint8_t year, uint8_t month, uint8_t day)
 {
-    u16 y, c, m, d, w;
+    u16      y, c, m, d, w;
     uint16_t year_real = 0;
 
     year_real = (u16)year + 2000;
@@ -366,8 +351,7 @@ uint8_t RTC_Get_Week(uint8_t year, uint8_t month, uint8_t day)
     c         = year_real / 100;  // 年份前两位　如2015即20
     m         = month;
     d         = day;
-    if (m == 1 || m == 2)
-    {  //判断月份是否为1或2
+    if (m == 1 || m == 2) {  //判断月份是否为1或2
         y--;
         m += 12;  //某年的1、2月要看作上一年的13、14月来计算
     }
@@ -382,11 +366,10 @@ void RTC_Set_CMD(void)
 {
     unsigned char time_calibra1[8];
     unsigned char i, n, m;
-    uint8_t temp[2];
-    uint8_t week = 0;
-    ReadDGUS(RTC_Set, (uint8_t*)time_calibra, 8);
-    if ((time_calibra[0] == 0x5A) && (time_calibra[1] == 0xA5))
-    {
+    uint8_t       temp[2];
+    uint8_t       week = 0;
+    ReadDGUS(RTC_Set, (uint8_t *)time_calibra, 8);
+    if ((time_calibra[0] == 0x5A) && (time_calibra[1] == 0xA5)) {
         for (i = 2; i < 8; i++)  //年月日时分秒转换成HEX
         {
             n                = time_calibra[i] / 10;
@@ -411,36 +394,32 @@ void RTC_Set_CMD(void)
 
         time_calibra[0] = 0;
         time_calibra[1] = 0;
-        WriteDGUS(RTC_Set, (uint8_t*)time_calibra, 8);
+        WriteDGUS(RTC_Set, (uint8_t *)time_calibra, 8);
         timSetFlag = 1;
     }
 }
 
-u32 time_to_stamp(const struct tm* ltm, int utc_diff)
+u32 time_to_stamp(const struct tm *ltm, int utc_diff)
 {
     const int mon_days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    long tyears, tdays, leap_years, utc_hrs;
-    int is_leap;
-    int i, ryear;
+    long      tyears, tdays, leap_years, utc_hrs;
+    int       is_leap;
+    int       i, ryear;
 
     //判断闰年
     ryear   = ltm->tm_year + 1900;
     is_leap = ((ryear % 100 != 0 && ryear % 4 == 0) || (ryear % 400 == 0)) ? 1 : 0;
 
     tyears = ltm->tm_year - 70;  //时间戳从1970年开始算起
-    if (ltm->tm_mon < 1 && is_leap == 1)
-    {
+    if (ltm->tm_mon < 1 && is_leap == 1) {
         leap_years = (tyears + 2) / 4 - 1;  // 1970年不是闰年，从1972年开始闰年
                                             //闰年的月份小于1，需要减去一天
-    }
-    else
-    {
+    } else {
         leap_years = (tyears + 2) / 4;
     }
 
     tdays = 0;
-    for (i = 0; i < ltm->tm_mon; ++i)
-    {
+    for (i = 0; i < ltm->tm_mon; ++i) {
         tdays += mon_days[i];
     }
     tdays += ltm->tm_mday - 1;  //减去今天

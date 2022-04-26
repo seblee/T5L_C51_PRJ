@@ -17,7 +17,7 @@
  *
  **/
 
-#define READRFLASH 0x5A
+#define READRFLASH  0x5A
 #define WRITERFLASH 0xA5
 
 void wait_ok(unsigned int addr);

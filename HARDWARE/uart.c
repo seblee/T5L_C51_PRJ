@@ -25,28 +25,28 @@
 #define UART2_BAUD 19200
 uint8_t uart2_busy = 0;
 #ifndef MDO_UART2
-uint16_t uart2_rx_count = 0;
+uint16_t      uart2_rx_count = 0;
 uint8_t xdata Uart2_Rx[UART2_MAX_LEN];
 #endif
 #endif
 
 #if UART3_EN == 1
 #define UART3_BAUD 19200  // not used yet
-uint8_t uart3_busy      = 0;
-uint16_t uart3_rx_count = 0;
+uint8_t       uart3_busy     = 0;
+uint16_t      uart3_rx_count = 0;
 uint8_t xdata Uart3_Rx[UART3_MAX_LEN];
 #endif
 
 #if UART4_EN == 1
 #define UART4_BAUD 19200  // not used yet
-uint16_t uart4_rx_count = 0;
+uint16_t      uart4_rx_count = 0;
 uint8_t xdata Uart4_Rx[UART4_MAX_LEN];
 #endif
 
 #if UART5_EN == 1
 #define UART5_BAUD 19200
 #ifndef MDO_UART5
-uint16_t uart5_rx_count = 0;
+uint16_t      uart5_rx_count = 0;
 uint8_t xdata Uart5_Rx[UART5_MAX_LEN];
 #endif
 #endif
@@ -94,12 +94,10 @@ void Uart2SendByte(uint8_t dat)
 串口2发送字符串*/
 void Uart2SendStr(uint8_t *pstr, uint8_t strlen)
 {
-    if ((NULL == pstr) || (0 == strlen))
-    {
+    if ((NULL == pstr) || (0 == strlen)) {
         return;
     }
-    while (strlen--)
-    {
+    while (strlen--) {
         Uart2SendByte(*pstr);
         pstr++;
     }
@@ -113,30 +111,35 @@ void UART2_ISR_PC(void) interrupt 4
 {
     uint8_t res = 0;
     EA          = 0;
-    //		 if  (RI0) { SBUF0=SBUF0;while (!TI0){;}TI0=0;RI0=0; } //自环回实验,
-    //		 if  (TI0) {TI0=0;}
-    if (RI0 == 1)
-    {
+    // if (RI0) {
+    //     SBUF0 = SBUF0;
+    //     while (!TI0) {
+    //         ;
+    //     }
+    //     TI0 = 0;
+    //     RI0 = 0;
+    // }  //自环回实验,
+    // if (TI0) {
+    //     TI0 = 0;
+    // }
+    if (RI0 == 1) {
         res = SBUF0;
 #ifdef MDO_UART2
-        if (modbus_rx_count < UART_RX_BUF_MAX_LEN)
-        {
+        if (modbus_rx_count < UART_RX_BUF_MAX_LEN) {
             modbus_rx_buf[modbus_rx_count++] = res;
             modbus_rx_flag                   = 1;
         }
 #else
         Uart2_Rx[uart2_rx_count] = res;
         uart2_rx_count++;
-        if (uart2_rx_count >= UART2_MAX_LEN)
-        {
+        if (uart2_rx_count >= UART2_MAX_LEN) {
             //防止溢出
             uart2_rx_count = 0;
         }
 #endif
         RI0 = 0;
     }
-    if (TI0 == 1)
-    {
+    if (TI0 == 1) {
         TI0        = 0;
         uart2_busy = 0;
     }
@@ -179,12 +182,10 @@ void Uart3SendByte(uint8_t dat)
 串口3发送字符串*/
 void Uart3SendStr(uint8_t *pstr, uint8_t strlen)
 {
-    if ((NULL == pstr) || (0 == strlen))
-    {
+    if ((NULL == pstr) || (0 == strlen)) {
         return;
     }
-    while (strlen--)
-    {
+    while (strlen--) {
         Uart3SendByte(*pstr);
         pstr++;
     }
@@ -195,21 +196,18 @@ void UART3_ISR_PC(void) interrupt 16
 {
     uint8_t res = 0;
     EA          = 0;
-    if (SCON1 & 0x01)
-    {
+    if (SCON1 & 0x01) {
         res                      = SBUF1;
         Uart3_Rx[uart3_rx_count] = res;
         uart3_rx_count++;
         SCON1 &= 0xFE;
         SCON1 &= 0xFE;
-        if (uart3_rx_count >= UART3_MAX_LEN)
-        {
+        if (uart3_rx_count >= UART3_MAX_LEN) {
             //防止溢出
             uart3_rx_count = 0;
         }
     }
-    if (SCON1 & 0x02)
-    {
+    if (SCON1 & 0x02) {
         SCON1 &= 0xFD;
         SCON1 &= 0xFD;
         uart3_busy = 0;
@@ -244,13 +242,11 @@ void Uart4SendByte(uint8_t dat)
 
 void Uart4SendStr(uint8_t *pstr, uint8_t strlen)
 {
-    if ((NULL == pstr) || (0 == strlen))
-    {
+    if ((NULL == pstr) || (0 == strlen)) {
         return;
     }
     //	P0_0 = 1;
-    while (strlen--)
-    {
+    while (strlen--) {
         Uart4SendByte(*pstr);
         pstr++;
     }
@@ -258,23 +254,19 @@ void Uart4SendStr(uint8_t *pstr, uint8_t strlen)
 }
 /*****************************************************************************
 串口4发送中断*/
-void UART4_TX_ISR_PC(void) interrupt 10
-{
-}
+void UART4_TX_ISR_PC(void) interrupt 10 {}
 /*****************************************************************************
 串口4接收中断*/
 void UART4_RX_ISR_PC(void) interrupt 11
 {
     uint8_t res = 0;
     EA          = 0;
-    if ((SCON2R & 0x01) == 0x01)
-    {
+    if ((SCON2R & 0x01) == 0x01) {
         res                      = SBUF2_RX;
         Uart4_Rx[uart4_rx_count] = res;
         uart4_rx_count++;
         SCON2R &= 0xFE;
-        if (uart4_rx_count >= UART4_MAX_LEN)
-        {
+        if (uart4_rx_count >= UART4_MAX_LEN) {
             //防止溢出
             uart4_rx_count = 0;
         }
@@ -319,13 +311,11 @@ void Uart5SendByte(uint8_t dat)
 串口5发送字符串*/
 void Uart5SendStr(uint8_t *pstr, uint8_t strlen)
 {
-    if ((NULL == pstr) || (0 == strlen))
-    {
+    if ((NULL == pstr) || (0 == strlen)) {
         return;
     }
     RS485_TX_EN = 1;
-    while (strlen--)
-    {
+    while (strlen--) {
         Uart5SendByte(*pstr);
         pstr++;
     }
@@ -333,9 +323,7 @@ void Uart5SendStr(uint8_t *pstr, uint8_t strlen)
 }
 /*****************************************************************************
 串口5发送中断*/
-void UART5_TX_ISR_PC(void) interrupt 12
-{
-}
+void UART5_TX_ISR_PC(void) interrupt 12 {}
 /*****************************************************************************
 串口5接收中断*/
 #ifdef MDO_UART5
@@ -345,20 +333,17 @@ void UART5_RX_ISR_PC(void) interrupt 13
 {
     uint8_t res = 0;
     EA          = 0;
-    if ((SCON3R & 0x01) == 0x01)
-    {
+    if ((SCON3R & 0x01) == 0x01) {
         res = SBUF3_RX;
 #ifdef MDO_UART5
-        if (modbus_rx_count < UART_RX_BUF_MAX_LEN)
-        {
+        if (modbus_rx_count < UART_RX_BUF_MAX_LEN) {
             modbus_rx_buf[modbus_rx_count++] = res;
             modbus_rx_flag                   = 1;
         }
 #else
         Uart5_Rx[uart5_rx_count] = res;
         uart5_rx_count++;
-        if (uart5_rx_count >= UART5_MAX_LEN)
-        {
+        if (uart5_rx_count >= UART5_MAX_LEN) {
             //防止溢出
             uart5_rx_count = 0;
         }

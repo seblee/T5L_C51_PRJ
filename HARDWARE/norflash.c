@@ -40,8 +40,7 @@ void ReadNorFlash(uint32_t NorAddr, uint32_t DgusAddr, uint16_t Len)
     temp[6]         = (uint8_t)(Len >> 8);
     temp[7]         = (uint8_t)(Len);
     WriteDGUS(NOR_FLASH_RW_CMD, temp, sizeof(temp));
-    do
-    {
+    do {
         DelayMs(5);
         ReadDGUS(NOR_FLASH_RW_CMD, temp, 1);
     } while (temp[0] != 0);
@@ -73,8 +72,7 @@ void WriteNorFlash(uint32_t NorAddr, uint32_t DgusAddr, uint16_t Len)
     temp[6]         = (uint8_t)(Len >> 8);
     temp[7]         = (uint8_t)(Len);
     WriteDGUS(NOR_FLASH_RW_CMD, temp, sizeof(temp));
-    do
-    {
+    do {
         DelayMs(5);
         ReadDGUS(NOR_FLASH_RW_CMD, temp, 1);
     } while (temp[0] != 0);
