@@ -38,7 +38,7 @@
 #include "string.h"
 #include "sys.h"
 
-#define TimerPeriod 1200  // T*100ms
+#define TimerPeriod 3000  // T*100ms
 
 #define CURVE_FLASH_ADDR 0
 #define CURVE_VP_ADDR    0x1000
@@ -77,5 +77,6 @@ void curveInit(void);
 void curveProcess(void);
 void dragCuave(void);
 void curveClearHandle(void);
+void curveTimeDisplay(int16_t minute);
 
 #endif

@@ -36,10 +36,9 @@
 #include "curve.h"
 #include "T5L_lib.h"
 #include "dgus.h"
+#include "rtc.h"
 #include "timer.h"
 static u16 curvePoint = 0;
-// static u16 curveManual    = 0;
-// static u16 curveManualBak = 0;
 
 void curveInit(void)
 {
@@ -85,6 +84,9 @@ checkout:
     temp[8] = 369;
     temp[9] = 0xFF00;
     WriteDGUS(CurveDrager, (u8 *)temp, 20);
+
+    pointTemp = RTCHex[4] * 60 + RTCHex[5];
+    curveTimeDisplay(pointTemp);
 }
 void curveProcess(void)
 {
@@ -136,12 +138,14 @@ void curveProcess(void)
 }
 void dragCuave(void)
 {
-    u16 temp[4];
+    u16     temp[4];
+    int16_t minute;
     ReadDGUS(CurveManual, (u8 *)&temp[0], 4);
     if (temp[0] == temp[1]) {
         return;
     }
-    WriteDGUS(CurveManualBak, (u8 *)&temp[1], 2);
+    WriteDGUS(CurveManualBak, (u8 *)&temp[0], 2);
+    minute  = temp[0] - CurveMAX;
     temp[2] = curvePoint + temp[0];
     if (temp[2] >= CurveMAX) {
         temp[2] -= CurveMAX;
@@ -151,6 +155,10 @@ void dragCuave(void)
     temp[0] >>= 2;
     temp[0] += DragerLeft;
     WriteDGUS(DragerX, (u8 *)&temp[0], 2);
+    minute *= 2;
+    temp[0] = RTCHex[4] * 60 + RTCHex[5];
+    minute += temp[0];
+    curveTimeDisplay(minute);
 }
 
 void curveClearHandle(void)
@@ -172,4 +180,40 @@ void curveClearHandle(void)
     WriteDGUS(CurveManualBak, (u8 *)&cache[2], 2);
     cache[2] = DragerRight;
     WriteDGUS(DragerX, (u8 *)&cache[2], 2);
+}
+
+void curveTimeDisplay(int16_t minute)
+{
+    u16 minute0, minute1, minute2, minute3;
+
+    u8 cache[8];
+    u8 m, n, i;
+
+    minute0 = minute;
+
+    while (minute0 < 120) {
+        minute0 += 1440;
+    }
+    minute1 = minute0 - 40;
+    minute2 = minute0 - 80;
+    minute3 = minute0 - 120;
+    minute1 %= 1440;
+    cache[0] = minute0 / 60;
+    cache[1] = minute0 % 60;
+    minute1 %= 1440;
+    cache[2] = minute1 / 60;
+    cache[3] = minute1 % 60;
+    minute2 %= 1440;
+    cache[4] = minute2 / 60;
+    cache[5] = minute2 % 60;
+    minute3 %= 1440;
+    cache[6] = minute3 / 60;
+    cache[7] = minute3 % 60;
+    for (i = 0; i < 8; i++)  //时分秒转换成HEX
+    {
+        n        = cache[i] / 10;
+        m        = cache[i] % 10;
+        cache[i] = n * 16 + m;
+    }
+    WriteDGUS(0xcd20, (u8 *)cache, 8);
 }

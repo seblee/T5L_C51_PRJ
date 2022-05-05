@@ -41,7 +41,8 @@
 //**********************RX8130接口程序，SDA 10K上拉到3.3V**************
 //上电时运行一次initrtc()，然后0.5秒间隔运行一次rdtime()读取时间到DGUS相应系统接口
 
-uint8_t RTC_temp[7] = {0};
+uint8_t RTCNow[7] = {0};
+uint8_t RTCHex[7] = {0};
 //时间校准
 uint8_t            time_calibra[8] = {0};
 uint8_t            prtc_set1[8]    = {0};
@@ -225,6 +226,7 @@ void init_rtc(void)
         i2cbw(0x10);
         i2cstop();
     }
+    rdtime();
 }
 
 void RTC_Set_Time(u8 *prtc_set)
@@ -280,6 +282,7 @@ void rdtime(void)
     rtcdata[0] = i2cbr();
     mnak();
     i2cstop();
+    memcpy(RTCNow, rtcdata, 7);
     for (i = 0; i < 3; i++)  //年月日转换成HEX
     {
         n          = rtcdata[i] / 16;
@@ -293,21 +296,20 @@ void rdtime(void)
         rtcdata[i] = n * 10 + m;
     }
     //处理星期的数据格式
-    //	n=0;
-    //	m=rtcdata[3];
-    //	for(i=0;i<7;i++)
-    //	{
-    //		if(m&0x01)
-    //		{
-    //			break;
-    //		}
-    //		n++;
-    //		m=(m>>1);
-    //	}
-    //	rtcdata[3]=n;
+    // n = 0;
+    // m = rtcdata[3];
+    // for (i = 0; i < 7; i++) {
+    //     if (m & 0x01) {
+    //         break;
+    //     }
+    //     n++;
+    //     m = (m >> 1);
+    // }
+    // rtcdata[3] = n;
 
     rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
     WriteDGUS(RTC, (u8 *)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
+    memcpy(RTCHex, rtcdata, 7);
     if (syncTimer < 840)
         syncTimer++;
     if (((rtcdata[5] != 0) && (rtcdata[6] != 0) && (syncTimer >= 839)) || timSetFlag) {

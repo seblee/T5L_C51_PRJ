@@ -70,8 +70,8 @@ sbit RTC_SDA = P3 ^ 3;
 sbit RTC_SCL = P3 ^ 2;
 
 extern u16 data SysTick_RTC;
-extern uint8_t  page[2];
-extern uint8_t  page1[2];
+extern uint8_t  RTCNow[7];
+extern uint8_t  RTCHex[7];
 
 void          delayus(unsigned char t);
 void          SDA_IN(void);
