@@ -40,6 +40,8 @@
 #include "timer.h"
 static u16 curvePoint = 0;
 
+u16 curveCurent = 0;
+
 void curveInit(void)
 {
     u16 temp[256] = {0};
@@ -85,8 +87,8 @@ checkout:
     temp[9] = 0xFF00;
     WriteDGUS(CurveDrager, (u8 *)temp, 20);
 
-    pointTemp = RTCHex[4] * 60 + RTCHex[5];
-    curveTimeDisplay(pointTemp);
+    curveCurent = RTCHex[4] * 60 + RTCHex[5];
+    curveTimeDisplay(curveCurent);
 }
 void curveProcess(void)
 {
@@ -134,6 +136,8 @@ void curveProcess(void)
         temp[2] = 0xa55a;
         WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
         T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x0800, 4);
+        curveCurent = RTCHex[4] * 60 + RTCHex[5];
+        curveTimeDisplay(curveCurent);
     }
 }
 void dragCuave(void)
@@ -156,8 +160,7 @@ void dragCuave(void)
     temp[0] += DragerLeft;
     WriteDGUS(DragerX, (u8 *)&temp[0], 2);
     minute *= 2;
-    temp[0] = RTCHex[4] * 60 + RTCHex[5];
-    minute += temp[0];
+    minute += curveCurent;
     curveTimeDisplay(minute);
 }
 
