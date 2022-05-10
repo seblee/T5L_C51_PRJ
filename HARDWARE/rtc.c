@@ -310,6 +310,7 @@ void rdtime(void)
     rtcdata[3] = RTC_Get_Week(rtcdata[0], rtcdata[1], rtcdata[2]);
     WriteDGUS(RTC, (u8 *)rtcdata, sizeof(rtcdata));  //写入DGUS变量空间
     memcpy(RTCHex, rtcdata, 7);
+    WriteDGUS(0xcd28, (u8 *)&RTCHex[4], 2);
     if (syncTimer < 840)
         syncTimer++;
     if (((rtcdata[5] != 0) && (rtcdata[6] != 0) && (syncTimer >= 839)) || timSetFlag) {

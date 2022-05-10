@@ -40,7 +40,7 @@
 #include "timer.h"
 static u16 curvePoint = 0;
 
-u16 curveCurent = 0;
+volatile int16_t curveCurent = 0;
 
 void curveInit(void)
 {
@@ -123,6 +123,8 @@ void curveProcess(void)
         // curveManualBak = CurveMAX;
         temp[2] = DragerRight;
         WriteDGUS(DragerX, (u8 *)&temp[2], 2);
+        curveCurent = RTCHex[4] * 60 + RTCHex[5];
+        curveTimeDisplay(curveCurent);
 
         if (curvePoint & 0x01) {
             return;
@@ -136,8 +138,6 @@ void curveProcess(void)
         temp[2] = 0xa55a;
         WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
         T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x0800, 4);
-        curveCurent = RTCHex[4] * 60 + RTCHex[5];
-        curveTimeDisplay(curveCurent);
     }
 }
 void dragCuave(void)
@@ -159,7 +159,7 @@ void dragCuave(void)
     temp[0] >>= 2;
     temp[0] += DragerLeft;
     WriteDGUS(DragerX, (u8 *)&temp[0], 2);
-    minute *= 2;
+    minute = TimerPeriod / 600 * minute;
     minute += curveCurent;
     curveTimeDisplay(minute);
 }
@@ -187,10 +187,9 @@ void curveClearHandle(void)
 
 void curveTimeDisplay(int16_t minute)
 {
-    u16 minute0, minute1, minute2, minute3;
+    int16_t minute0, minute1, minute2, minute3;
 
     u8 cache[8];
-    u8 m, n, i;
 
     minute0 = minute;
 
@@ -200,7 +199,7 @@ void curveTimeDisplay(int16_t minute)
     minute1 = minute0 - 40;
     minute2 = minute0 - 80;
     minute3 = minute0 - 120;
-    minute1 %= 1440;
+    minute0 %= 1440;
     cache[0] = minute0 / 60;
     cache[1] = minute0 % 60;
     minute1 %= 1440;
@@ -212,11 +211,5 @@ void curveTimeDisplay(int16_t minute)
     minute3 %= 1440;
     cache[6] = minute3 / 60;
     cache[7] = minute3 % 60;
-    for (i = 0; i < 8; i++)  //时分秒转换成HEX
-    {
-        n        = cache[i] / 10;
-        m        = cache[i] % 10;
-        cache[i] = n * 16 + m;
-    }
     WriteDGUS(0xcd20, (u8 *)cache, 8);
 }
