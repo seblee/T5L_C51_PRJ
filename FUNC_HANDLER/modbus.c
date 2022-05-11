@@ -30,7 +30,6 @@ u8 modbus_rx_count = 0;                 //接收到的字符串的长度
 u8 modbus_rx_flag  = 0;                 //接收到的字符串的标志，为1表示有收到数据
 u8 modbus_rx_buf[UART_RX_BUF_MAX_LEN];  //接收到的字符串的内容
 
-// extern process_struct process_flag;  //命令状态标志
 extern u32 data ModbusSysTick;               //每隔1ms+1
 u32             uart_rx_check_tick     = 0;  //检查串口是否接收结束
 u8              modbus_rx_count_before = 0;  //接收串口的数据
@@ -38,7 +37,7 @@ u8              modbus_rx_count_before = 0;  //接收串口的数据
 u32 modbus_tx_process_tick = 0;  // modbus发送命令的时间间隔
 
 const modbosCmd_t modbusCmdlib[] = {
-  // en       id         fun      len  timeout   mod      modP     VP  slaveAddr feedback
+  //  en         id         fun     len  timeout      mod    modP     VP  slaveAddr feedback
     {BUS_EN, SLAVE_ID, BUS_FUN_10H, 0x03, 0xc8, MODE_PARA, 0x5015, 0x5016, 0x0000, 0x00ff}, // rtc
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_ALWA, 0x0000, 0xa020, 0x031c, 0x00ff}, //告警数
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa023, 0x0319, 0x00ff}, //位状态
@@ -112,6 +111,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbb00, 0xbb28, 0x01d1, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbb00, 0xbb2a, 0x01fb, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbb00, 0xbb2c, 0x0276, PAGE27},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xbb00, 0xbb2e, 0x01dc, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xbb80, 0xbb20, 0x01b0, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xbb81, 0xbb21, 0x01b2, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xbb82, 0xbb22, 0x01b3, PAGE27},
@@ -126,6 +126,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xbb8b, 0xbb2b, 0x01fc, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xbb8c, 0xbb2c, 0x0276, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xbb8d, 0xbb2d, 0x0277, PAGE27},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xbb8e, 0xbb2e, 0x01dc, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbc00, 0xbc20, 0x0232, PAGE28},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xbc00, 0xbc22, 0x0252, PAGE28},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xbc00, 0xbc23, 0x0255, PAGE28},
@@ -165,12 +166,16 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc720, 0x01a6, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc721, 0x01a9, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc725, 0x01ab, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc726, 0x02d9, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc727, 0x02d8, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc780, 0xc720, 0x01a6, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc781, 0xc721, 0x01a9, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc782, 0xc722, 0x01a8, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc723, 0x0375, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc724, 0x0377, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc785, 0xc725, 0x01ab, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc786, 0xc726, 0x02d9, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc787, 0xc727, 0x02d8, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc800, 0xc820, 0x0127, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc800, 0xc821, 0x0129, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xc800, 0xc822, 0x012d, PAGE40},
@@ -250,7 +255,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE58, 0xda26, 0x03d9, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE58, 0xda27, 0x03db, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE58, 0xda28, 0x03dd, 0x00ff},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xdb00, 0xdb20, 0x019b, PAGE59},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xdb00, 0xdb20, 0x019a, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xdb00, 0xdb21, 0x02d3, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xdb00, 0xdb22, 0x02d5, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xdb00, 0xdb24, 0x02d8, PAGE59},
@@ -258,7 +263,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xdb00, 0xdb2b, 0x0106, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xdb00, 0xdb2c, 0x02e1, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xdb00, 0xdb2d, 0x02e4, PAGE59},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdb80, 0xdb20, 0x019b, PAGE59},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdb80, 0xdb20, 0x019a, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdb81, 0xdb21, 0x02d3, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdb82, 0xdb22, 0x02d5, PAGE59},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdb83, 0xdb23, 0x02d6, PAGE59},
@@ -354,6 +359,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE27, 0xbb2b, 0xbb5b, 0xbb8b}, //
     {BUS_EN, PAGE27, 0xbb2c, 0xbb5c, 0xbb8c}, //
     {BUS_EN, PAGE27, 0xbb2d, 0xbb5d, 0xbb8d}, //
+    {BUS_EN, PAGE27, 0xbb2e, 0xbb5e, 0xbb8e}, //
     {BUS_EN, PAGE28, 0xbc20, 0xbc50, 0xbc80}, //
     {BUS_EN, PAGE28, 0xbc21, 0xbc51, 0xbc81}, //
     {BUS_EN, PAGE28, 0xbc22, 0xbc52, 0xbc82}, //
@@ -379,6 +385,8 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE39, 0xc720, 0xc750, 0xc780}, //
     {BUS_EN, PAGE39, 0xc721, 0xc751, 0xc781}, //
     {BUS_EN, PAGE39, 0xc725, 0xc755, 0xc785}, //
+    {BUS_EN, PAGE39, 0xc726, 0xc756, 0xc786}, //
+    {BUS_EN, PAGE39, 0xc727, 0xc757, 0xc787}, //
     {BUS_EN, PAGE40, 0xc820, 0xc850, 0xc880}, //
     {BUS_EN, PAGE40, 0xc821, 0xc851, 0xc881}, //
     {BUS_EN, PAGE40, 0xc822, 0xc852, 0xc882}, //
