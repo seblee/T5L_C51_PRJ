@@ -44,7 +44,7 @@
 #include "ui.h"
 
 u8        password[LEVEL_NUM][4]     = {0};
-const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 519525};
+const u32 defaultPassword[LEVEL_NUM] = {0, 1, 2, 160608, 666888, 191104, 519525};
 u8        passwordGotLevel           = 0xff;
 
 const u8 pageLevel[][2] = {
@@ -103,7 +103,7 @@ const u8 pageLevel[][2] = {
     {PAGE52, 0}, //  PASSWORD_PAGEJUMP_34_EVENT
     {PAGE53, 0}, //  PASSWORD_PAGEJUMP_35_EVENT
     {PAGE54, 0}, //  PASSWORD_PAGEJUMP_36_EVENT
-    {PAGE55, 0}, //  PASSWORD_PAGEJUMP_37_EVENT
+    {PAGE55, 5}, //  PASSWORD_PAGEJUMP_37_EVENT
     {PAGE56, 0}, //  PASSWORD_PAGEJUMP_38_EVENT
     {PAGE57, 0}, //  PASSWORD_PAGEJUMP_39_EVENT
     {PAGE58, 0}, //  PASSWORD_PAGEJUMP_3A_EVENT
@@ -123,7 +123,7 @@ const u8 funLevel[][2] = {
     {FUN00, 1}, // clear current alarm
     {FUN01, 3}, // clear alarm history
     {FUN02, 3}, // clear curve
-    {FUN03, 5}, // reset password
+    {FUN03, 6}, // reset password
 };
 
 u16                     jumpPage    = 0;
@@ -417,17 +417,24 @@ void pageHandle(u16 page)
     if (page == PAGE47) {
         WriteDGUS(0xa000 + (page << 8), (u8 *)&cache, 2);
     }
+    if (page == PAGE55) {
+        WriteDGUS(0xa000 + (page << 8), (u8 *)&cache, 2);
+    }
 }
 
 u8 getPasswordLevel(u16 event)
 {
-    if (event <= PASSWORD_PAGEJUMP_31_EVENT) {
+    if (event < PASSWORD_PAGEJUMP_00_EVENT) {
+        return LEVEL_NUM - 1;
+    } else if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
-    }
-    if (event <= PASSWORD_FUN_03_EVENT) {
+    } else if (event < PASSWORD_FUN_00_EVENT) {
+        return LEVEL_NUM - 1;
+    } else if (event <= PASSWORD_FUN_03_EVENT) {
         return funLevel[event - PASSWORD_FUN_00_EVENT][1];
+    } else {
+        return LEVEL_NUM - 1;
     }
-    return LEVEL_NUM - 1;
 }
 
 u8 checkPassword(u8 level, u8 *input)

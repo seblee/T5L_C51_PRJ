@@ -141,7 +141,7 @@
 
 #define SAVE_FACTORY_CFG_EVENT 0xD600
 
-#define LEVEL_NUM            6
+#define LEVEL_NUM            7
 #define PASSWORD_FLASH_START 0x3000
 #define PASSWORD_FLASH_LENTH (LEVEL_NUM - 1) * 2
 
