@@ -458,13 +458,17 @@ void pageHandle(u16 page)
 
 u8 getPasswordLevel(u16 event)
 {
-    if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
+    if (event < PASSWORD_PAGEJUMP_00_EVENT) {
+        return LEVEL_NUM - 1;
+    } else if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
-    }
-    if (event <= PASSWORD_FUN_04_EVENT) {
+    } else if (event < PASSWORD_FUN_00_EVENT) {
+        return LEVEL_NUM - 1;
+    } else if (event <= PASSWORD_FUN_04_EVENT) {
         return funLevel[event - PASSWORD_FUN_00_EVENT][1];
+    } else {
+        return LEVEL_NUM - 1;
     }
-    return LEVEL_NUM - 1;
 }
 
 u8 checkPassword(u8 level, u8 *input)
