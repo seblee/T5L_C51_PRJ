@@ -133,6 +133,7 @@ const u8 funLevel[][2] = {
     {FUN02, 3}, // clear curve
     {FUN03, 6}, // reset password
     {FUN04, 2}, // sysSet
+    {FUN05, 0}, // vacuum
 };
 
 u16                     jumpPage    = 0;
@@ -142,6 +143,7 @@ static u16              funOpt       = 0;
 static u8               currentLevel = 0;
 /* Private function prototypes -----------------------------------------------*/
 static void sysSetPageSwitch(void);
+static void vacuum(void);
 /* Private user code ---------------------------------------------------------*/
 
 void touchHandler(void)
@@ -241,6 +243,7 @@ void touchHandler(void)
             case PASSWORD_FUN_02_EVENT:
             case PASSWORD_FUN_03_EVENT:
             case PASSWORD_FUN_04_EVENT:
+            case PASSWORD_FUN_05_EVENT:
                 passwordFunEventHandle(touchEventFlag);
                 break;
             case PASSWORD_CHANGE_CONFIRM_EVENT:
@@ -442,6 +445,8 @@ void passwordFunOPThandle(u16 fun, u16 page)
         savePassword();
     } else if (fun == FUN04) {
         sysSetPageSwitch();
+    } else if (fun == FUN05) {
+        vacuum();
     }
 }
 
@@ -458,13 +463,17 @@ void pageHandle(u16 page)
 
 u8 getPasswordLevel(u16 event)
 {
-    if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
+    if (event < PASSWORD_PAGEJUMP_START) {
+        return LEVEL_NUM - 1;
+    } else if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
-    }
-    if (event <= PASSWORD_FUN_04_EVENT) {
+    } else if (event < PASSWORD_FUN_00_EVENT) {
+        return LEVEL_NUM - 1;
+    } else if (event <= PASSWORD_FUN_05_EVENT) {
         return funLevel[event - PASSWORD_FUN_00_EVENT][1];
+    } else {
+        return LEVEL_NUM - 1;
     }
-    return LEVEL_NUM - 1;
 }
 
 u8 checkPassword(u8 level, u8 *input)
@@ -542,4 +551,18 @@ static void sysSetPageSwitch(void)
     } else {
         JumpPage(18);
     }
+}
+
+static void vacuum(void)
+{
+    u16 cache = 0;
+    ReadDGUS(0xc620, (u8 *)&cache, 2);
+    if (cache == 0) {
+        cache = 3;
+    } else {
+        cache = 0;
+    }
+    WriteDGUS(0xc621, (u8 *)&cache, 2);
+    cache = 0x005a;
+    WriteDGUS(0xc681, (u8 *)&cache, 2);
 }
