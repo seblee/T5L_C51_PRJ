@@ -20,8 +20,10 @@
 
 const char test[] = "测试汉字";
 
-const char alarmMessage[115][32] = {
+const char alarmMessage[115][32] =
 #include "alarmMessage.h"
+
+    // {
     // {"ID00回风高温"},
     // {"ID01回风低温"},
     // {"ID02回风高湿"},
@@ -61,7 +63,7 @@ const char alarmMessage[115][32] = {
     // {"ID36排气温度2锁死"},
     // {"ID37短周期2告警"},
     // {"ID38压机2运行超时"},
-    // {"ID39加湿器电流过大"},
+    // {"ID39加湿电流过大"},
     // {"ID40加湿器高水位"},
     // {"ID41加湿器缺水"},
     // {"ID42加湿器运行超时"},
@@ -137,4 +139,4 @@ const char alarmMessage[115][32] = {
     // {"ID112保留"},
     // {"ID113保留"},
     // {"ID114保留"},
-};
+    // };
