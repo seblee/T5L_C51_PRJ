@@ -168,6 +168,8 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc725, 0x01ab, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc726, 0x02d9, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc727, 0x02d8, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xc700, 0xc728, 0x02ce, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xa025, 0x0104, 0x00ff}, //诊断模式
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc780, 0xc720, 0x01a6, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc781, 0xc721, 0x01a9, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc782, 0xc722, 0x01a8, PAGE39},
@@ -176,6 +178,8 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc785, 0xc725, 0x01ab, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc786, 0xc726, 0x02d9, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc787, 0xc727, 0x02d8, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc788, 0xc728, 0x02ce, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc789, 0xc729, 0x02cf, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc800, 0xc820, 0x0127, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc800, 0xc821, 0x0129, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xc800, 0xc822, 0x012d, PAGE40},
@@ -196,6 +200,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf24, 0x0141, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf25, 0x015a, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf26, 0x02d0, PAGE47},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf27, 0x019d, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf80, 0xcf20, 0x010d, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf81, 0xcf21, 0x010e, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf82, 0xcf22, 0x010f, PAGE47},
@@ -203,6 +208,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf84, 0xcf24, 0x0141, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf85, 0xcf25, 0x015a, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf86, 0xcf26, 0x02d0, PAGE47},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf87, 0xcf27, 0x019d, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf8a, 0xcf2a, 0x023b, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0A, 0xc8, MODE_PAGE, PAGE52, 0xd420, 0x039c, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE52, 0xd42a, 0x03a8, 0x00ff},
@@ -289,6 +295,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdd85, 0xdd25, 0x01ed, PAGE61},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdd86, 0xdd26, 0x01ee, PAGE61},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE62, 0xde20, 0x0375, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE62, 0xde21, 0x0377, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PANP, 0xdf00, 0xdf20, 0x0237, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x06, 0xc8, MODE_PANP, 0xdf00, 0xdf23, 0x029e, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xdf80, 0xdf20, 0x0237, PAGE63},
@@ -387,6 +394,8 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE39, 0xc725, 0xc755, 0xc785}, //
     {BUS_EN, PAGE39, 0xc726, 0xc756, 0xc786}, //
     {BUS_EN, PAGE39, 0xc727, 0xc757, 0xc787}, //
+    {BUS_EN, PAGE39, 0xc728, 0xc758, 0xc788}, //
+    {BUS_EN, PAGE39, 0xc729, 0xc759, 0xc789}, //
     {BUS_EN, PAGE40, 0xc820, 0xc850, 0xc880}, //
     {BUS_EN, PAGE40, 0xc821, 0xc851, 0xc881}, //
     {BUS_EN, PAGE40, 0xc822, 0xc852, 0xc882}, //
@@ -402,6 +411,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE47, 0xcf24, 0xcf54, 0xcf84}, //
     {BUS_EN, PAGE47, 0xcf25, 0xcf55, 0xcf85}, //
     {BUS_EN, PAGE47, 0xcf26, 0xcf56, 0xcf86}, //
+    {BUS_EN, PAGE47, 0xcf27, 0xcf57, 0xcf87}, //
     {BUS_EN, PAGE53, 0xd520, 0xd550, 0xd580}, //
     {BUS_EN, PAGE53, 0xd522, 0xd552, 0xd582}, //
     {BUS_EN, PAGE53, 0xd523, 0xd553, 0xd583}, //
