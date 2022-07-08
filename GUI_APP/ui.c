@@ -126,9 +126,12 @@ void ui(void)
             } else {
                 if (diagnosisPageOutCount < 5) {
                     u16 cache = 0;
-                    WriteDGUS(0xa027, (u8 *)&cache, 2);
-                    cache = 0x005a;
-                    WriteDGUS(0xa087, (u8 *)&cache, 2);
+                    ReadDGUS(0xc729, (u8 *)&cache, 2);
+                    if (cache == 0) {
+                        WriteDGUS(0xa027, (u8 *)&cache, 2);
+                        cache = 0x005a;
+                        WriteDGUS(0xa087, (u8 *)&cache, 2);
+                    }
                     diagnosisPageOutCount++;
                 }
                 diagnosisPageInCount = 0;
@@ -249,16 +252,13 @@ void caculateGroupCtrlPic(void)
                 //故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0) {
                     lw_teamwork_icon_sta[i] += 8;
-                } else  //正常
-                {
-                    //保持原值
+                } else {  //正常
+                          //保持原值
                 }
-            } else  //备用
-            {       //故障
+            } else {  //备用 故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_0] & (1 << i)) != 0) {
                     lw_teamwork_icon_sta[i] = 2;
-                } else  //正常
-                {
+                } else {  //正常
                     lw_teamwork_icon_sta[i] = 1;
                 }
             }
@@ -306,16 +306,12 @@ void caculateGroupCtrlPic(void)
                 //故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0) {
                     lw_teamwork_icon_sta[i] += 8;
-                } else  //正常
-                {
-                    //保持原值
+                } else {  //正常
                 }
-            } else  //备用
-            {       //故障
+            } else {  //备用故障
                 if ((mb_teamwork_sts_regs[SYS_STS_MALFUN_1] & (1 << (i - 16))) != 0) {
                     lw_teamwork_icon_sta[i] = 2;
-                } else  //正常
-                {
+                } else {  //正常
                     lw_teamwork_icon_sta[i] = 1;
                 }
             }
