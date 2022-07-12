@@ -103,6 +103,8 @@
 #define WAE_PALY_ADDR   0x00A0
 #define ALARM_BEEP_FLAG 0xa026
 
+#define STRINGLEN 0X0020
+
 typedef struct alarmDataStruct {
     u16 flag;
     u8  startY;

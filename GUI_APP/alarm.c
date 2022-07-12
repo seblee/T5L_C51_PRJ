@@ -42,19 +42,19 @@
 #include "timer.h"
 #include "ui.h"
 
-#define START_Xs 105
+#define START_Xs 45
 #define START_Ys 100
-#define START_Xe 285
+#define START_Xe 225
 #define START_Ye 125
 
-#define END_Xs 295
+#define END_Xs 230
 #define END_Ys 100
-#define END_Xe 475
+#define END_Xe 410
 #define END_Ye 125
 
-#define STRING_Xs 485
+#define STRING_Xs 415
 #define STRING_Ys 100
-#define STRING_Xe 685
+#define STRING_Xe 756
 #define STRING_Ye 125
 
 #define END_X    295
@@ -96,7 +96,7 @@ const dgus_string_t showStringDesConst = {
     STRING_Ys,  //.Ys
     STRING_Xe,  //.Xe
     STRING_Ye,  //.Ye
-    0X0010,     //.Text_length
+    STRINGLEN,  //.Text_length
     0x00,       //.Font0_ID
     0X17,       //.Font1_ID
     0x18,       //.Font_X_Dots

@@ -21,6 +21,6 @@
 #ifndef __CHINESECHARACTER_H_
 #define __CHINESECHARACTER_H_
 extern const char test[];
-extern const char alarmMessage[115][32];
+extern const char alarmMessage[119][32];
 
 #endif

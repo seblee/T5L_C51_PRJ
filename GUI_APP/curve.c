@@ -62,6 +62,17 @@ checkout:
     }
     pointTemp -= Curve0Start;
     curvePoint = pointTemp;
+
+    temp[0] = curvePoint + Curve0Start;
+    temp[1] = 234 + 200;  //负数显示
+    temp[2] = 234 + 200;  //负数显示
+    WriteDGUS(temp[0], (u8 *)&temp[1], 4);
+
+    temp[0] = curvePoint + Curve1Start;
+    temp[1] = 567;
+    temp[2] = 567;
+    WriteDGUS(temp[0], (u8 *)&temp[1], 4);
+
     // WriteDGUS(Curve0Addr, &pointTemp, 2);
     WriteDGUS(Curve0Point, (u8 *)&pointTemp, 2);
     // WriteDGUS(Curve1Addr, &pointTemp, 2);
