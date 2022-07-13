@@ -81,7 +81,7 @@ checkout:
     // curveManualBak = pointTemp;
     WriteDGUS(CurveManual, (u8 *)&pointTemp, 2);
     WriteDGUS(CurveManualBak, (u8 *)&pointTemp, 2);
-    temp[0] = 0x07fe;
+    temp[0] = CurveMAX;
     WriteDGUS(Curve0Len, (u8 *)temp, 2);
     WriteDGUS(Curve1Len, (u8 *)temp, 2);
 
@@ -134,15 +134,31 @@ void curveProcess(void)
         if (curvePoint & 0x01) {
             return;
         }
-        temp[3]--;
-        ReadDGUS(temp[3] + Curve0Start, (u8 *)&temp[0], 4);
-        temp[2] = 0xa55a;
-        WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
-        T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3], 4);
-        ReadDGUS(temp[3] + Curve1Start, (u8 *)&temp[0], 4);
-        temp[2] = 0xa55a;
-        WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
-        T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x0800, 4);
+        if (curvePoint) {
+            temp[3]--;
+            ReadDGUS(temp[3] + Curve0Start, (u8 *)&temp[0], 4);
+            temp[2] = 0xa55a;
+            WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
+            T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3], 4);
+
+            ReadDGUS(temp[3] + Curve1Start, (u8 *)&temp[0], 4);
+            temp[2] = 0xa55a;
+            WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
+            T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x0800, 4);
+        } else {
+            temp[3]--;
+            ReadDGUS(temp[3] + Curve0Start, (u8 *)&temp[0], 4);
+            temp[2] = 0xa55a;
+            WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
+            T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3], 2);
+            T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR, 2);
+
+            ReadDGUS(temp[3] + Curve1Start, (u8 *)&temp[0], 4);
+            temp[2] = 0xa55a;
+            WriteDGUS(Curvetemp, (u8 *)&temp[0], 6);
+            T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + temp[3] + 0x0800, 2);
+            T5L_Flash(WRITERFLASH, Curvetemp, CURVE_FLASH_ADDR + 0x0800, 2);
+        }
     }
 }
 void dragCuave(void)
@@ -152,7 +168,7 @@ void dragCuave(void)
     if (temp[0] == temp[1]) {
         return;
     }
-    WriteDGUS(CurveManualBak, (u8 *)&temp[1], 2);
+    WriteDGUS(CurveManualBak, (u8 *)&temp[0], 2);
     temp[2] = curvePoint + temp[0];
     if (temp[2] >= CurveMAX) {
         temp[2] -= CurveMAX;
