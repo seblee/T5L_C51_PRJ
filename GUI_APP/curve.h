@@ -48,19 +48,19 @@
 #define Curve0Point 0x0300
 #define Curve0Len   0x0301
 #define Curve0Start 0x1000
-#define Curve0End   0x17FE
+#define Curve0End   0x1800
 // curve1---
 #define Curve1Point 0x0302
 #define Curve1Len   0x0303
 #define Curve1Start 0x1800
-#define Curve1End   0x1FFE
+#define Curve1End   0x2000
 
 // #define Curve0Addr 0x5004  // 1个
 // #define Curve1Addr 0x5005  // 1个
 #define Curve0Data 0xa0a3  // 1个
 #define Curve1Data 0xa0a4  // 1个
 
-#define CurveMAX   0x07FE
+#define CurveMAX   0x0800
 #define Curveffset 0x1000
 #define Curvetemp  0x5000  // 4个
 #define Curveflag  0x5002  // 1个
