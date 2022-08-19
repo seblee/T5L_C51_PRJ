@@ -103,32 +103,6 @@ void ui(void)
             cache[3] = (cache[2] >> 6) & 3;
             WriteDGUS(0xcf11, (u8 *)&cache[3], 2);
         }
-        {
-            static u8 diagnosisPageInCount  = 0;
-            static u8 diagnosisPageOutCount = 0;
-            if ((picNow == PAGE39) || (picNow == PAGE67)) {
-                if (diagnosisPageInCount < 5) {
-                    u16 cache = 1;
-                    WriteDGUS(0xa027, (u8 *)&cache, 2);
-                    cache = 0x005a;
-                    WriteDGUS(0xa087, (u8 *)&cache, 2);
-                    diagnosisPageInCount++;
-                }
-                diagnosisPageOutCount = 0;
-            } else {
-                if (diagnosisPageOutCount < 5) {
-                    u16 cache = 0;
-                    ReadDGUS(0xc729, (u8 *)&cache, 2);
-                    if (cache == 0) {
-                        WriteDGUS(0xa027, (u8 *)&cache, 2);
-                        cache = 0x005a;
-                        WriteDGUS(0xa087, (u8 *)&cache, 2);
-                    }
-                    diagnosisPageOutCount++;
-                }
-                diagnosisPageInCount = 0;
-            }
-        }
 
         {
             static u16 timerCounter = 0;
