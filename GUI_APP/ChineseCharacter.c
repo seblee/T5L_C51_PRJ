@@ -22,7 +22,6 @@ const char test[] = "测试汉字";
 
 const char alarmMessage[115][32] =
 #include "alarmMessage.h"
-
     // {
     // {"ID00回风高温"},
     // {"ID01回风低温"},
@@ -103,7 +102,7 @@ const char alarmMessage[115][32] =
     // {"ID76保留"},
     // {"ID77保留"},
     // {"ID78保留"},
-    // {"ID79保留"},
+    // {"ID79压力输入异常"},
     // {"ID80排水高水位"},
     // {"ID81加湿器异常"},
     // {"ID82风压过低"},
