@@ -134,6 +134,7 @@ const u8 funLevel[][2] = {
     {FUN03, 6}, // reset password
     {FUN04, 2}, // sysSet
     {FUN05, 0}, // vacuum
+    {FUN06, 1}, // switch maintainPage
 };
 
 u16                     jumpPage    = 0;
@@ -144,6 +145,7 @@ static u8               currentLevel = 0;
 /* Private function prototypes -----------------------------------------------*/
 static void sysSetPageSwitch(void);
 static void vacuum(void);
+static void maintainPageSwitch(void);
 /* Private user code ---------------------------------------------------------*/
 
 void touchHandler(void)
@@ -244,6 +246,7 @@ void touchHandler(void)
             case PASSWORD_FUN_03_EVENT:
             case PASSWORD_FUN_04_EVENT:
             case PASSWORD_FUN_05_EVENT:
+            case PASSWORD_FUN_06_EVENT:
                 passwordFunEventHandle(touchEventFlag);
                 break;
             case PASSWORD_CHANGE_CONFIRM_EVENT:
@@ -448,6 +451,8 @@ void passwordFunOPThandle(u16 fun, u16 page)
         sysSetPageSwitch();
     } else if (fun == FUN05) {
         vacuum();
+    } else if (fun == FUN06) {
+        maintainPageSwitch();
     }
 }
 
@@ -466,11 +471,11 @@ u8 getPasswordLevel(u16 event)
 {
     if (event < PASSWORD_PAGEJUMP_START) {
         return LEVEL_NUM - 1;
-    } else if (event <= PASSWORD_PAGEJUMP_45_EVENT) {
+    } else if (event <= PASSWORD_PAGE_MAX_EVENT) {
         return pageLevel[event - PASSWORD_PAGEJUMP_START][1];
     } else if (event < PASSWORD_FUN_00_EVENT) {
         return LEVEL_NUM - 1;
-    } else if (event <= PASSWORD_FUN_05_EVENT) {
+    } else if (event <= PASSWORD_FUN_MAX) {
         return funLevel[event - PASSWORD_FUN_00_EVENT][1];
     } else {
         return LEVEL_NUM - 1;
@@ -566,4 +571,17 @@ static void vacuum(void)
     WriteDGUS(0xc621, (u8 *)&cache, 2);
     cache = 0x005a;
     WriteDGUS(0xc681, (u8 *)&cache, 2);
+}
+/**
+ * @brief
+ */
+static void maintainPageSwitch(void)
+{
+    u16 cache = 0;
+    ReadDGUS(0xcf27, (u8 *)&cache, 2);
+    if (cache < 3) {
+        JumpPage(67);
+    } else {
+        JumpPage(39);
+    }
 }
