@@ -26,27 +26,27 @@ void Modbus_Write_Register10H(modbosCmd_t *CmdNow);
 void Modbus_Read_Register03H(modbosCmd_t *CmdNow);
 void modbus_process_command(u8 *pstr, u16 strlen);
 
-u8 modbus_rx_count = 0;                 //接收到的字符串的长度
-u8 modbus_rx_flag  = 0;                 //接收到的字符串的标志，为1表示有收到数据
-u8 modbus_rx_buf[UART_RX_BUF_MAX_LEN];  //接收到的字符串的内容
+u8 modbus_rx_count = 0;                 // 接收到的字符串的长度
+u8 modbus_rx_flag  = 0;                 // 接收到的字符串的标志，为1表示有收到数据
+u8 modbus_rx_buf[UART_RX_BUF_MAX_LEN];  // 接收到的字符串的内容
 
-extern u32 data ModbusSysTick;               //每隔1ms+1
-u32             uart_rx_check_tick     = 0;  //检查串口是否接收结束
-u8              modbus_rx_count_before = 0;  //接收串口的数据
+extern u32 data ModbusSysTick;               // 每隔1ms+1
+u32             uart_rx_check_tick     = 0;  // 检查串口是否接收结束
+u8              modbus_rx_count_before = 0;  // 接收串口的数据
 
 u32 modbus_tx_process_tick = 0;  // modbus发送命令的时间间隔
 
 const modbosCmd_t modbusCmdlib[] = {
   //  en         id         fun     len  timeout      mod    modP     VP  slaveAddr feedback
     {BUS_EN, SLAVE_ID, BUS_FUN_10H, 0x03, 0xc8, MODE_PARA, 0x5015, 0x5016, 0x0000, 0x00ff}, // rtc
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_ALWA, 0x0000, 0xa020, 0x031c, 0x00ff}, //告警数
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa023, 0x0319, 0x00ff}, //位状态
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_ALWA, 0x0000, 0xa020, 0x031c, 0x00ff}, //  告警数
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa023, 0x0319, 0x00ff}, //  位状态
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xa084, 0xa024, 0x0100, PAGE57}, // power switch
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa025, 0x0104, 0x00ff}, //诊断模式
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PARA, 0xa087, 0xa027, 0x0104, 0x00ff}, //诊断模式
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa025, 0x0104, 0x00ff}, //  诊断模式
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PARA, 0xa087, 0xa027, 0x0104, 0x00ff}, //  诊断模式
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa028, 0x01cc, 0x00ff}, // logo
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PAGE, PAGE57, 0xa0a0, 0x011a, 0x00ff}, //温湿度
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_ALWA, 0x0000, 0xa0a3, 0x0310, 0x00ff}, //回风温湿度
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PAGE, PAGE57, 0xa0a0, 0x011a, 0x00ff}, //  温湿度
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_ALWA, 0x0000, 0xa0a3, 0x0310, 0x00ff}, //  回风温湿度
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE10, 0xaa00, 0x0326, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x08, 0xc8, MODE_PAGE, PAGE10, 0xaa02, 0x0341, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE10, 0xaa0a, 0x036f, 0x00ff},
@@ -56,8 +56,8 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE10, 0xaa0e, 0x034f, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE10, 0xaa0f, 0x0369, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x1f, 0xc8, MODE_PAGE, PAGE11, 0xab20, 0x038c, 0x00ff},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xac80, 0xac20, 0x023a, PAGE12}, //清楚当前告警
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x06, 0xc8, MODE_ALWA, 0x000d, 0xaea0, 0x0320, 0x00ff}, //告警
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xac80, 0xac20, 0x023a, PAGE12}, //  清楚当前告警
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x06, 0xc8, MODE_ALWA, 0x000d, 0xaea0, 0x0320, 0x00ff}, //  告警
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x07, 0xc8, MODE_PANP, 0xb300, 0xb320, 0x011a, PAGE19},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb380, 0xb320, 0x011a, PAGE19},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb382, 0xb322, 0x011c, PAGE19},
@@ -95,6 +95,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xb800, 0xb825, 0x0174, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xb800, 0xb826, 0x017b, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xb800, 0xb827, 0x022a, PAGE24},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xb800, 0xb828, 0x0173, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb880, 0xb820, 0x016a, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb881, 0xb821, 0x016d, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb882, 0xb822, 0x016e, PAGE24},
@@ -103,6 +104,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb885, 0xb825, 0x0174, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb886, 0xb826, 0x017b, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb887, 0xb827, 0x022a, PAGE24},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb888, 0xb828, 0x0173, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xbb00, 0xbb20, 0x01b0, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbb00, 0xbb21, 0x01b2, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbb00, 0xbb23, 0x01b5, PAGE27},
@@ -300,8 +302,8 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf86, 0xdf26, 0x02a1, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf87, 0xdf27, 0x02a2, PAGE63},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x06, 0xc8, MODE_PANP, 0xdf88, 0xdf28, 0x02a3, PAGE63},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xe120, 0x02f5, 0x00ff}, //首页 开机控制状态
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE65, 0xe120, 0x02f5, 0x00ff}, //开机控制状态
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xe120, 0x02f5, 0x00ff}, //  首页 开机控制状态
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE65, 0xe120, 0x02f5, 0x00ff}, //  开机控制状态
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE65, 0xe121, 0x02f6, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe123, 0x02f8, PAGE65},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xe183, 0xe124, 0x02f9, PAGE65},
@@ -345,6 +347,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE24, 0xb825, 0xb855, 0xb885}, //
     {BUS_EN, PAGE24, 0xb826, 0xb856, 0xb886}, //
     {BUS_EN, PAGE24, 0xb827, 0xb857, 0xb887}, //
+    {BUS_EN, PAGE24, 0xb828, 0xb858, 0xb888}, //
     {BUS_EN, PAGE27, 0xbb20, 0xbb50, 0xbb80}, //
     {BUS_EN, PAGE27, 0xbb21, 0xbb51, 0xbb81}, //
     {BUS_EN, PAGE27, 0xbb22, 0xbb52, 0xbb82}, //
@@ -493,20 +496,19 @@ void modbus_process_command(u8 *pstr, u16 strlen)
     num = 0;
     do {
         if ((*(pstr + num)) == SLAVE_ID) {
-            switch (*(pstr + num + 1))  //判读下一个字节是modbus的哪个命令
+            switch (*(pstr + num + 1))  // 判读下一个字节是modbus的哪个命令
             {
                 case BUS_FUN_03H:
                     len = *(pstr + num + 2);
-                    if ((len + num + 5) > strlen)  //长度超过最大长度
+                    if ((len + num + 5) > strlen)  // 长度超过最大长度
                     {
-                        num = strlen;  //非modbus命令
+                        num = strlen;  // 非modbus命令
                         break;
                     }
                     crc_data = crc16table(pstr + num, 3 + len);
                     // printf("num:%d,len:%d,crc data:%02X,%02X,", num, len, (u16)((crc_data >> 8) &
                     // 0xFF),(u16)(crc_data & 0xFF));
-                    if ((*(pstr + num + len + 3) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + len + 4) != (crc_data & 0xFF)))  // CRC
-                    {
+                    if ((*(pstr + num + len + 3) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + len + 4) != (crc_data & 0xFF))) {  // CRC
                         break;
                     }
                     WriteDGUS(modbusCmdNow.VPAddr, (pstr + num + 3), len);
@@ -516,12 +518,11 @@ void modbus_process_command(u8 *pstr, u16 strlen)
                     break;
                 case BUS_FUN_06H:
                     if ((num + 8) > strlen) {
-                        num = strlen;  //非modbus命令
+                        num = strlen;  // 非modbus命令
                         break;
                     }
                     crc_data = crc16table(pstr + num, 6);
-                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF)))  // CRC
-                    {
+                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF))) {  // CRC
                         break;
                     }
                     num += 8;
@@ -530,12 +531,11 @@ void modbus_process_command(u8 *pstr, u16 strlen)
                     break;
                 case BUS_FUN_10H:
                     if ((num + 8) > strlen) {
-                        num = strlen;  //非modbus命令
+                        num = strlen;  // 非modbus命令
                         break;
                     }
                     crc_data = crc16table(pstr + num, 6);
-                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF)))  // CRC
-                    {
+                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF))) {  // CRC
                         break;
                     }
                     num += 8;
@@ -560,7 +560,7 @@ modbus 发送和接收任务处理程序，实现：
 void Modbus_Process_Task(void)
 {
     modbosCmd_t *cmdTemp_t = NULL;
-    if (modbus_rx_flag == 1)  //接收数据
+    if (modbus_rx_flag == 1)  // 接收数据
     {
         if (modbus_rx_count > modbus_rx_count_before) {
             modbus_rx_count_before = modbus_rx_count;
@@ -590,7 +590,7 @@ void Modbus_Process_Task(void)
         return;
     }
 
-    if ((ModbusSysTick - modbus_tx_process_tick) < MODBUS_SEND_TIME_PERIOD)  //间隔固定时间后再处理UI的设置命令，
+    if ((ModbusSysTick - modbus_tx_process_tick) < MODBUS_SEND_TIME_PERIOD)  // 间隔固定时间后再处理UI的设置命令，
     {
         return;
     }
@@ -695,7 +695,7 @@ void Modbus_Write_Register10H(modbosCmd_t *CmdNow)
     Uart5SendStr(modbus_tx_buf, len);
 #endif
 }
-//清除modbus RX的相关参数
+// 清除modbus RX的相关参数
 void Modbus_RX_Reset(void)
 {
     modbus_rx_count = 0;
@@ -704,12 +704,12 @@ void Modbus_RX_Reset(void)
     modbus_rx_count_before = 0;
     uart_rx_check_tick     = 0;
 }
-//初始化modbus 相关参数
+// 初始化modbus 相关参数
 void Modbus_UART_Init(void)
 {
     //	Modbus_TX_Reset();
     Modbus_RX_Reset();
-    modbus_tx_process_tick = 0;  //初始化 0
+    modbus_tx_process_tick = 0;  // 初始化 0
 }
 
 void getCmd(u16 *index)
@@ -780,7 +780,7 @@ void checkChange(void)
     }
 }
 
-void forcedOutputHnadle(void)
+void forcedOutputHandle(void)
 {
     u16 cache = 0;
     ReadDGUS(0xc7a0, (u8 *)&cache, 2);
