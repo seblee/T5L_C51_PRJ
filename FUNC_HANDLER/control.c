@@ -92,9 +92,9 @@ const u8 pageLevel[][2] = {
     {PAGE33, 0}, //  PASSWORD_PAGEJUMP_21_EVENT
     {PAGE34, 0}, //  PASSWORD_PAGEJUMP_22_EVENT
     {PAGE35, 0}, //  PASSWORD_PAGEJUMP_23_EVENT
-    {PAGE36, 3}, //  vacuum
+    {PAGE36, 2}, //  vacuum
     {PAGE37, 0}, //  PASSWORD_PAGEJUMP_25_EVENT
-    {PAGE38, 2}, //  MAINTAIM PAGE
+    {PAGE38, 1}, //  MAINTAIM PAGE
     {PAGE39, 0}, //  PASSWORD_PAGEJUMP_27_EVENT
     {PAGE40, 0}, //  PASSWORD_PAGEJUMP_28_EVENT
     {PAGE41, 0}, //  PASSWORD_PAGEJUMP_29_EVENT
@@ -134,7 +134,7 @@ const u8 funLevel[][2] = {
     {FUN03, 6}, // reset password
     {FUN04, 2}, // sysSet
     {FUN05, 0}, // vacuum
-    {FUN06, 1}, // switch maintainPage
+    {FUN06, 3}, // switch maintainPage
 };
 
 u16                     jumpPage    = 0;
