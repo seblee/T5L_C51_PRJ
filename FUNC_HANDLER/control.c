@@ -246,7 +246,7 @@ void touchHandler(void)
                 curAlarmClearHandle();
                 break;
             case OUTPUT_EVENT:
-                forcedOutputHnadle();
+                forcedOutputHandle();
                 break;
             case RESET_EVENT:
                 resetEventHandle();

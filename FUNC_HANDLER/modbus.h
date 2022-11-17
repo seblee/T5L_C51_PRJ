@@ -42,13 +42,13 @@
 #define UART_RX_BUF_MAX_LEN 128
 
 #define MODBUS_SEND_TIME_PERIOD 500  // 0.5秒钟
-#define RX_CHECK_TICK_TIME      20   //超过20个字节的时间没有收到新的字符，认为接收结束，10*10*1000/9600,
+#define RX_CHECK_TICK_TIME      20   // 超过20个字节的时间没有收到新的字符，认为接收结束，10*10*1000/9600,
 
-#define SLAVE_ID     0x02  //设备端地址
+#define SLAVE_ID     0x02  // 设备端地址
 #define BUS_EN       0X5A
 #define BUS_DIS      0X00
-#define BUS_FUN_03H  0x03  //读寄存器地址命令
-#define BUS_FUN_06H  0x06  //写寄存器地址命令
+#define BUS_FUN_03H  0x03  // 读寄存器地址命令
+#define BUS_FUN_06H  0x06  // 写寄存器地址命令
 #define BUS_FUN_10H  0x10
 #define CMD_NUMBER   (sizeof(modbusCmdlib) / sizeof(modbosCmd_t))
 #define CHECK_NUMBER (sizeof(dataCheckLib) / sizeof(dataCheckCmd_t))
@@ -79,9 +79,9 @@ enum {
     MODE_PARA = 2,
     MODE_PANP = 3,
 };
-extern u8 modbus_rx_flag;                      //接收到的字符串的标志，为1表示有收到数据
-extern u8 modbus_rx_buf[UART_RX_BUF_MAX_LEN];  //接收到的字符串的内容
-extern u8 modbus_rx_count;                     //接收到的字符串的长度
+extern u8 modbus_rx_flag;                      // 接收到的字符串的标志，为1表示有收到数据
+extern u8 modbus_rx_buf[UART_RX_BUF_MAX_LEN];  // 接收到的字符串的内容
+extern u8 modbus_rx_count;                     // 接收到的字符串的长度
 
 extern _TKS_FLAGA_type modbusFlag;
 #define cmdTxFlag modbusFlag.bits.b0
@@ -91,6 +91,6 @@ void Modbus_UART_Init(void);
 void Modbus_Process_Task(void);
 void getCmd(u16 *index);
 void checkChange(void);
-void forcedOutputHnadle(void);
+void forcedOutputHandle(void);
 
 #endif
