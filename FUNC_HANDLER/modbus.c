@@ -586,9 +586,27 @@ modbus 发送和接收任务处理程序，实现：
 2. 监控UI的触发命令，当有检测到发送命令时，发送modbus写命令
 3. 每隔1秒钟触发一次查询modbus寄存器状态的命令
 ******************************************************************************/
+#define COM_TIMEOUT  20
+#define COM_ICON_REG 0xa0b0
 void Modbus_Process_Task(void)
 {
-    modbosCmd_t *cmdTemp_t = NULL;
+    modbosCmd_t   *cmdTemp_t    = NULL;
+    static uint8_t timeoutCount = 0;
+    if (MS500msFlag) {
+        if (timeoutCount < 3) {
+            uint16_t cache = 0;
+            WriteDGUS(COM_ICON_REG, (u8 *)(&cache), 2);
+            timeoutCount++;
+        } else if (timeoutCount < COM_TIMEOUT) {
+            timeoutCount++;
+        } else if (timeoutCount == COM_TIMEOUT) {
+            uint16_t cache = 1;
+            WriteDGUS(COM_ICON_REG, (u8 *)(&cache), 2);
+            timeoutCount++;
+        } else {
+        }
+    }
+
     if (modbus_rx_flag == 1)  // 接收数据
     {
         if (modbus_rx_count > modbus_rx_count_before) {
@@ -610,6 +628,7 @@ void Modbus_Process_Task(void)
         if ((cmdRxFlag) || ((ModbusSysTick - modbus_tx_process_tick) >= modbusCmdNow.timeout)) {
             if (cmdRxFlag) {
                 CmdIndex++;
+                timeoutCount = 0;
                 goto processCMDLib;
             } else {
                 cmdTxFlag = 0;
