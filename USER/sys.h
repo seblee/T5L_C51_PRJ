@@ -80,16 +80,16 @@ typedef union {
 #define WDT_OFF() MUX_SEL &= 0xFD /******关闭看门狗*********/
 #define WDT_RST() MUX_SEL |= 0x01 /******喂狗*********/
 
-//电源开关宏定义
+// 电源开关宏定义
 #define POWER_ON()  P2_1 = 1;
 #define POWER_OFF() P2_1 = 0;
-//电源开关引脚
+// 电源开关引脚
 sbit P2_1 = P2 ^ 1;
-//电压反馈，低电平表示按键有效
+// 电压反馈，低电平表示按键有效
 sbit KEY1_Vin_F = P2 ^ 2;
 
-#define SOFTWARE_VER_H (u32)0x02010700  // version
-#define SOFTWARE_VER_L (u32)0x22000000  // version
+#define SOFTWARE_VER_H (u32)0x02010420  // version
+#define SOFTWARE_VER_L (u32)0x00000000  // version
 
 extern data _TKS_FLAGA_type MSFlag;
 #define MS1msFlag   MSFlag.bits.b0
