@@ -100,7 +100,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xb800, 0xb825, 0x0171, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xb800, 0xb829, 0x017b, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xb800, 0xb82a, 0x0230, PAGE24},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xb800, 0xb82b, 0x02c1, PAGE24},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PANP, 0xb800, 0xb82b, 0x017e, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb880, 0xb820, 0x0169, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb881, 0xb821, 0x016a, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb882, 0xb822, 0x016b, PAGE24},
@@ -112,7 +112,9 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb888, 0xb828, 0x0174, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb889, 0xb829, 0x017b, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb88a, 0xb82a, 0x0230, PAGE24},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb88b, 0xb82b, 0x02c1, PAGE24},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb88b, 0xb82b, 0x017e, PAGE24},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb88c, 0xb82c, 0x017f, PAGE24},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xb88d, 0xb82d, 0x0180, PAGE24},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xbb00, 0xbb20, 0x01b0, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbb00, 0xbb21, 0x01b2, PAGE27},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xbb00, 0xbb23, 0x01b5, PAGE27},
@@ -173,23 +175,24 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc288, 0xc228, 0x018c, PAGE34},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc289, 0xc229, 0x0198, PAGE34},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc580, 0xc520, 0x023b, PAGE15}, // reset factory
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc720, 0x01a6, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc721, 0x01a9, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc725, 0x01ab, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc726, 0x02d9, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc727, 0x02d8, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xc700, 0xc728, 0x02ce, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE38, 0xcf27, 0x0197, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE38, 0XC620, 0x0106, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0XC681, 0XC621, 0x0106, PAGE38},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc720, 0x0104, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xc700, 0xc721, 0x01a8, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc700, 0xc723, 0x01ab, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PANP, 0xc700, 0xc724, 0x02d8, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc726, 0x0316, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc727, 0x0318, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc728, 0x0377, 0x00ff},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc729, 0x03d7, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xa025, 0x0104, 0x00ff}, //  诊断模式
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc780, 0xc720, 0x01a6, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc781, 0xc721, 0x01a9, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc782, 0xc722, 0x01a8, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc723, 0x0375, 0x00ff},
-    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE39, 0xc724, 0x0377, 0x00ff},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc785, 0xc725, 0x01ab, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc786, 0xc726, 0x02d9, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc787, 0xc727, 0x02d8, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc788, 0xc728, 0x02ce, PAGE39},
-    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc789, 0xc729, 0x02cf, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc780, 0xc720, 0x0104, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc781, 0xc721, 0x01a8, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc782, 0xc722, 0x01a9, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc783, 0xc723, 0x01ab, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc784, 0xc724, 0x02d8, PAGE39},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xc785, 0xc725, 0x02d9, PAGE39},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc800, 0xc820, 0x0127, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xc800, 0xc821, 0x0129, PAGE40},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PANP, 0xc800, 0xc822, 0x012d, PAGE40},
@@ -211,6 +214,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf25, 0x015a, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf26, 0x02d0, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf27, 0x019d, PAGE47},
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PANP, 0xcf00, 0xcf2b, 0x02c1, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf80, 0xcf20, 0x010d, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf81, 0xcf21, 0x010e, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf82, 0xcf22, 0x010f, PAGE47},
@@ -220,6 +224,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf86, 0xcf26, 0x02d0, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf87, 0xcf27, 0x019d, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf8a, 0xcf2a, 0x023b, PAGE47},
+    {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PANP, 0xcf8b, 0xcf2b, 0x02c1, PAGE47},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x0A, 0xc8, MODE_PAGE, PAGE52, 0xd420, 0x039c, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_PAGE, PAGE52, 0xd42a, 0x03a8, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x07, 0xc8, MODE_PANP, 0xd500, 0xd520, 0x011a, PAGE53},
@@ -371,6 +376,8 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE24, 0xb829, 0xb859, 0xb889}, //
     {BUS_EN, PAGE24, 0xb82a, 0xb85a, 0xb88a}, //
     {BUS_EN, PAGE24, 0xb82b, 0xb85b, 0xb88b}, //
+    {BUS_EN, PAGE24, 0xb82c, 0xb85c, 0xb88c}, //
+    {BUS_EN, PAGE24, 0xb82d, 0xb85d, 0xb88d}, //
     {BUS_EN, PAGE27, 0xbb20, 0xbb50, 0xbb80}, //
     {BUS_EN, PAGE27, 0xbb21, 0xbb51, 0xbb81}, //
     {BUS_EN, PAGE27, 0xbb22, 0xbb52, 0xbb82}, //
@@ -410,11 +417,10 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE34, 0xc229, 0xc259, 0xc289}, //
     {BUS_EN, PAGE39, 0xc720, 0xc750, 0xc780}, //
     {BUS_EN, PAGE39, 0xc721, 0xc751, 0xc781}, //
+    {BUS_EN, PAGE39, 0xc722, 0xc752, 0xc782}, //
+    {BUS_EN, PAGE39, 0xc723, 0xc753, 0xc783}, //
+    {BUS_EN, PAGE39, 0xc724, 0xc754, 0xc784}, //
     {BUS_EN, PAGE39, 0xc725, 0xc755, 0xc785}, //
-    {BUS_EN, PAGE39, 0xc726, 0xc756, 0xc786}, //
-    {BUS_EN, PAGE39, 0xc727, 0xc757, 0xc787}, //
-    {BUS_EN, PAGE39, 0xc728, 0xc758, 0xc788}, //
-    {BUS_EN, PAGE39, 0xc729, 0xc759, 0xc789}, //
     {BUS_EN, PAGE40, 0xc820, 0xc850, 0xc880}, //
     {BUS_EN, PAGE40, 0xc821, 0xc851, 0xc881}, //
     {BUS_EN, PAGE40, 0xc822, 0xc852, 0xc882}, //
@@ -431,6 +437,7 @@ const dataCheckCmd_t dataCheckLib[] = {
     {BUS_EN, PAGE47, 0xcf25, 0xcf55, 0xcf85}, //
     {BUS_EN, PAGE47, 0xcf26, 0xcf56, 0xcf86}, //
     {BUS_EN, PAGE47, 0xcf27, 0xcf57, 0xcf87}, //
+    {BUS_EN, PAGE47, 0xcf2b, 0xcf5b, 0xcf8b}, //
     {BUS_EN, PAGE53, 0xd520, 0xd550, 0xd580}, //
     {BUS_EN, PAGE53, 0xd522, 0xd552, 0xd582}, //
     {BUS_EN, PAGE53, 0xd523, 0xd553, 0xd583}, //
@@ -526,16 +533,14 @@ void modbus_process_command(u8 *pstr, u16 strlen)
             {
                 case BUS_FUN_03H:
                     len = *(pstr + num + 2);
-                    if ((len + num + 5) > strlen)  // 长度超过最大长度
-                    {
+                    if ((len + num + 5) > strlen) {  // 长度超过最大长度
+
                         num = strlen;  // 非modbus命令
                         break;
                     }
                     crc_data = crc16table(pstr + num, 3 + len);
-                    // printf("num:%d,len:%d,crc data:%02X,%02X,", num, len, (u16)((crc_data >> 8) &
-                    // 0xFF),(u16)(crc_data & 0xFF));
-                    if ((*(pstr + num + len + 3) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + len + 4) != (crc_data & 0xFF)))  // CRC
-                    {
+                    // printf("num:%d,len:%d,crc data:%02X,%02X,", num, len, (u16)((crc_data >> 8) & 0xFF), (u16)(crc_data & 0xFF));
+                    if ((*(pstr + num + len + 3) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + len + 4) != (crc_data & 0xFF))) {  // CRC
                         break;
                     }
                     WriteDGUS(modbusCmdNow.VPAddr, (pstr + num + 3), len);
@@ -549,8 +554,7 @@ void modbus_process_command(u8 *pstr, u16 strlen)
                         break;
                     }
                     crc_data = crc16table(pstr + num, 6);
-                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF)))  // CRC
-                    {
+                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF))) {  // CRC
                         break;
                     }
                     num += 8;
@@ -563,8 +567,7 @@ void modbus_process_command(u8 *pstr, u16 strlen)
                         break;
                     }
                     crc_data = crc16table(pstr + num, 6);
-                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF)))  // CRC
-                    {
+                    if ((*(pstr + num + 6) != ((crc_data >> 8) & 0xFF)) || (*(pstr + num + 7) != (crc_data & 0xFF))) {  // CRC
                         break;
                     }
                     num += 8;
@@ -638,8 +641,7 @@ void Modbus_Process_Task(void)
         return;
     }
 
-    if ((ModbusSysTick - modbus_tx_process_tick) < MODBUS_SEND_TIME_PERIOD)  // 间隔固定时间后再处理UI的设置命令，
-    {
+    if ((ModbusSysTick - modbus_tx_process_tick) < MODBUS_SEND_TIME_PERIOD) {  // 间隔固定时间后再处理UI的设置命令，
         return;
     }
 processCMDLib:

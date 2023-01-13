@@ -245,19 +245,18 @@ void touchHandler(void)
             case CUR_ALARM_CLEAR_EVENT:
                 curAlarmClearHandle();
                 break;
-            case OUTPUT_EVENT:
-                forcedOutputHandle();
-                break;
             case RESET_EVENT:
                 resetEventHandle();
                 break;
             case IN_MAINTAIN_MOD_EVENT:
                 inMaintainModEventHandle();
                 break;
+            case OUTPUT_EVENT:
+                forcedOutputHandle();
+                break;
             case OUT_MAINTAIN_MOD_EVENT:
                 outMaintainModEventHandle();
                 break;
-
             case CLEAR_RUNTIME_EVENT_0E:
             case CLEAR_RUNTIME_EVENT_0C:
             case CLEAR_RUNTIME_EVENT_01:
