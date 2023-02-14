@@ -121,6 +121,8 @@
 #define PASSWORD_FUN_01_EVENT 0xA4F1
 #define PASSWORD_FUN_02_EVENT 0xA4F2
 #define PASSWORD_FUN_03_EVENT 0xA4F3
+#define PASSWORD_FUN_04_EVENT 0xA4F4
+#define PASSWORD_FUN_05_EVENT 0xA4F5
 
 #define PASSWORD_CHANGE_CONFIRM_EVENT 0xA600
 #define PASSWORD_CHANGE_CANCLE_EVENT  0xA601
@@ -155,6 +157,8 @@ enum {
     FUN01 = 0X01,
     FUN02 = 0X02,
     FUN03 = 0X03,
+    FUN04 = 0X04,
+    FUN05 = 0X05,
 };
 enum {
     PWOER_LOCK_IDEL = 0,
@@ -181,7 +185,7 @@ void passwordCancleEventHandle(void);
 void passwordPageJumpEventHandle(u16 event);
 void passwordFunEventHandle(u16 event);
 void passwordOperation(void);
-void passwordFunOPThandle(u16 fun);
+void passwordFunOPThandle(u16 fun, u16 page);
 u8   getPasswordLevel(u16 event);
 u8   checkPassword(u8 level, u8 *input);
 void passwordInit(void);
