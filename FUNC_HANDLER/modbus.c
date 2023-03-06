@@ -45,6 +45,7 @@ const modbosCmd_t modbusCmdlib[] = {
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0xa025, 0x0104, 0x00ff}, //  诊断模式
     {BUS_EN, SLAVE_ID, BUS_FUN_06H, 0x01, 0xc8, MODE_PARA, 0xa087, 0xa027, 0x0104, 0x00ff}, //  诊断模式
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x03, 0xc8, MODE_PAGE, PAGE57, 0xa0a0, 0x011a, 0x00ff}, //  温湿度
+    {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x01, 0xc8, MODE_PAGE, PAGE57, 0XC620, 0x0106, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x02, 0xc8, MODE_ALWA, 0x0000, 0xa0a3, 0x0310, 0x00ff}, //  回风温湿度
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x04, 0xc8, MODE_PAGE, PAGE10, 0xaa00, 0x0326, 0x00ff},
     {BUS_EN, SLAVE_ID, BUS_FUN_03H, 0x05, 0xc8, MODE_PAGE, PAGE10, 0xaa04, 0x0344, 0x00ff},
